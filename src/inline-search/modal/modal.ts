@@ -1,5 +1,4 @@
 import { fetchSearchResults, html, trapFocus } from '../../helper';
-import './modal.tokens.css';
 import './modal.css';
 import type { InternalModalConfig } from '../../types/config';
 import createSuggestions from '../suggestions/suggestions';
