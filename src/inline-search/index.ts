@@ -1,0 +1,84 @@
+import type { InternalModalConfig, ModalConfig } from '../types/config.js';
+import { createSearchModal } from './modal/modal.js';
+import DEFAULT_CONFIG from './default-config.js';
+
+export type ModalData = {
+  openModal: () => void;
+  closeModal: () => void;
+};
+
+const getTriggerOpenEl = (searchOpenElementSelector: string) => {
+  if (!searchOpenElementSelector) {
+    throw new Error('No trigger selector provided!');
+  }
+
+  const triggerEl = document.querySelector(searchOpenElementSelector);
+
+  if (!triggerEl) {
+    throw new Error(
+      `No trigger element found! Used selector: "${searchOpenElementSelector}`,
+    );
+  }
+
+  return triggerEl;
+};
+
+const getTriggerCloseEl = (searchCloseElementSelector: string) => {
+  if (!searchCloseElementSelector) {
+    return;
+  }
+
+  const triggerCloseEl = document.querySelector(searchCloseElementSelector);
+
+  return triggerCloseEl;
+};
+
+const bootstrapModal = (config: InternalModalConfig): ModalData => {
+  const { openModal, closeModal, element } = createSearchModal(config);
+
+  document.body.append(element);
+
+  return {
+    openModal,
+    closeModal,
+  };
+};
+
+export default function createSearchInModal(customConfig: ModalConfig) {
+  const config: InternalModalConfig = {
+    ...DEFAULT_CONFIG,
+    ...customConfig,
+    renderers: {
+      ...DEFAULT_CONFIG.renderers,
+      ...customConfig.renderers,
+    },
+    labels: {
+      ...DEFAULT_CONFIG.labels,
+      ...customConfig.labels,
+    },
+  };
+
+  const { searchOpenElementSelector, searchCloseElementSelector } = config;
+  const triggerEl = getTriggerOpenEl(searchOpenElementSelector);
+  let modalData: ModalData | null = null;
+
+  triggerEl.addEventListener('click', () => {
+    if (!modalData) {
+      modalData = bootstrapModal(config);
+    }
+
+    modalData.openModal();
+  });
+
+  if (searchCloseElementSelector) {
+    const triggerCloseEl = getTriggerCloseEl(searchCloseElementSelector);
+
+    if (triggerCloseEl) {
+      triggerCloseEl.addEventListener('click', () => {
+        if (modalData) {
+          modalData.closeModal();
+        }
+      });
+    }
+  }
+}
