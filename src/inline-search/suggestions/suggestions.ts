@@ -1,5 +1,5 @@
 import { html } from '../../helper.ts';
-import type { InternalModalConfig } from '../../types/config.ts';
+import type { QueryInput } from '../../types/query-input.ts';
 import type {
   OpenSearchItem,
   OpenSearchResponse,
@@ -7,7 +7,7 @@ import type {
 
 const renderSuggestionListItem = (
   item: OpenSearchItem & { isFirstInGroup?: boolean },
-  config: InternalModalConfig,
+  config: QueryInput,
 ) => {
   const elements = [];
 
@@ -62,7 +62,7 @@ export function orderByTypeWithFlags(items: OpenSearchItem[]) {
 
 const createSuggestions = (
   response: OpenSearchResponse,
-  config: InternalModalConfig,
+  config: QueryInput,
 ) => {
   let data = response.hits.hits;
 
@@ -71,7 +71,7 @@ const createSuggestions = (
   }
 
   const element = html`
-    <div class="streamx-search-modal__suggestions-wrapper">
+    <div class="stx-suggestions-wrapper">
       ${data
         .map((el) => {
           return renderSuggestionListItem(el, config);

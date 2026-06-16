@@ -1,6 +1,6 @@
-import type { InternalModalConfig, ModalConfig } from '../types/config.js';
-import { createSearchModal } from './modal/modal.js';
-import DEFAULT_CONFIG from './default-config.js';
+import type { Modal, ModalConfig } from "../types/config.js";
+import { createSearchModal } from "./modal/modal.js";
+import DEFAULT_CONFIG from "./default-config.js";
 
 export type ModalData = {
   openModal: () => void;
@@ -9,7 +9,7 @@ export type ModalData = {
 
 const getTriggerOpenEl = (searchOpenElementSelector: string) => {
   if (!searchOpenElementSelector) {
-    throw new Error('No trigger selector provided!');
+    throw new Error("No trigger selector provided!");
   }
 
   const triggerEl = document.querySelector(searchOpenElementSelector);
@@ -33,7 +33,7 @@ const getTriggerCloseEl = (searchCloseElementSelector: string) => {
   return triggerCloseEl;
 };
 
-const bootstrapModal = (config: InternalModalConfig): ModalData => {
+const bootstrapModal = (config: Modal): ModalData => {
   const { openModal, closeModal, element } = createSearchModal(config);
 
   document.body.append(element);
@@ -45,16 +45,14 @@ const bootstrapModal = (config: InternalModalConfig): ModalData => {
 };
 
 export default function createSearchInModal(customConfig: ModalConfig) {
-  const config: InternalModalConfig = {
+  const config: Modal = {
     ...DEFAULT_CONFIG,
     ...customConfig,
-    renderers: {
-      ...DEFAULT_CONFIG.renderers,
-      ...customConfig.renderers,
-    },
-    labels: {
-      ...DEFAULT_CONFIG.labels,
-      ...customConfig.labels,
+    input: {
+      ...DEFAULT_CONFIG.input,
+      ...customConfig.input,
+      labels: { ...DEFAULT_CONFIG.input.labels, ...customConfig.input.labels },
+      renderers: {...DEFAULT_CONFIG.input.renderers, ...customConfig.input.renderers}
     },
   };
 
@@ -62,7 +60,7 @@ export default function createSearchInModal(customConfig: ModalConfig) {
   const triggerEl = getTriggerOpenEl(searchOpenElementSelector);
   let modalData: ModalData | null = null;
 
-  triggerEl.addEventListener('click', () => {
+  triggerEl.addEventListener("click", () => {
     if (!modalData) {
       modalData = bootstrapModal(config);
     }
@@ -74,7 +72,7 @@ export default function createSearchInModal(customConfig: ModalConfig) {
     const triggerCloseEl = getTriggerCloseEl(searchCloseElementSelector);
 
     if (triggerCloseEl) {
-      triggerCloseEl.addEventListener('click', () => {
+      triggerCloseEl.addEventListener("click", () => {
         if (modalData) {
           modalData.closeModal();
         }

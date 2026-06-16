@@ -1,0 +1,186 @@
+import { fetchSearchResults, html } from "../../helper";
+import createSuggestions from "../../inline-search/suggestions/suggestions";
+import type { QueryInput } from "../../types/query-input";
+import type { OpenSearchResponse } from "../../types/results";
+import "./query-input.css";
+
+export function creatQueryInput(config: QueryInput) {
+  const inputTextId = crypto.randomUUID();
+  const suggestionWrapperId = crypto.randomUUID();
+  const { labels, renderers } = config;
+
+  const queryInputEl = html`
+    <div class="stx-query-input">
+      <button
+        class="stx-query-input__search-button"
+        type="button"
+        aria-label="${labels.searchButtonAria}"
+      >
+        ${renderers.searchIcon()}
+      </button>
+      <div class="stx-query-input__input-wrapper">
+        <label for="${inputTextId}">${labels.inputLabel}</label>
+        <input
+          class="stx-query-input__input"
+          type="text"
+          placeholder="${labels.inputPlaceholder}"
+          role="combobox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          aria-controls="${suggestionWrapperId}"
+          id="${inputTextId}"
+        />
+        <button
+          class="stx-query-input__clear-button"
+          type="button"
+          aria-label="${labels.clearButtonAria}"
+        >
+          ${renderers.clearIcon()}
+        </button>
+      </div>
+      <div
+        class="stx-query-input__suggestions-wrapper"
+        id="${suggestionWrapperId}"
+      ></div>
+    </div>
+  ` as HTMLDivElement;
+
+  const inputEl = queryInputEl.querySelector(
+    ".stx-query-input__input",
+  ) as HTMLInputElement;
+
+  const suggestionContainer = queryInputEl.querySelector(
+    ".stx-query-input__suggestions-wrapper",
+  );
+
+  const clearButton = queryInputEl.querySelector(
+    ".stx-query-input__clear-button",
+  ) as HTMLButtonElement;
+
+  const searchButton = queryInputEl.querySelector(
+    ".stx-query-input__search-button",
+  ) as HTMLButtonElement;
+
+  let activeIndex = -1;
+  let suggestionListLenght = 0;
+
+  const updateActiveItem = () => {
+    if (!suggestionContainer) {
+      return;
+    }
+
+    const elements = suggestionContainer.querySelectorAll(
+      ".stx-suggestion__item",
+    ) as NodeListOf<HTMLElement>;
+
+    elements.forEach((el, index) => {
+      if (index === activeIndex) {
+        el.classList.add("is-active");
+        el.setAttribute("aria-selected", "true");
+        el.scrollIntoView({ block: "nearest" });
+        el.setAttribute("tabindex", "0");
+        inputEl.setAttribute("aria-activedescendant", el.id);
+      } else {
+        el.classList.remove("is-active");
+        el.setAttribute("aria-selected", "false");
+        el.setAttribute("tabindex", "-1");
+      }
+    });
+
+    if (activeIndex === -1) {
+      inputEl.removeAttribute("aria-activedescendant");
+    }
+  };
+
+  if (inputEl) {
+    inputEl.addEventListener("input", async (event) => {
+      const { value } = event.target as HTMLInputElement;
+
+      if (value.length >= config.minSearchLength) {
+        let url = "";
+
+        if (typeof config.searchApiUrl === "string") {
+          url = config.searchApiUrl;
+        } else {
+          url = config.searchApiUrl();
+        }
+
+        await fetchSearchResults(url, (results: OpenSearchResponse) => {
+          const suggestionEl = createSuggestions(results, config);
+          suggestionListLenght = results.hits.hits.length;
+          activeIndex = -1;
+
+          if (suggestionContainer) {
+            suggestionContainer.innerHTML = "";
+            suggestionContainer.append(suggestionEl.element as Element);
+          }
+        });
+      }
+
+      if (!value.length && suggestionContainer) {
+        suggestionContainer.innerHTML = "";
+        suggestionListLenght = 0;
+      }
+    });
+
+    inputEl.addEventListener("keydown", (e) => {
+      const { key } = e;
+
+      if (!suggestionListLenght) {
+        return;
+      }
+
+      const maxIndex = suggestionListLenght;
+
+      if (key === "ArrowDown") {
+        e.preventDefault();
+
+        if (maxIndex === 0) return;
+
+        activeIndex = activeIndex < maxIndex ? activeIndex + 1 : 0;
+        updateActiveItem();
+      } else if (key === "ArrowUp") {
+        e.preventDefault();
+
+        if (maxIndex === 0) return;
+
+        activeIndex = activeIndex > 0 ? activeIndex - 1 : maxIndex;
+        updateActiveItem();
+      } else if (key === "Enter") {
+        if (activeIndex > -1 && suggestionContainer) {
+          e.preventDefault();
+          const elements = suggestionContainer.querySelectorAll(
+            ".stx-suggestion__item",
+          ) as NodeListOf<HTMLElement>;
+
+          elements[activeIndex]?.click();
+        }
+      }
+    });
+  }
+
+  if (clearButton && inputEl && suggestionContainer) {
+    clearButton.addEventListener("click", () => {
+      inputEl.value = "";
+      suggestionContainer.innerHTML = "";
+      suggestionListLenght = 0;
+      inputEl.focus();
+    });
+  }
+
+  if (searchButton && config.searchPageUrl) {
+    const { searchPageUrl } = config;
+
+    searchButton.addEventListener("click", () => {
+      const link = searchPageUrl(inputEl.value);
+
+      window.location.href = link.toString();
+    });
+  } else {
+    if (searchButton) {
+      searchButton.remove();
+    }
+  }
+
+  return { element: queryInputEl, inputEl: inputEl };
+}

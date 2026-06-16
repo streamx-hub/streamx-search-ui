@@ -1,4 +1,4 @@
-import type { OpenSearchItem } from './results';
+import type { QueryInput, QueryInputLabels, QueryInputRenderers } from './query-input';
 
 export type AnalyticsEvents =
   | {
@@ -14,40 +14,27 @@ export type AnalyticsEvents =
       };
     };
 
-export interface ModalLabels {
-  inputPlaceholder?: string;
-  inputLabel?: string;
-  clearButtonAria?: string;
-  searchButtonAria?: string;
+export interface QueryInputConfig {
+  minSearchLength?: number;
+  searchApiUrl: string | (() => string);
+  searchPageUrl?: (val: string) => string;
+  groupByCategory?: boolean;
+  labels?: Partial<QueryInputLabels>;
+  renderers?: Partial<QueryInputRenderers>;
 }
 
 export interface ModalConfig {
-  searchApiUrl: string | (() => string);
-  searchPageUrl?: (val: string) => string;
   searchOpenElementSelector: string;
   searchCloseElementSelector?: string;
-  minSearchLength?: number;
-  groupByCategory?: boolean;
   useNonModal?: boolean;
   analytics?: (event: AnalyticsEvents) => void;
-  renderers?: {
-    suggestionItem?: (suggestionItem: OpenSearchItem) => Element | undefined;
-    groupItem?: (groupItem: OpenSearchItem) => Element | undefined;
-    clearIcon?: () => HTMLElement | string;
-    searchIcon?: () => HTMLElement | string;
-  };
-  labels?: ModalLabels;
+  input: QueryInputConfig;
 }
 
-export interface InternalModalConfig extends Required<
-  Omit<
-    ModalConfig,
-    'analytics' | 'renderers' | 'searchCloseElementSelector' | 'searchPageUrl'
-  >
-> {
-  analytics?: ModalConfig['analytics'];
-  searchCloseElementSelector?: ModalConfig['searchCloseElementSelector'];
-  searchPageUrl?: ModalConfig['searchPageUrl'];
-  renderers: Required<NonNullable<ModalConfig['renderers']>>;
-  labels: Required<NonNullable<ModalConfig['labels']>>;
+export interface Modal {
+  searchOpenElementSelector: string;
+  searchCloseElementSelector?: string;
+  useNonModal: boolean;
+  analytics: (event: AnalyticsEvents) => void;
+  input: QueryInput;
 }

@@ -1,8 +1,14 @@
-import './style.css';
-import createSearchInModal from './inline-search/index.ts';
-import { html } from './helper.ts';
+import "./style.css";
+import createSearchInModal from "./inline-search/index.ts";
+import { html } from "./helper.ts";
 
-document.body.innerHTML = `
+const appEl = document.body.querySelector("#app");
+
+if (!appEl) {
+  throw new Error("The app requires to have the #app element!");
+}
+
+appEl.innerHTML = `
   <h1>Streamx Search test page</h1>
   <p>Below are some examples of how to use streamx search.</p>
 
@@ -56,103 +62,121 @@ document.body.innerHTML = `
 `;
 
 const searchApiUrl = () => {
-  const mock1 = '/src/assets/mocks/search-data.json';
-  const mock2 = '/src/assets/mocks/search-data-2.json';
+  const mock1 = "/src/assets/mocks/search-data.json";
+  const mock2 = "/src/assets/mocks/search-data-2.json";
 
   return Math.random() > 0.5 ? mock1 : mock2;
 };
 
 // default inline search
 createSearchInModal({
-  searchOpenElementSelector: '#search-button-default',
-  searchApiUrl,
+  searchOpenElementSelector: "#search-button-default",
+  input: {
+    searchApiUrl,
+  },
 });
 
 // search with analytics
 createSearchInModal({
-  searchOpenElementSelector: '#search-button-modal-analytics',
+  searchOpenElementSelector: "#search-button-modal-analytics",
   analytics: (event) => {
     switch (event.type) {
-      case 'streamx_modal_search_open':
-        console.log('Modal open');
+      case "streamx_modal_search_open":
+        console.log("Modal open");
         break;
-      case 'streamx_modal_search_close':
-        console.log('Modal close');
+      case "streamx_modal_search_close":
+        console.log("Modal close");
         break;
     }
   },
-  searchApiUrl
+  input: {
+    searchApiUrl,
+  },
 });
 
 // custom search input placeholder
 createSearchInModal({
-  searchOpenElementSelector: '#custom-search-input-placeholder',
-  searchApiUrl,
-  labels: {
-    inputPlaceholder: 'Ask us a question',
+  searchOpenElementSelector: "#custom-search-input-placeholder",
+  input: {
+    searchApiUrl,
+    labels: {
+      inputPlaceholder: "Ask us a question",
+    },
   },
 });
 
 // custom character limit
 createSearchInModal({
-  searchOpenElementSelector: '#search-custom-character-limit',
-  minSearchLength: 5,
-  searchApiUrl,
+  searchOpenElementSelector: "#search-custom-character-limit",
+  input: {
+    minSearchLength: 5,
+    searchApiUrl,
+  },
 });
 
 createSearchInModal({
-  searchOpenElementSelector: '#search-close-button-example',
-  searchCloseElementSelector: '#search-close-button',
+  searchOpenElementSelector: "#search-close-button-example",
+  searchCloseElementSelector: "#search-close-button",
   useNonModal: true,
-  searchApiUrl,
+  input: {
+    searchApiUrl,
+  },
 });
 
 // custom item render
 createSearchInModal({
-  searchOpenElementSelector: '#search-custom-item-renderer',
-  searchApiUrl,
-  renderers: {
-    suggestionItem: (data) => {
-      return html`
-        <div style="padding: 10px 5px; color: purple;">
-          <span>${data?.highlight?.['payload.content'][0]}</span>
-        </div>
-      ` as Element;
+  searchOpenElementSelector: "#search-custom-item-renderer",
+  input: {
+    searchApiUrl,
+    renderers: {
+      suggestionItem: (data) => {
+        return html`
+          <div style="padding: 10px 5px; color: purple;">
+            <span>${data?.highlight?.["payload.content"][0]}</span>
+          </div>
+        ` as Element;
+      },
     },
   },
 });
 
 // no group render
 createSearchInModal({
-  searchOpenElementSelector: '#search-no-group-render',
-  searchApiUrl,
-  renderers: {
-    groupItem: (group) => {
-      return html`<div
-        style="color: red; text-transform: uppercase; padding: 10px 5px;"
-      >
-        ${group._source.type}
-      </div>` as Element;
+  searchOpenElementSelector: "#search-no-group-render",
+  input: {
+    searchApiUrl,
+    renderers: {
+      groupItem: (group) => {
+        return html`<div
+          style="color: red; text-transform: uppercase; padding: 10px 5px;"
+        >
+          ${group._source.type}
+        </div>` as Element;
+      },
     },
   },
 });
 
 // custom clear icon
 createSearchInModal({
-  searchOpenElementSelector: '#custom-clear-icon',
-  searchApiUrl,
-  renderers: {
-    clearIcon: () => `
-        <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3l10 16H2L12 3z"></path>
-        </svg>
-    `,
+  searchOpenElementSelector: "#custom-clear-icon",
+  input: {
+    searchApiUrl,
+    renderers: {
+      clearIcon: () => `
+          <svg xmlns="http://w3.org" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3l10 16H2L12 3z"></path>
+          </svg>
+      `,
+    },
   },
 });
 
 // with search icon
 createSearchInModal({
-  searchOpenElementSelector: '#with-search-icon',
-  searchApiUrl,
-  searchPageUrl: (query) => `/query?query=${query}`,
+  searchOpenElementSelector: "#with-search-icon",
+  input: {
+    searchApiUrl,
+    searchPageUrl: (query) => `/query?query=${query}`,
+  },
 });

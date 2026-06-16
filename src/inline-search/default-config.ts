@@ -1,14 +1,14 @@
-import type { ModalConfig, ModalLabels } from '../types/config';
+import type { QueryInputLabels, QueryInputRenderers } from '../types/query-input';
 import { suggestionItem, groupItem, clearIcon, searchIcon } from './renderers';
 
-const DEFAULT_LABELS: Required<ModalLabels> = {
+const DEFAULT_LABELS: Required<QueryInputLabels> = {
   inputPlaceholder: 'Search',
   inputLabel: 'Search',
   clearButtonAria: 'Clear search input',
   searchButtonAria: 'Go to search page'
 };
 
-const DEFAULT_RENDERERS: Required<ModalConfig['renderers']> = {
+const DEFAULT_RENDERERS: Required<QueryInputRenderers> = {
   suggestionItem,
   groupItem,
   clearIcon,
@@ -16,11 +16,14 @@ const DEFAULT_RENDERERS: Required<ModalConfig['renderers']> = {
 };
 
 const DEFAULT_CONFIG = {
-  minSearchLength: 3,
-  groupByCategory: true,
+  input: {
+    minSearchLength: 3,
+    groupByCategory: true,
+    labels: DEFAULT_LABELS,
+    renderers: DEFAULT_RENDERERS,
+  },
   useNonModal: false,
-  labels: DEFAULT_LABELS,
-  renderers: DEFAULT_RENDERERS,
+  analytics: () => {}
 };
 
 export default DEFAULT_CONFIG;

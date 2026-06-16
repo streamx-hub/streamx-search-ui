@@ -14,7 +14,7 @@ export function suggestionItem(item: OpenSearchItem): Element | undefined {
     <a
       href="${item._id}"
       id="${id}"
-      class="streamx-search-modal__suggestion-item"
+      class="stx-suggestion__item"
     >
       <span>${content}</span>
     </a>
@@ -27,7 +27,7 @@ export function groupItem(item: OpenSearchItem): Element | undefined {
   }
 
   return html`
-    <span class="streamx-search-modal__suggestion-category">
+    <span class="stx-suggestion__category">
       ${item._source.type}
     </span>
   ` as Element;
