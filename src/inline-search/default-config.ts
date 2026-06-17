@@ -1,5 +1,5 @@
 import type { QueryInputLabels, QueryInputRenderers } from '../types/query-input';
-import { suggestionItem, groupItem, clearIcon, searchIcon } from './renderers';
+import { suggestionItem, groupItem, clearIcon, searchIcon } from '../renderers/renderers';
 
 const DEFAULT_LABELS: Required<QueryInputLabels> = {
   inputPlaceholder: 'Search',

@@ -1,6 +1,6 @@
 import { fetchSearchResults, html } from "../../helper";
 import DEFAULT_CONFIG from "../../inline-search/default-config";
-import createSuggestions from "../../inline-search/suggestions/suggestions";
+import createSuggestions from "../suggestions/suggestions";
 import type { QueryInputConfig } from "../../types/config";
 import type { QueryInput } from "../../types/query-input";
 import type { OpenSearchResponse } from "../../types/results";
