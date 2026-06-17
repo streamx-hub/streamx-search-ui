@@ -48,7 +48,7 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
           id="${inputTextId}"
         />
         <button
-          class="stx-query-input__clear-button"
+          class="stx-query-input__clear-button stx-hidden"
           type="button"
           aria-label="${labels.clearButtonAria}"
         >
@@ -112,6 +112,8 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
   if (inputEl) {
     inputEl.addEventListener("input", async (event) => {
       const { value } = event.target as HTMLInputElement;
+
+      clearButton.classList.toggle('stx-hidden', !value.length);
 
       if (value.length >= config.minSearchLength) {
         let url = "";
