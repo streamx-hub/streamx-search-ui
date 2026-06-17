@@ -6,9 +6,9 @@ const searchApiUrl = () => {
 };
 
 const initSearchPage = async (mountPoint: Element) => {
-  const { configureTextInput } = await import('../../src/search-results-page/index');
+  const { createTextInput } = await import('../../src/search-results-page/index');
 
-  configureTextInput(mountPoint, {
+  createTextInput(mountPoint, {
     searchApiUrl
   });
 }

@@ -1,10 +1,27 @@
 import { fetchSearchResults, html } from "../../helper";
+import DEFAULT_CONFIG from "../../inline-search/default-config";
 import createSuggestions from "../../inline-search/suggestions/suggestions";
+import type { QueryInputConfig } from "../../types/config";
 import type { QueryInput } from "../../types/query-input";
 import type { OpenSearchResponse } from "../../types/results";
 import "./query-input.css";
 
-export function creatQueryInput(config: QueryInput) {
+const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
+  const inputOption: QueryInput = {
+    ...DEFAULT_CONFIG.input,
+    ...customConfig,
+    renderers: {
+      ...DEFAULT_CONFIG.input.renderers,
+      ...customConfig.renderers,
+    },
+    labels: { ...DEFAULT_CONFIG.input.labels, ...customConfig.labels },
+  };
+
+  return inputOption;
+};
+
+export function creatQueryInput(customConfig: QueryInputConfig) {
+  const config = resolveConfig(customConfig);
   const inputTextId = crypto.randomUUID();
   const suggestionWrapperId = crypto.randomUUID();
   const { labels, renderers } = config;
@@ -155,6 +172,12 @@ export function creatQueryInput(config: QueryInput) {
 
           elements[activeIndex]?.click();
         }
+      } else if (key === "Escape") {
+        activeIndex = -1;
+
+        if (suggestionContainer) {
+          suggestionContainer.innerHTML = "";
+        }
       }
     });
   }
@@ -181,6 +204,18 @@ export function creatQueryInput(config: QueryInput) {
       searchButton.remove();
     }
   }
+
+  window.addEventListener("click", (e) => {
+    const target = e.target as Element;
+
+    if (target !== queryInputEl && !target.closest(".stx-query-input")) {
+      activeIndex = -1;
+
+      if (suggestionContainer) {
+        suggestionContainer.innerHTML = "";
+      }
+    }
+  });
 
   return { element: queryInputEl, inputEl: inputEl };
 }

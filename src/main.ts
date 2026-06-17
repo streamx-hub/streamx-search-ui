@@ -1,5 +1,8 @@
 import "./style.css";
-import createSearchInModal from "./inline-search/index.ts";
+import {
+  createSearchInModal,
+  createTextInput,
+} from "./inline-search/index.ts";
 import { html } from "./helper.ts";
 
 const appEl = document.body.querySelector("#app");
@@ -180,3 +183,11 @@ createSearchInModal({
     searchPageUrl: (query) => `/query?query=${query}`,
   },
 });
+
+const navSearch = document.querySelector("#nav-search");
+
+if (navSearch) {
+  createTextInput(navSearch, {
+    searchApiUrl,
+  });
+}

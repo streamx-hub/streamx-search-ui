@@ -1,3 +1,18 @@
+:root {
+  --stx-color-text: #222;
+  --stx-color-background: #fff;
+  --stx-color-border: #eee;
+  --stx-shadow-dropdown: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
+}
+
+.stx-query-input, .stx-query-input * {
+  box-sizing: border-box;
+}
+
+.stx-query-input {
+  position: relative;
+}
+
 .stx-query-input__input-wrapper {
   position: relative;
   flex-grow: 1;
@@ -32,11 +47,11 @@
   appearance: none;
 
   border: 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--stx-color-border);
   border-radius: 0;
 
-  background: #fff;
-  color: #222;
+  background: var(--stx-color-background);
+  color: var(--stx-color-text);
 
   outline: none;
 
@@ -47,11 +62,11 @@
 }
 
 .stx-query-input__input::placeholder {
-  color: #888;
+  color: color-mix(in srgb, var(--stx-color-text) 75%, black);
 }
 
 .stx-query-input__input:focus {
-  border-bottom-color: #999;
+  border-bottom-color: color-mix(in srgb, var(--stx-color-border) 75%, black);
 }
 
 .stx-query-input__clear-button,
@@ -98,7 +113,7 @@
 
 .stx-query-input__clear-button:hover,
 .stx-query-input__search-button:hover {
-  color: #222;
+  color: var(--stx-color-text);
 }
 
 .stx-query-input__clear-button[hidden],
@@ -108,8 +123,12 @@
 
 .stx-query-input__suggestions-wrapper {
   max-height: 600px;
+  width: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
+  position: absolute;
+  background: var(--stx-color-background);
+  box-shadow: var(--stx-shadow-dropdown);
 }
 
 .stx-suggestions-wrapper {
@@ -121,7 +140,7 @@
 
   padding: 12px 12px 4px;
 
-  color: #666;
+  color: color-mix(in srgb, var(--stx-color-text) 75%, black);
 
   font-family: inherit;
   font-size: 11px;
@@ -140,7 +159,7 @@
 
   background: transparent;
 
-  color: #222;
+  color: var(--stx-color-text);
   text-decoration: none;
 
   font-family: inherit;
@@ -154,7 +173,7 @@
 .stx-suggestion__item:hover,
 .stx-suggestion__item:focus,
 .stx-suggestion__item.is-active {
-  background: #f5f5f5;
+  background: color-mix(in srgb, var(--stx-color-background) 80%, #000);
 }
 
 .stx-suggestion__item:focus {
@@ -162,7 +181,7 @@
 }
 
 .stx-suggestion__item.is-active {
-  outline: 1px solid #ddd;
+  outline: 1px solid var(--stx-color-border);
   outline-offset: -1px;
 }
 

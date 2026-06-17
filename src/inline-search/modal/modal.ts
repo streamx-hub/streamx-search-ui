@@ -7,9 +7,7 @@ const createSearchModal = (config: Modal) => {
   const { element: queryInput, inputEl } = creatQueryInput(config.input);
 
   const dialogEl = html`
-    <dialog class="stx-search-modal">
-      ${queryInput}
-    </dialog>
+    <dialog class="stx-search-modal">${queryInput}</dialog>
   ` as HTMLDialogElement;
 
   let restoreFocus: (() => void) | null;

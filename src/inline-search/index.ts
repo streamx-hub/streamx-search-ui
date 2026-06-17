@@ -1,6 +1,7 @@
-import type { Modal, ModalConfig } from "../types/config.js";
+import type { Modal, ModalConfig, QueryInputConfig } from "../types/config.js";
 import { createSearchModal } from "./modal/modal.js";
 import DEFAULT_CONFIG from "./default-config.js";
+import { creatQueryInput } from "../components/query-input/query-input.js";
 
 export type ModalData = {
   openModal: () => void;
@@ -44,7 +45,7 @@ const bootstrapModal = (config: Modal): ModalData => {
   };
 };
 
-export default function createSearchInModal(customConfig: ModalConfig) {
+export function createSearchInModal(customConfig: ModalConfig) {
   const config: Modal = {
     ...DEFAULT_CONFIG,
     ...customConfig,
@@ -52,7 +53,10 @@ export default function createSearchInModal(customConfig: ModalConfig) {
       ...DEFAULT_CONFIG.input,
       ...customConfig.input,
       labels: { ...DEFAULT_CONFIG.input.labels, ...customConfig.input.labels },
-      renderers: {...DEFAULT_CONFIG.input.renderers, ...customConfig.input.renderers}
+      renderers: {
+        ...DEFAULT_CONFIG.input.renderers,
+        ...customConfig.input.renderers,
+      },
     },
   };
 
@@ -78,5 +82,18 @@ export default function createSearchInModal(customConfig: ModalConfig) {
         }
       });
     }
+  }
+}
+
+export function createTextInput(
+  mountPoint: Element,
+  customConfig: QueryInputConfig,
+) {
+  const { element } = creatQueryInput(customConfig);
+
+  if (mountPoint.tagName === "INPUT") {
+    mountPoint.replaceWith(element);
+  } else {
+    mountPoint.append(element);
   }
 }
