@@ -19,32 +19,44 @@ const initSearchPage = async (mountPoint: Element) => {
     {
       id: "faqs",
       displayName: "Faqs",
-      dataSources: [],
+      results: {
+        dataSources: ["/src/assets/mocks/results-data.json"],
+      },
     },
     {
       id: "info",
       displayName: "Firm info",
-      dataSources: [],
+      results: {
+        dataSources: ["/src/assets/mocks/results-data.json"],
+      },
     },
     {
       id: "services",
       displayName: "Services & Solutions",
-      dataSources: [],
+      results: {
+        dataSources: ["/src/assets/mocks/results-data.json"],
+      },
     },
     {
       id: "insights",
       displayName: "Insights & Resources",
-      dataSources: [],
+      results: {
+        dataSources: ["/src/assets/mocks/results-data.json"],
+      },
     },
     {
       id: "econ",
       displayName: "Econ blog",
-      dataSources: [],
+      results: {
+        dataSources: ["/src/assets/mocks/results-data.json"],
+      },
     },
     {
       id: "tech",
       displayName: "Tech blog",
-      dataSources: [],
+      results: {
+        dataSources: ["/src/assets/mocks/results-data.json"],
+      },
     },
   ];
 

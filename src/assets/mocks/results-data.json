@@ -1,0 +1,3497 @@
+{
+    "took": 9,
+    "timed_out": false,
+    "hits": {
+        "total": {
+            "value": 6449,
+            "relation": "eq"
+        },
+        "max_score": 0.0,
+        "hits": [
+            {
+                "_id": "puresight_product:2092",
+                "_score": 0.0,
+                "_source": {
+                    "payload": {
+                        "quantity": 97,
+                        "primaryImage": {
+                            "alt": "Rivet Bristol Natural Edge Black Metal Side Table",
+                            "url": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                        },
+                        "ft_material": [
+                            "Metal"
+                        ],
+                        "description": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut\r\napril",
+                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                        "variants": [],
+                        "ingested": "2026-05-29T20:29:30.635+0000",
+                        "ft_type": [
+                            "Table"
+                        ],
+                        "price": {
+                            "discountedValue": 3,
+                            "value": 3
+                        },
+                        "ft_brand": [
+                            "Movian"
+                        ],
+                        "name": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                        "attributes": [
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "meta_title",
+                                "label": "Meta Title",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "meta_description",
+                                "label": "Meta Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg",
+                                        "value": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                                    }
+                                ],
+                                "name": "small_image",
+                                "label": "Small",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg",
+                                        "value": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                                    }
+                                ],
+                                "name": "thumbnail",
+                                "label": "Thumbnail",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "product-full-width",
+                                        "value": "product-full-width"
+                                    }
+                                ],
+                                "name": "page_layout",
+                                "label": "Layout",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table"
+                                    }
+                                ],
+                                "name": "image_label",
+                                "label": "Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table"
+                                    }
+                                ],
+                                "name": "small_image_label",
+                                "label": "Small Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table"
+                                    }
+                                ],
+                                "name": "thumbnail_label",
+                                "label": "Thumbnail Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "PL",
+                                        "value": "PL"
+                                    }
+                                ],
+                                "name": "country_of_manufacture",
+                                "label": "Country of Manufacture",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "rivet-bristol-natural-edge-black-metal-side-table-walnut-b072zlcb3m",
+                                        "value": "rivet-bristol-natural-edge-black-metal-side-table-walnut-b072zlcb3m"
+                                    }
+                                ],
+                                "name": "url_key",
+                                "label": "URL Key",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Use config",
+                                        "value": "Use config"
+                                    }
+                                ],
+                                "name": "msrp_display_actual_price_type",
+                                "label": "Display Actual Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_message_available",
+                                "label": "Allow Gift Message",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "2",
+                                        "value": "2"
+                                    }
+                                ],
+                                "name": "is_returnable",
+                                "label": "Enable RMA",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "short_description",
+                                "label": "Short Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "meta_keyword",
+                                "label": "Meta Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Metal",
+                                        "value": "Metal"
+                                    }
+                                ],
+                                "name": "material",
+                                "label": "Material",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Table",
+                                        "value": "Table"
+                                    }
+                                ],
+                                "name": "type",
+                                "label": "Type",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Movian",
+                                        "value": "Movian"
+                                    }
+                                ],
+                                "name": "brand",
+                                "label": "Brand",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">With a wood top and metal 3-legged stand; this table is modern yet classic. The wood top is a \"natural edge\" cut. No two tables are exactly alike; allow for some height variation. This table is a handy landing spot for keys; phones and small table lamps.|18.9\"L x 18.9\"W x 18.2\"H|Engineered wood with walnut veneer; metal stand bottom|Modern yet classic|Convenient side table for living room or bedroom|Simple assembly in 15-30 minutes|Free returns for 30 days. 1-year warranty.\r\n</div>",
+                                        "value": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">With a wood top and metal 3-legged stand; this table is modern yet classic. The wood top is a \"natural edge\" cut. No two tables are exactly alike; allow for some height variation. This table is a handy landing spot for keys; phones and small table lamps.|18.9\"L x 18.9\"W x 18.2\"H|Engineered wood with walnut veneer; metal stand bottom|Modern yet classic|Convenient side table for living room or bedroom|Simple assembly in 15-30 minutes|Free returns for 30 days. 1-year warranty.\r\n</div>"
+                                    }
+                                ],
+                                "name": "bullet_points",
+                                "label": "Bullet points",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Brown|White side table|End table|Night stand|Gold side table|Accent table|Side table for bedroom|Chairside table|End tables|Mid century|Side tables for small spaces|Nightstand|Side tables living room|End-tables|Modern|Round side table|Side table|Console table|Black side table|Rivet|Coffee table|Sofa table|End tables living room|Bedside table",
+                                        "value": "Brown|White side table|End table|Night stand|Gold side table|Accent table|Side table for bedroom|Chairside table|End tables|Mid century|Side tables for small spaces|Nightstand|Side tables living room|End-tables|Modern|Round side table|Side table|Console table|Black side table|Rivet|Coffee table|Sofa table|End tables living room|Bedside table"
+                                    }
+                                ],
+                                "name": "keywords",
+                                "label": "Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "8.510000",
+                                        "value": "8.510000"
+                                    }
+                                ],
+                                "name": "special_price",
+                                "label": "Special Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "14.740000",
+                                        "value": "14.740000"
+                                    }
+                                ],
+                                "name": "weight",
+                                "label": "Weight",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.900000",
+                                        "value": "18.900000"
+                                    }
+                                ],
+                                "name": "length",
+                                "label": "Length",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.200000",
+                                        "value": "18.200000"
+                                    }
+                                ],
+                                "name": "width",
+                                "label": "Width",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.900000",
+                                        "value": "18.900000"
+                                    }
+                                ],
+                                "name": "height",
+                                "label": "Height",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "swatch": {
+                                            "type": "color",
+                                            "value": "#945454"
+                                        },
+                                        "label": "Brown",
+                                        "value": "Brown"
+                                    }
+                                ],
+                                "name": "color",
+                                "label": "Color",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Enabled",
+                                        "value": "Enabled"
+                                    }
+                                ],
+                                "name": "status",
+                                "label": "Enable Product",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Catalog, Search",
+                                        "value": "Catalog, Search"
+                                    }
+                                ],
+                                "name": "visibility",
+                                "label": "Visibility",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Taxable Goods",
+                                        "value": "Taxable Goods"
+                                    }
+                                ],
+                                "name": "tax_class_id",
+                                "label": "Tax Class",
+                                "isFacet": false
+                            }
+                        ],
+                        "id": "2092",
+                        "categories": [
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "name": "Root Catalog",
+                                        "id": "1",
+                                        "label": "Root Catalog",
+                                        "slug": "root-catalog-1"
+                                    },
+                                    "name": "Default Category",
+                                    "id": "2",
+                                    "label": "Default Category",
+                                    "slug": "default-category-2"
+                                },
+                                "name": "Furniture",
+                                "id": "42",
+                                "label": "Furniture",
+                                "slug": "furniture-42"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Living Room Furniture",
+                                "id": "43",
+                                "label": "Living Room Furniture",
+                                "slug": "living-room-furniture-43"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "name": "Root Catalog",
+                                                "id": "1",
+                                                "label": "Root Catalog",
+                                                "slug": "root-catalog-1"
+                                            },
+                                            "name": "Default Category",
+                                            "id": "2",
+                                            "label": "Default Category",
+                                            "slug": "default-category-2"
+                                        },
+                                        "name": "Furniture",
+                                        "id": "42",
+                                        "label": "Furniture",
+                                        "slug": "furniture-42"
+                                    },
+                                    "name": "Living Room Furniture",
+                                    "id": "43",
+                                    "label": "Living Room Furniture",
+                                    "slug": "living-room-furniture-43"
+                                },
+                                "name": "Tables",
+                                "id": "44",
+                                "label": "Tables",
+                                "slug": "tables-44"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "parent": {
+                                                    "name": "Root Catalog",
+                                                    "id": "1",
+                                                    "label": "Root Catalog",
+                                                    "slug": "root-catalog-1"
+                                                },
+                                                "name": "Default Category",
+                                                "id": "2",
+                                                "label": "Default Category",
+                                                "slug": "default-category-2"
+                                            },
+                                            "name": "Furniture",
+                                            "id": "42",
+                                            "label": "Furniture",
+                                            "slug": "furniture-42"
+                                        },
+                                        "name": "Living Room Furniture",
+                                        "id": "43",
+                                        "label": "Living Room Furniture",
+                                        "slug": "living-room-furniture-43"
+                                    },
+                                    "name": "Tables",
+                                    "id": "44",
+                                    "label": "Tables",
+                                    "slug": "tables-44"
+                                },
+                                "name": "End Tables",
+                                "id": "45",
+                                "label": "End Tables",
+                                "slug": "end-tables-45"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Accent Furniture",
+                                "id": "54",
+                                "label": "Accent Furniture",
+                                "slug": "accent-furniture-54"
+                            }
+                        ],
+                        "sku": "B072ZLCB3M",
+                        "lang": "en",
+                        "ft_color": [
+                            "Brown"
+                        ],
+                        "category": [
+                            "End Tables",
+                            "Living Room Furniture",
+                            "Tables",
+                            "Furniture",
+                            "Accent Furniture"
+                        ],
+                        "slug": "rivet-bristol-natural-edge-black-metal-side-table-walnut-2092",
+                        "gallery": [
+                            {
+                                "alt": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                "url": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1odfc9ihhl_sh0hfqop8ca1iknn.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91a-ncul3fl_uqp5lppp7tj9jwmt.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81d0vezjm9l_mz5g9ylfr0sp7k3i.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1ukma6uhil_auouprpbngbhwnnz.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/7/1/71-2zou-hdl_dx9p6gaogbnflnwb.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1tsz82lxrl_lwqpdcrpqpkzkjk1.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91sqrjfhrnl_lsx3tfezqcfa22dg.jpg"
+                            }
+                        ]
+                    },
+                    "namespace": "puresight_product",
+                    "type": "product/simple"
+                }
+            },
+            {
+                "_id": "puresight_china_store_view_product:2092",
+                "_score": 0.0,
+                "_source": {
+                    "payload": {
+                        "quantity": 97,
+                        "primaryImage": {
+                            "alt": "Rivet Bristol Natural Edge Black Metal Side Table",
+                            "url": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                        },
+                        "ft_material": [
+                            "Metal"
+                        ],
+                        "description": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut August Edition v2",
+                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                        "variants": [],
+                        "ingested": "2026-05-29T20:29:30.649+0000",
+                        "ft_type": [
+                            "Table"
+                        ],
+                        "price": {
+                            "discountedValue": 3,
+                            "value": 3
+                        },
+                        "ft_brand": [
+                            "Movian"
+                        ],
+                        "name": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                        "attributes": [
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "meta_title",
+                                "label": "Meta Title",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "meta_description",
+                                "label": "Meta Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg",
+                                        "value": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                                    }
+                                ],
+                                "name": "small_image",
+                                "label": "Small",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg",
+                                        "value": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                                    }
+                                ],
+                                "name": "thumbnail",
+                                "label": "Thumbnail",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "product-full-width",
+                                        "value": "product-full-width"
+                                    }
+                                ],
+                                "name": "page_layout",
+                                "label": "Layout",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table"
+                                    }
+                                ],
+                                "name": "image_label",
+                                "label": "Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table"
+                                    }
+                                ],
+                                "name": "small_image_label",
+                                "label": "Small Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table"
+                                    }
+                                ],
+                                "name": "thumbnail_label",
+                                "label": "Thumbnail Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "rivet-bristol-natural-edge-black-metal-side-table-walnut-b072zlcb3m",
+                                        "value": "rivet-bristol-natural-edge-black-metal-side-table-walnut-b072zlcb3m"
+                                    }
+                                ],
+                                "name": "url_key",
+                                "label": "URL Key",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Use config",
+                                        "value": "Use config"
+                                    }
+                                ],
+                                "name": "msrp_display_actual_price_type",
+                                "label": "Display Actual Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_message_available",
+                                "label": "Allow Gift Message",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "2",
+                                        "value": "2"
+                                    }
+                                ],
+                                "name": "is_returnable",
+                                "label": "Enable RMA",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "<p>Rivet Bristol Natural Edge Black Metal Side Table, Walnut August Edition v2</p>",
+                                        "value": "<p>Rivet Bristol Natural Edge Black Metal Side Table, Walnut August Edition v2</p>"
+                                    }
+                                ],
+                                "name": "short_description",
+                                "label": "Short Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+                                        "value": "Rivet Bristol Natural Edge Black Metal Side Table, Walnut"
+                                    }
+                                ],
+                                "name": "meta_keyword",
+                                "label": "Meta Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Metal",
+                                        "value": "Metal"
+                                    }
+                                ],
+                                "name": "material",
+                                "label": "Material",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Table",
+                                        "value": "Table"
+                                    }
+                                ],
+                                "name": "type",
+                                "label": "Type",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Movian",
+                                        "value": "Movian"
+                                    }
+                                ],
+                                "name": "brand",
+                                "label": "Brand",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "With a wood top and metal 3-legged stand; this table is modern yet classic. The wood top is a \"natural edge\" cut. No two tables are exactly alike; allow for some height variation. This table is a handy landing spot for keys; phones and small table lamps.|18.9\"L x 18.9\"W x 18.2\"H|Engineered wood with walnut veneer; metal stand bottom|Modern yet classic|Convenient side table for living room or bedroom|Simple assembly in 15-30 minutes|Free returns for 30 days. 1-year warranty.",
+                                        "value": "With a wood top and metal 3-legged stand; this table is modern yet classic. The wood top is a \"natural edge\" cut. No two tables are exactly alike; allow for some height variation. This table is a handy landing spot for keys; phones and small table lamps.|18.9\"L x 18.9\"W x 18.2\"H|Engineered wood with walnut veneer; metal stand bottom|Modern yet classic|Convenient side table for living room or bedroom|Simple assembly in 15-30 minutes|Free returns for 30 days. 1-year warranty."
+                                    }
+                                ],
+                                "name": "bullet_points",
+                                "label": "Bullet points",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Brown|White side table|End table|Night stand|Gold side table|Accent table|Side table for bedroom|Chairside table|End tables|Mid century|Side tables for small spaces|Nightstand|Side tables living room|End-tables|Modern|Round side table|Side table|Console table|Black side table|Rivet|Coffee table|Sofa table|End tables living room|Bedside table",
+                                        "value": "Brown|White side table|End table|Night stand|Gold side table|Accent table|Side table for bedroom|Chairside table|End tables|Mid century|Side tables for small spaces|Nightstand|Side tables living room|End-tables|Modern|Round side table|Side table|Console table|Black side table|Rivet|Coffee table|Sofa table|End tables living room|Bedside table"
+                                    }
+                                ],
+                                "name": "keywords",
+                                "label": "Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "8.510000",
+                                        "value": "8.510000"
+                                    }
+                                ],
+                                "name": "special_price",
+                                "label": "Special Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "14.740000",
+                                        "value": "14.740000"
+                                    }
+                                ],
+                                "name": "weight",
+                                "label": "Weight",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.900000",
+                                        "value": "18.900000"
+                                    }
+                                ],
+                                "name": "length",
+                                "label": "Length",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.200000",
+                                        "value": "18.200000"
+                                    }
+                                ],
+                                "name": "width",
+                                "label": "Width",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.900000",
+                                        "value": "18.900000"
+                                    }
+                                ],
+                                "name": "height",
+                                "label": "Height",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "swatch": {
+                                            "type": "color",
+                                            "value": "#945454"
+                                        },
+                                        "label": "Brown",
+                                        "value": "Brown"
+                                    }
+                                ],
+                                "name": "color",
+                                "label": "Color",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Enabled",
+                                        "value": "Enabled"
+                                    }
+                                ],
+                                "name": "status",
+                                "label": "Enable Product",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Catalog, Search",
+                                        "value": "Catalog, Search"
+                                    }
+                                ],
+                                "name": "visibility",
+                                "label": "Visibility",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Taxable Goods",
+                                        "value": "Taxable Goods"
+                                    }
+                                ],
+                                "name": "tax_class_id",
+                                "label": "Tax Class",
+                                "isFacet": false
+                            }
+                        ],
+                        "id": "2092",
+                        "categories": [
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "name": "Root Catalog",
+                                        "id": "1",
+                                        "label": "Root Catalog",
+                                        "slug": "root-catalog-1"
+                                    },
+                                    "name": "Default Category",
+                                    "id": "2",
+                                    "label": "Default Category",
+                                    "slug": "default-category-2"
+                                },
+                                "name": "Furniture",
+                                "id": "42",
+                                "label": "Furniture",
+                                "slug": "furniture-42"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Living Room Furniture",
+                                "id": "43",
+                                "label": "Living Room Furniture",
+                                "slug": "living-room-furniture-43"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "name": "Root Catalog",
+                                                "id": "1",
+                                                "label": "Root Catalog",
+                                                "slug": "root-catalog-1"
+                                            },
+                                            "name": "Default Category",
+                                            "id": "2",
+                                            "label": "Default Category",
+                                            "slug": "default-category-2"
+                                        },
+                                        "name": "Furniture",
+                                        "id": "42",
+                                        "label": "Furniture",
+                                        "slug": "furniture-42"
+                                    },
+                                    "name": "Living Room Furniture",
+                                    "id": "43",
+                                    "label": "Living Room Furniture",
+                                    "slug": "living-room-furniture-43"
+                                },
+                                "name": "Tables",
+                                "id": "44",
+                                "label": "Tables",
+                                "slug": "tables-44"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "parent": {
+                                                    "name": "Root Catalog",
+                                                    "id": "1",
+                                                    "label": "Root Catalog",
+                                                    "slug": "root-catalog-1"
+                                                },
+                                                "name": "Default Category",
+                                                "id": "2",
+                                                "label": "Default Category",
+                                                "slug": "default-category-2"
+                                            },
+                                            "name": "Furniture",
+                                            "id": "42",
+                                            "label": "Furniture",
+                                            "slug": "furniture-42"
+                                        },
+                                        "name": "Living Room Furniture",
+                                        "id": "43",
+                                        "label": "Living Room Furniture",
+                                        "slug": "living-room-furniture-43"
+                                    },
+                                    "name": "Tables",
+                                    "id": "44",
+                                    "label": "Tables",
+                                    "slug": "tables-44"
+                                },
+                                "name": "End Tables",
+                                "id": "45",
+                                "label": "End Tables",
+                                "slug": "end-tables-45"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Accent Furniture",
+                                "id": "54",
+                                "label": "Accent Furniture",
+                                "slug": "accent-furniture-54"
+                            }
+                        ],
+                        "sku": "B072ZLCB3M",
+                        "lang": "en",
+                        "ft_color": [
+                            "Brown"
+                        ],
+                        "category": [
+                            "End Tables",
+                            "Living Room Furniture",
+                            "Tables",
+                            "Furniture",
+                            "Accent Furniture"
+                        ],
+                        "slug": "rivet-bristol-natural-edge-black-metal-side-table-walnut-2092",
+                        "gallery": [
+                            {
+                                "alt": "Rivet Bristol Natural Edge Black Metal Side Table",
+                                "url": "/media/catalog/product/8/1/81xhyzvd1l_azsd6ipktoid3ahc.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1odfc9ihhl_sh0hfqop8ca1iknn.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91a-ncul3fl_uqp5lppp7tj9jwmt.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81d0vezjm9l_mz5g9ylfr0sp7k3i.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1ukma6uhil_auouprpbngbhwnnz.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/7/1/71-2zou-hdl_dx9p6gaogbnflnwb.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1tsz82lxrl_lwqpdcrpqpkzkjk1.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91sqrjfhrnl_lsx3tfezqcfa22dg.jpg"
+                            }
+                        ]
+                    },
+                    "namespace": "puresight_china_store_view_product",
+                    "type": "product/simple"
+                }
+            },
+            {
+                "_id": "puresight_china_store_view_product:2097",
+                "_score": 0.0,
+                "_source": {
+                    "payload": {
+                        "quantity": 100,
+                        "primaryImage": {
+                            "alt": "Lift-Top Storage Coffee Table",
+                            "url": "/media/catalog/product/8/1/812iuvjn3zl_uslxnfrx1gsfguub.jpg"
+                        },
+                        "ft_material": [
+                            "Wood"
+                        ],
+                        "description": "Lift-Top Storage Coffee Table, Natural",
+                        "label": "Lift-Top Storage Coffee Table, Natural",
+                        "variants": [],
+                        "ingested": "2026-05-29T20:29:30.706+0000",
+                        "ft_type": [
+                            "Table"
+                        ],
+                        "price": {
+                            "discountedValue": 10.76,
+                            "value": 10.76
+                        },
+                        "ft_brand": [
+                            "AmazonBasics"
+                        ],
+                        "name": "Lift-Top Storage Coffee Table, Natural",
+                        "attributes": [
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "meta_title",
+                                "label": "Meta Title",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "meta_description",
+                                "label": "Meta Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/8/1/812iuvjn3zl_uslxnfrx1gsfguub.jpg",
+                                        "value": "/media/catalog/product/8/1/812iuvjn3zl_uslxnfrx1gsfguub.jpg"
+                                    }
+                                ],
+                                "name": "small_image",
+                                "label": "Small",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/8/1/812iuvjn3zl_uslxnfrx1gsfguub.jpg",
+                                        "value": "/media/catalog/product/8/1/812iuvjn3zl_uslxnfrx1gsfguub.jpg"
+                                    }
+                                ],
+                                "name": "thumbnail",
+                                "label": "Thumbnail",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "product-full-width",
+                                        "value": "product-full-width"
+                                    }
+                                ],
+                                "name": "page_layout",
+                                "label": "Layout",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "image_label",
+                                "label": "Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "small_image_label",
+                                "label": "Small Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "thumbnail_label",
+                                "label": "Thumbnail Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "lift-top-storage-coffee-table-natural-b07j1yw3yt",
+                                        "value": "lift-top-storage-coffee-table-natural-b07j1yw3yt"
+                                    }
+                                ],
+                                "name": "url_key",
+                                "label": "URL Key",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Use config",
+                                        "value": "Use config"
+                                    }
+                                ],
+                                "name": "msrp_display_actual_price_type",
+                                "label": "Display Actual Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_message_available",
+                                "label": "Allow Gift Message",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "2",
+                                        "value": "2"
+                                    }
+                                ],
+                                "name": "is_returnable",
+                                "label": "Enable RMA",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "short_description",
+                                "label": "Short Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Lift-Top Storage Coffee Table, Natural",
+                                        "value": "Lift-Top Storage Coffee Table, Natural"
+                                    }
+                                ],
+                                "name": "meta_keyword",
+                                "label": "Meta Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Wood",
+                                        "value": "Wood"
+                                    }
+                                ],
+                                "name": "material",
+                                "label": "Material",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Table",
+                                        "value": "Table"
+                                    }
+                                ],
+                                "name": "type",
+                                "label": "Type",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "AmazonBasics",
+                                        "value": "AmazonBasics"
+                                    }
+                                ],
+                                "name": "brand",
+                                "label": "Brand",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Coffee table with top that lifts to create a sturdy; raised work surface; ideal for a living room; family room; or office|Hidden storage space beneath the lift-up top—plenty of room for a throw blanket; remote controls; board games; and more|Made of sturdy wood with a Natural finish; finished on all sides; which allows for versatile placement|Open shelves below offer added storage and display space|Measures 40 by 18 by 19 inches (LxWxH); weighs 39 pounds; backed by an AmazonBasics 1-year limited warranty",
+                                        "value": "Coffee table with top that lifts to create a sturdy; raised work surface; ideal for a living room; family room; or office|Hidden storage space beneath the lift-up top—plenty of room for a throw blanket; remote controls; board games; and more|Made of sturdy wood with a Natural finish; finished on all sides; which allows for versatile placement|Open shelves below offer added storage and display space|Measures 40 by 18 by 19 inches (LxWxH); weighs 39 pounds; backed by an AmazonBasics 1-year limited warranty"
+                                    }
+                                ],
+                                "name": "bullet_points",
+                                "label": "Bullet points",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Laguna|Antique|Set|Entertainment|Sauder|Wheels|Brass|Glass|Cocktail|Rustic|Furniture|Metal|Stone|Modern|Ottoman|Centro|Oval|Tables|Round|Books|Chandler|Home|De|Tv|Hillsdale|Small|Decor|Mid|Songmics|Couch|Pop|Tea|Stand|Game|Farmhouse|Reclaimed|Country|T100|Up|Edge|Coffe|Crystal|Fireplace",
+                                        "value": "Laguna|Antique|Set|Entertainment|Sauder|Wheels|Brass|Glass|Cocktail|Rustic|Furniture|Metal|Stone|Modern|Ottoman|Centro|Oval|Tables|Round|Books|Chandler|Home|De|Tv|Hillsdale|Small|Decor|Mid|Songmics|Couch|Pop|Tea|Stand|Game|Farmhouse|Reclaimed|Country|T100|Up|Edge|Coffe|Crystal|Fireplace"
+                                    }
+                                ],
+                                "name": "keywords",
+                                "label": "Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "9.150000",
+                                        "value": "9.150000"
+                                    }
+                                ],
+                                "name": "special_price",
+                                "label": "Special Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "39.000000",
+                                        "value": "39.000000"
+                                    }
+                                ],
+                                "name": "weight",
+                                "label": "Weight",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "40.000000",
+                                        "value": "40.000000"
+                                    }
+                                ],
+                                "name": "length",
+                                "label": "Length",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "19.000000",
+                                        "value": "19.000000"
+                                    }
+                                ],
+                                "name": "width",
+                                "label": "Width",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "18.000000",
+                                        "value": "18.000000"
+                                    }
+                                ],
+                                "name": "height",
+                                "label": "Height",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "swatch": {
+                                            "type": "color",
+                                            "value": "#f5deb3"
+                                        },
+                                        "label": "Natural",
+                                        "value": "Natural"
+                                    }
+                                ],
+                                "name": "color",
+                                "label": "Color",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Enabled",
+                                        "value": "Enabled"
+                                    }
+                                ],
+                                "name": "status",
+                                "label": "Enable Product",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Catalog, Search",
+                                        "value": "Catalog, Search"
+                                    }
+                                ],
+                                "name": "visibility",
+                                "label": "Visibility",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Taxable Goods",
+                                        "value": "Taxable Goods"
+                                    }
+                                ],
+                                "name": "tax_class_id",
+                                "label": "Tax Class",
+                                "isFacet": false
+                            }
+                        ],
+                        "id": "2097",
+                        "categories": [
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "name": "Root Catalog",
+                                        "id": "1",
+                                        "label": "Root Catalog",
+                                        "slug": "root-catalog-1"
+                                    },
+                                    "name": "Default Category",
+                                    "id": "2",
+                                    "label": "Default Category",
+                                    "slug": "default-category-2"
+                                },
+                                "name": "Furniture",
+                                "id": "42",
+                                "label": "Furniture",
+                                "slug": "furniture-42"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Living Room Furniture",
+                                "id": "43",
+                                "label": "Living Room Furniture",
+                                "slug": "living-room-furniture-43"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "name": "Root Catalog",
+                                                "id": "1",
+                                                "label": "Root Catalog",
+                                                "slug": "root-catalog-1"
+                                            },
+                                            "name": "Default Category",
+                                            "id": "2",
+                                            "label": "Default Category",
+                                            "slug": "default-category-2"
+                                        },
+                                        "name": "Furniture",
+                                        "id": "42",
+                                        "label": "Furniture",
+                                        "slug": "furniture-42"
+                                    },
+                                    "name": "Living Room Furniture",
+                                    "id": "43",
+                                    "label": "Living Room Furniture",
+                                    "slug": "living-room-furniture-43"
+                                },
+                                "name": "Tables",
+                                "id": "44",
+                                "label": "Tables",
+                                "slug": "tables-44"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "parent": {
+                                                    "name": "Root Catalog",
+                                                    "id": "1",
+                                                    "label": "Root Catalog",
+                                                    "slug": "root-catalog-1"
+                                                },
+                                                "name": "Default Category",
+                                                "id": "2",
+                                                "label": "Default Category",
+                                                "slug": "default-category-2"
+                                            },
+                                            "name": "Furniture",
+                                            "id": "42",
+                                            "label": "Furniture",
+                                            "slug": "furniture-42"
+                                        },
+                                        "name": "Living Room Furniture",
+                                        "id": "43",
+                                        "label": "Living Room Furniture",
+                                        "slug": "living-room-furniture-43"
+                                    },
+                                    "name": "Tables",
+                                    "id": "44",
+                                    "label": "Tables",
+                                    "slug": "tables-44"
+                                },
+                                "name": "Coffee Tables",
+                                "id": "61",
+                                "label": "Coffee Tables",
+                                "slug": "coffee-tables-61"
+                            }
+                        ],
+                        "sku": "B07J1YW3YT",
+                        "lang": "en",
+                        "ft_color": [
+                            "Natural"
+                        ],
+                        "category": [
+                            "Coffee Tables",
+                            "Living Room Furniture",
+                            "Tables",
+                            "Furniture"
+                        ],
+                        "slug": "lift-top-storage-coffee-table-natural-2097",
+                        "gallery": [
+                            {
+                                "alt": "Lift-Top Storage Coffee Table",
+                                "url": "/media/catalog/product/8/1/812iuvjn3zl_uslxnfrx1gsfguub.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81bod9zz4fl_6a4x9q2nfnh0esqe.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81d6ntej9sl_0qy2lrzssys4umdt.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/6/1/61r4xgi4pl_inrdgpbfw46qixdi.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81v7w1t-oil_oudzukciplufimte.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91z2wj6oynl_ovxtrdxaxvtgvomr.jpg"
+                            }
+                        ]
+                    },
+                    "namespace": "puresight_china_store_view_product",
+                    "type": "product/simple"
+                }
+            },
+            {
+                "_id": "puresight_product:2101",
+                "_score": 0.0,
+                "_source": {
+                    "payload": {
+                        "quantity": 100,
+                        "primaryImage": {
+                            "alt": "Rivet Ian Modern Wood Dining Kitchen Chairs",
+                            "url": "/media/catalog/product/9/1/91x2wvleihl_xctuswwayljr7lg6.jpg"
+                        },
+                        "ft_material": [
+                            "Wood"
+                        ],
+                        "description": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey, Test",
+                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey",
+                        "variants": [],
+                        "ingested": "2026-05-29T20:29:30.719+0000",
+                        "ft_type": [
+                            "Chair"
+                        ],
+                        "price": {
+                            "discountedValue": 12.72,
+                            "value": 12.72
+                        },
+                        "ft_brand": [
+                            "Rivet"
+                        ],
+                        "name": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey",
+                        "attributes": [
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey"
+                                    }
+                                ],
+                                "name": "meta_title",
+                                "label": "Meta Title",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey"
+                                    }
+                                ],
+                                "name": "meta_description",
+                                "label": "Meta Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/9/1/91x2wvleihl_xctuswwayljr7lg6.jpg",
+                                        "value": "/media/catalog/product/9/1/91x2wvleihl_xctuswwayljr7lg6.jpg"
+                                    }
+                                ],
+                                "name": "small_image",
+                                "label": "Small",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/9/1/91x2wvleihl_xctuswwayljr7lg6.jpg",
+                                        "value": "/media/catalog/product/9/1/91x2wvleihl_xctuswwayljr7lg6.jpg"
+                                    }
+                                ],
+                                "name": "thumbnail",
+                                "label": "Thumbnail",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "product-full-width",
+                                        "value": "product-full-width"
+                                    }
+                                ],
+                                "name": "page_layout",
+                                "label": "Layout",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs"
+                                    }
+                                ],
+                                "name": "image_label",
+                                "label": "Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs"
+                                    }
+                                ],
+                                "name": "small_image_label",
+                                "label": "Small Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs"
+                                    }
+                                ],
+                                "name": "thumbnail_label",
+                                "label": "Thumbnail Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "rivet-ian-modern-wood-dining-kitchen-chairs-33-inch-height-set-of-2-grey-b07btrtc76",
+                                        "value": "rivet-ian-modern-wood-dining-kitchen-chairs-33-inch-height-set-of-2-grey-b07btrtc76"
+                                    }
+                                ],
+                                "name": "url_key",
+                                "label": "URL Key",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Use config",
+                                        "value": "Use config"
+                                    }
+                                ],
+                                "name": "msrp_display_actual_price_type",
+                                "label": "Display Actual Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_message_available",
+                                "label": "Allow Gift Message",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_wrapping_available",
+                                "label": "Allow Gift Wrapping",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "2",
+                                        "value": "2"
+                                    }
+                                ],
+                                "name": "is_returnable",
+                                "label": "Enable RMA",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey"
+                                    }
+                                ],
+                                "name": "short_description",
+                                "label": "Short Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey",
+                                        "value": "Rivet Ian Modern Wood Dining Kitchen Chairs, 33 Inch Height, Set of 2, Grey"
+                                    }
+                                ],
+                                "name": "meta_keyword",
+                                "label": "Meta Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Wood",
+                                        "value": "Wood"
+                                    }
+                                ],
+                                "name": "material",
+                                "label": "Material",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Chair",
+                                        "value": "Chair"
+                                    }
+                                ],
+                                "name": "type",
+                                "label": "Type",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet",
+                                        "value": "Rivet"
+                                    }
+                                ],
+                                "name": "brand",
+                                "label": "Brand",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Hints of mid-century; including sloping armless sides and a tall curved back; combine with traditional fabric for a transitional style that will blend with a variety of décor. Quality materials and construction make this chair sturdy and stable.|19\"W x 24\"D x 33\"H; Seat Height: 18\"H ; Seat Depth: 18\"D; Seat Back Height: 15.25\"H|Sturdy hardwood frame and legs with performance fabric|Assemble in 30 minutes or less; just bolt on legs|Free returns for 30 days. 1-year warranty.</div>",
+                                        "value": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Hints of mid-century; including sloping armless sides and a tall curved back; combine with traditional fabric for a transitional style that will blend with a variety of décor. Quality materials and construction make this chair sturdy and stable.|19\"W x 24\"D x 33\"H; Seat Height: 18\"H ; Seat Depth: 18\"D; Seat Back Height: 15.25\"H|Sturdy hardwood frame and legs with performance fabric|Assemble in 30 minutes or less; just bolt on legs|Free returns for 30 days. 1-year warranty.</div>"
+                                    }
+                                ],
+                                "name": "bullet_points",
+                                "label": "Bullet points",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Dining chair|Gray|Dining chairs set of 4|Chair|Dining room chairs|Accent chair|Mid century|Modern|Chairs|Kitchen chairs|Dining chairs|Dining table set|Rivet|Dining-chairs|Dining chair; upholstered|Accent chair set of 2</div>",
+                                        "value": "<div data-content-type=\"html\" data-appearance=\"default\" data-element=\"main\">Dining chair|Gray|Dining chairs set of 4|Chair|Dining room chairs|Accent chair|Mid century|Modern|Chairs|Kitchen chairs|Dining chairs|Dining table set|Rivet|Dining-chairs|Dining chair; upholstered|Accent chair set of 2</div>"
+                                    }
+                                ],
+                                "name": "keywords",
+                                "label": "Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "9.960000",
+                                        "value": "9.960000"
+                                    }
+                                ],
+                                "name": "special_price",
+                                "label": "Special Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "26.460000",
+                                        "value": "26.460000"
+                                    }
+                                ],
+                                "name": "weight",
+                                "label": "Weight",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "21.500000",
+                                        "value": "21.500000"
+                                    }
+                                ],
+                                "name": "length",
+                                "label": "Length",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "24.000000",
+                                        "value": "24.000000"
+                                    }
+                                ],
+                                "name": "width",
+                                "label": "Width",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "36.000000",
+                                        "value": "36.000000"
+                                    }
+                                ],
+                                "name": "height",
+                                "label": "Height",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "swatch": {
+                                            "type": "color",
+                                            "value": "#8f8f8f"
+                                        },
+                                        "label": "Gray",
+                                        "value": "Gray"
+                                    }
+                                ],
+                                "name": "color",
+                                "label": "Color",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Enabled",
+                                        "value": "Enabled"
+                                    }
+                                ],
+                                "name": "status",
+                                "label": "Enable Product",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Catalog, Search",
+                                        "value": "Catalog, Search"
+                                    }
+                                ],
+                                "name": "visibility",
+                                "label": "Visibility",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Taxable Goods",
+                                        "value": "Taxable Goods"
+                                    }
+                                ],
+                                "name": "tax_class_id",
+                                "label": "Tax Class",
+                                "isFacet": false
+                            }
+                        ],
+                        "id": "2101",
+                        "categories": [
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "name": "Root Catalog",
+                                        "id": "1",
+                                        "label": "Root Catalog",
+                                        "slug": "root-catalog-1"
+                                    },
+                                    "name": "Default Category",
+                                    "id": "2",
+                                    "label": "Default Category",
+                                    "slug": "default-category-2"
+                                },
+                                "name": "Furniture",
+                                "id": "42",
+                                "label": "Furniture",
+                                "slug": "furniture-42"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "name": "Root Catalog",
+                                                "id": "1",
+                                                "label": "Root Catalog",
+                                                "slug": "root-catalog-1"
+                                            },
+                                            "name": "Default Category",
+                                            "id": "2",
+                                            "label": "Default Category",
+                                            "slug": "default-category-2"
+                                        },
+                                        "name": "Furniture",
+                                        "id": "42",
+                                        "label": "Furniture",
+                                        "slug": "furniture-42"
+                                    },
+                                    "name": "Living Room Furniture",
+                                    "id": "43",
+                                    "label": "Living Room Furniture",
+                                    "slug": "living-room-furniture-43"
+                                },
+                                "name": "Chairs",
+                                "id": "56",
+                                "label": "Chairs",
+                                "slug": "chairs-56"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Kitchen & Dining Room Furniture",
+                                "id": "62",
+                                "label": "Kitchen & Dining Room Furniture",
+                                "slug": "kitchen-and-dining-room-furniture-62"
+                            }
+                        ],
+                        "sku": "B07BTRTC76",
+                        "lang": "en",
+                        "ft_color": [
+                            "Gray"
+                        ],
+                        "category": [
+                            "Chairs",
+                            "Furniture",
+                            "Kitchen & Dining Room Furniture"
+                        ],
+                        "slug": "rivet-ian-modern-wood-dining-kitchen-chairs-33-inch-height-set-of-2-grey-2101",
+                        "gallery": [
+                            {
+                                "alt": "Rivet Ian Modern Wood Dining Kitchen Chairs",
+                                "url": "/media/catalog/product/9/1/91x2wvleihl_xctuswwayljr7lg6.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1c9ap-jyfl_aljhfjsx4u764k1s.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1yg8cs5yhl_fgd7vp0p8xduqbt0.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/b/1/b1taokdnbes_vzmkbjqymkm3erdn.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91xthtlvwl_nq37z0wxeyykoapk.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/9118oxydhl_dcneypckbpqdyiv2.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91bs4efykfl_sswnndebm8oyagxm.jpg"
+                            }
+                        ]
+                    },
+                    "namespace": "puresight_product",
+                    "type": "product/simple"
+                }
+            },
+            {
+                "_id": "puresight_china_store_view_product:2094",
+                "_score": 0.0,
+                "_source": {
+                    "payload": {
+                        "quantity": 100,
+                        "primaryImage": {
+                            "alt": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                            "url": "/media/catalog/product/9/1/91udgka1eil_kfffppc1tdme7h99.jpg"
+                        },
+                        "ft_material": [
+                            "Polyurethane"
+                        ],
+                        "description": "Marowashere Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                        "variants": [],
+                        "ingested": "2026-05-29T20:29:30.730+0000",
+                        "ft_type": [
+                            "Chair"
+                        ],
+                        "price": {
+                            "discountedValue": 6.59,
+                            "value": 6.59
+                        },
+                        "ft_brand": [
+                            "Rivet"
+                        ],
+                        "name": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                        "attributes": [
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "meta_title",
+                                "label": "Meta Title",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "meta_description",
+                                "label": "Meta Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/9/1/91udgka1eil_kfffppc1tdme7h99.jpg",
+                                        "value": "/media/catalog/product/9/1/91udgka1eil_kfffppc1tdme7h99.jpg"
+                                    }
+                                ],
+                                "name": "small_image",
+                                "label": "Small",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/9/1/91udgka1eil_kfffppc1tdme7h99.jpg",
+                                        "value": "/media/catalog/product/9/1/91udgka1eil_kfffppc1tdme7h99.jpg"
+                                    }
+                                ],
+                                "name": "thumbnail",
+                                "label": "Thumbnail",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "product-full-width",
+                                        "value": "product-full-width"
+                                    }
+                                ],
+                                "name": "page_layout",
+                                "label": "Layout",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "image_label",
+                                "label": "Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "small_image_label",
+                                "label": "Small Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "thumbnail_label",
+                                "label": "Thumbnail Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "classic-faux-leather-extra-padded-recliner-chair-brown-renewed-b083h3wmt3",
+                                        "value": "classic-faux-leather-extra-padded-recliner-chair-brown-renewed-b083h3wmt3"
+                                    }
+                                ],
+                                "name": "url_key",
+                                "label": "URL Key",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Use config",
+                                        "value": "Use config"
+                                    }
+                                ],
+                                "name": "msrp_display_actual_price_type",
+                                "label": "Display Actual Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_message_available",
+                                "label": "Allow Gift Message",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "2",
+                                        "value": "2"
+                                    }
+                                ],
+                                "name": "is_returnable",
+                                "label": "Enable RMA",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "short_description",
+                                "label": "Short Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                        "value": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)"
+                                    }
+                                ],
+                                "name": "meta_keyword",
+                                "label": "Meta Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Polyurethane",
+                                        "value": "Polyurethane"
+                                    }
+                                ],
+                                "name": "material",
+                                "label": "Material",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Chair",
+                                        "value": "Chair"
+                                    }
+                                ],
+                                "name": "type",
+                                "label": "Type",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet",
+                                        "value": "Rivet"
+                                    }
+                                ],
+                                "name": "brand",
+                                "label": "Brand",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Classic-style chair with lever reclining mechanism|Slim design; perfect for smaller living spaces|Hand-lever reclining feature offers smooth; easy operation|Overstuffed; generously padded seat and back; arm rests; and foot rest|Faux leather upholstery provides a luxurious look with added durability",
+                                        "value": "Classic-style chair with lever reclining mechanism|Slim design; perfect for smaller living spaces|Hand-lever reclining feature offers smooth; easy operation|Overstuffed; generously padded seat and back; arm rests; and foot rest|Faux leather upholstery provides a luxurious look with added durability"
+                                    }
+                                ],
+                                "name": "bullet_points",
+                                "label": "Bullet points",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Sale|Reclinables|Prime|Glider|Rocker|Furniture|Nursery|Nhi|Sales|Chairs|La|Reclinable|Under|Z|Homestretch|Dollars|Gray|Sillones|Small|Express|Lane|People|Chocolate|Boy|Boxberg|Overstuffed|Lazy|200|Microfiber|Rocking|Cover|Recliners|Swivel|Ashley|Power|On",
+                                        "value": "Sale|Reclinables|Prime|Glider|Rocker|Furniture|Nursery|Nhi|Sales|Chairs|La|Reclinable|Under|Z|Homestretch|Dollars|Gray|Sillones|Small|Express|Lane|People|Chocolate|Boy|Boxberg|Overstuffed|Lazy|200|Microfiber|Rocking|Cover|Recliners|Swivel|Ashley|Power|On"
+                                    }
+                                ],
+                                "name": "keywords",
+                                "label": "Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "8.560000",
+                                        "value": "8.560000"
+                                    }
+                                ],
+                                "name": "special_price",
+                                "label": "Special Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "67.500000",
+                                        "value": "67.500000"
+                                    }
+                                ],
+                                "name": "weight",
+                                "label": "Weight",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "32.700000",
+                                        "value": "32.700000"
+                                    }
+                                ],
+                                "name": "length",
+                                "label": "Length",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "37.400000",
+                                        "value": "37.400000"
+                                    }
+                                ],
+                                "name": "width",
+                                "label": "Width",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "38.600000",
+                                        "value": "38.600000"
+                                    }
+                                ],
+                                "name": "height",
+                                "label": "Height",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "swatch": {
+                                            "type": "color",
+                                            "value": "#945454"
+                                        },
+                                        "label": "Brown",
+                                        "value": "Brown"
+                                    }
+                                ],
+                                "name": "color",
+                                "label": "Color",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Enabled",
+                                        "value": "Enabled"
+                                    }
+                                ],
+                                "name": "status",
+                                "label": "Enable Product",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Catalog, Search",
+                                        "value": "Catalog, Search"
+                                    }
+                                ],
+                                "name": "visibility",
+                                "label": "Visibility",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Taxable Goods",
+                                        "value": "Taxable Goods"
+                                    }
+                                ],
+                                "name": "tax_class_id",
+                                "label": "Tax Class",
+                                "isFacet": false
+                            }
+                        ],
+                        "id": "2094",
+                        "categories": [
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "name": "Root Catalog",
+                                        "id": "1",
+                                        "label": "Root Catalog",
+                                        "slug": "root-catalog-1"
+                                    },
+                                    "name": "Default Category",
+                                    "id": "2",
+                                    "label": "Default Category",
+                                    "slug": "default-category-2"
+                                },
+                                "name": "Furniture",
+                                "id": "42",
+                                "label": "Furniture",
+                                "slug": "furniture-42"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Living Room Furniture",
+                                "id": "43",
+                                "label": "Living Room Furniture",
+                                "slug": "living-room-furniture-43"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "name": "Root Catalog",
+                                                "id": "1",
+                                                "label": "Root Catalog",
+                                                "slug": "root-catalog-1"
+                                            },
+                                            "name": "Default Category",
+                                            "id": "2",
+                                            "label": "Default Category",
+                                            "slug": "default-category-2"
+                                        },
+                                        "name": "Furniture",
+                                        "id": "42",
+                                        "label": "Furniture",
+                                        "slug": "furniture-42"
+                                    },
+                                    "name": "Living Room Furniture",
+                                    "id": "43",
+                                    "label": "Living Room Furniture",
+                                    "slug": "living-room-furniture-43"
+                                },
+                                "name": "Chairs",
+                                "id": "56",
+                                "label": "Chairs",
+                                "slug": "chairs-56"
+                            }
+                        ],
+                        "sku": "B083H3WMT3",
+                        "lang": "en",
+                        "ft_color": [
+                            "Brown"
+                        ],
+                        "category": [
+                            "Chairs",
+                            "Living Room Furniture",
+                            "Furniture"
+                        ],
+                        "slug": "classic-faux-leather-extra-padded-recliner-chair-brown-renewed-2094",
+                        "gallery": [
+                            {
+                                "alt": "Classic Faux Leather Extra Padded Recliner Chair - Brown (Renewed)",
+                                "url": "/media/catalog/product/9/1/91udgka1eil_kfffppc1tdme7h99.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81pqauslyl_hl64hsrzg1n5k5cg.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91ltk4uhnl_vj5eldb5ptnvdoaa.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91i9sbtebzl_dutsngc7x1pwwkmf.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81w95anzyel_p45faq5c9lclifzq.jpg"
+                            }
+                        ]
+                    },
+                    "namespace": "puresight_china_store_view_product",
+                    "type": "product/simple"
+                }
+            },
+            {
+                "_id": "puresight_china_store_view_product:2095",
+                "_score": 0.0,
+                "_source": {
+                    "payload": {
+                        "quantity": 100,
+                        "primaryImage": {
+                            "alt": "Mid-Back Mesh Chair",
+                            "url": "/media/catalog/product/9/1/91birlya6pl_dyz3aqlevcgdycvm.jpg"
+                        },
+                        "ft_material": [
+                            "Plastic"
+                        ],
+                        "description": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                        "variants": [],
+                        "ingested": "2026-05-29T20:29:30.743+0000",
+                        "ft_type": [
+                            "Chair"
+                        ],
+                        "price": {
+                            "discountedValue": 10.43,
+                            "value": 10.43
+                        },
+                        "ft_brand": [
+                            "Rivet"
+                        ],
+                        "name": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                        "attributes": [
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "meta_title",
+                                "label": "Meta Title",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "meta_description",
+                                "label": "Meta Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/9/1/91birlya6pl_dyz3aqlevcgdycvm.jpg",
+                                        "value": "/media/catalog/product/9/1/91birlya6pl_dyz3aqlevcgdycvm.jpg"
+                                    }
+                                ],
+                                "name": "small_image",
+                                "label": "Small",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "/media/catalog/product/9/1/91birlya6pl_dyz3aqlevcgdycvm.jpg",
+                                        "value": "/media/catalog/product/9/1/91birlya6pl_dyz3aqlevcgdycvm.jpg"
+                                    }
+                                ],
+                                "name": "thumbnail",
+                                "label": "Thumbnail",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "product-full-width",
+                                        "value": "product-full-width"
+                                    }
+                                ],
+                                "name": "page_layout",
+                                "label": "Layout",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "image_label",
+                                "label": "Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "small_image_label",
+                                "label": "Small Image Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "thumbnail_label",
+                                "label": "Thumbnail Label",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "mid-back-mesh-chair-with-contoured-mesh-seat-for-extra-breathability-black-renewed-b086gm9ttd",
+                                        "value": "mid-back-mesh-chair-with-contoured-mesh-seat-for-extra-breathability-black-renewed-b086gm9ttd"
+                                    }
+                                ],
+                                "name": "url_key",
+                                "label": "URL Key",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Use config",
+                                        "value": "Use config"
+                                    }
+                                ],
+                                "name": "msrp_display_actual_price_type",
+                                "label": "Display Actual Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "No",
+                                        "value": "No"
+                                    }
+                                ],
+                                "name": "gift_message_available",
+                                "label": "Allow Gift Message",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "2",
+                                        "value": "2"
+                                    }
+                                ],
+                                "name": "is_returnable",
+                                "label": "Enable RMA",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "short_description",
+                                "label": "Short Description",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)",
+                                        "value": "Mid-Back Mesh Chair, with Contoured Mesh Seat for Extra Breathability - Black (Renewed)"
+                                    }
+                                ],
+                                "name": "meta_keyword",
+                                "label": "Meta Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Plastic",
+                                        "value": "Plastic"
+                                    }
+                                ],
+                                "name": "material",
+                                "label": "Material",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Chair",
+                                        "value": "Chair"
+                                    }
+                                ],
+                                "name": "type",
+                                "label": "Type",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Rivet",
+                                        "value": "Rivet"
+                                    }
+                                ],
+                                "name": "brand",
+                                "label": "Brand",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Adjustable mid-back mesh chair for office or home use|Contoured design provides comfort and support throughout the work day|Extra breathable mesh back seat offers better airflow; keeping you cool and comfortable|Pneumatic height and tilt mechanisms adjust to your ideal position|Powder-coated 5-point base for extra stability|Rolling caster wheels and 360 degree swivel mobility",
+                                        "value": "Adjustable mid-back mesh chair for office or home use|Contoured design provides comfort and support throughout the work day|Extra breathable mesh back seat offers better airflow; keeping you cool and comfortable|Pneumatic height and tilt mechanisms adjust to your ideal position|Powder-coated 5-point base for extra stability|Rolling caster wheels and 360 degree swivel mobility"
+                                    }
+                                ],
+                                "name": "bullet_points",
+                                "label": "Bullet points",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Task|Secretary|Basics|H03|Clearance|Conference|Modern|Cheap|Pain|Midback|Sewing|Ergonomic|Chairs|Without|Lorell|Computer|Desk|Best|Room|No|De|Study|Small|Stool|Executive|Armless|Llr81100|Arms|Student|W/metal|Drafting|White|Sillas|Low|Oficina|Lumbar|Amazon|Gaming",
+                                        "value": "Task|Secretary|Basics|H03|Clearance|Conference|Modern|Cheap|Pain|Midback|Sewing|Ergonomic|Chairs|Without|Lorell|Computer|Desk|Best|Room|No|De|Study|Small|Stool|Executive|Armless|Llr81100|Arms|Student|W/metal|Drafting|White|Sillas|Low|Oficina|Lumbar|Amazon|Gaming"
+                                    }
+                                ],
+                                "name": "keywords",
+                                "label": "Keywords",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "8.870000",
+                                        "value": "8.870000"
+                                    }
+                                ],
+                                "name": "special_price",
+                                "label": "Special Price",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "24.700000",
+                                        "value": "24.700000"
+                                    }
+                                ],
+                                "name": "weight",
+                                "label": "Weight",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "22.240000",
+                                        "value": "22.240000"
+                                    }
+                                ],
+                                "name": "length",
+                                "label": "Length",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "22.240000",
+                                        "value": "22.240000"
+                                    }
+                                ],
+                                "name": "width",
+                                "label": "Width",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "38.780000",
+                                        "value": "38.780000"
+                                    }
+                                ],
+                                "name": "height",
+                                "label": "Height",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "swatch": {
+                                            "type": "color",
+                                            "value": "#000000"
+                                        },
+                                        "label": "Black",
+                                        "value": "Black"
+                                    }
+                                ],
+                                "name": "color",
+                                "label": "Color",
+                                "isFacet": true
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Enabled",
+                                        "value": "Enabled"
+                                    }
+                                ],
+                                "name": "status",
+                                "label": "Enable Product",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Catalog, Search",
+                                        "value": "Catalog, Search"
+                                    }
+                                ],
+                                "name": "visibility",
+                                "label": "Visibility",
+                                "isFacet": false
+                            },
+                            {
+                                "values": [
+                                    {
+                                        "label": "Taxable Goods",
+                                        "value": "Taxable Goods"
+                                    }
+                                ],
+                                "name": "tax_class_id",
+                                "label": "Tax Class",
+                                "isFacet": false
+                            }
+                        ],
+                        "id": "2095",
+                        "categories": [
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "name": "Root Catalog",
+                                        "id": "1",
+                                        "label": "Root Catalog",
+                                        "slug": "root-catalog-1"
+                                    },
+                                    "name": "Default Category",
+                                    "id": "2",
+                                    "label": "Default Category",
+                                    "slug": "default-category-2"
+                                },
+                                "name": "Furniture",
+                                "id": "42",
+                                "label": "Furniture",
+                                "slug": "furniture-42"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "name": "Root Catalog",
+                                            "id": "1",
+                                            "label": "Root Catalog",
+                                            "slug": "root-catalog-1"
+                                        },
+                                        "name": "Default Category",
+                                        "id": "2",
+                                        "label": "Default Category",
+                                        "slug": "default-category-2"
+                                    },
+                                    "name": "Furniture",
+                                    "id": "42",
+                                    "label": "Furniture",
+                                    "slug": "furniture-42"
+                                },
+                                "name": "Home Office Furniture",
+                                "id": "57",
+                                "label": "Home Office Furniture",
+                                "slug": "home-office-furniture-57"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "name": "Root Catalog",
+                                                "id": "1",
+                                                "label": "Root Catalog",
+                                                "slug": "root-catalog-1"
+                                            },
+                                            "name": "Default Category",
+                                            "id": "2",
+                                            "label": "Default Category",
+                                            "slug": "default-category-2"
+                                        },
+                                        "name": "Furniture",
+                                        "id": "42",
+                                        "label": "Furniture",
+                                        "slug": "furniture-42"
+                                    },
+                                    "name": "Home Office Furniture",
+                                    "id": "57",
+                                    "label": "Home Office Furniture",
+                                    "slug": "home-office-furniture-57"
+                                },
+                                "name": "Home Office Chairs",
+                                "id": "58",
+                                "label": "Home Office Chairs",
+                                "slug": "home-office-chairs-58"
+                            },
+                            {
+                                "parent": {
+                                    "parent": {
+                                        "parent": {
+                                            "parent": {
+                                                "parent": {
+                                                    "name": "Root Catalog",
+                                                    "id": "1",
+                                                    "label": "Root Catalog",
+                                                    "slug": "root-catalog-1"
+                                                },
+                                                "name": "Default Category",
+                                                "id": "2",
+                                                "label": "Default Category",
+                                                "slug": "default-category-2"
+                                            },
+                                            "name": "Furniture",
+                                            "id": "42",
+                                            "label": "Furniture",
+                                            "slug": "furniture-42"
+                                        },
+                                        "name": "Home Office Furniture",
+                                        "id": "57",
+                                        "label": "Home Office Furniture",
+                                        "slug": "home-office-furniture-57"
+                                    },
+                                    "name": "Home Office Chairs",
+                                    "id": "58",
+                                    "label": "Home Office Chairs",
+                                    "slug": "home-office-chairs-58"
+                                },
+                                "name": "Home Office Desk Chairs",
+                                "id": "59",
+                                "label": "Home Office Desk Chairs",
+                                "slug": "home-office-desk-chairs-59"
+                            }
+                        ],
+                        "sku": "B086GM9TTD",
+                        "lang": "en",
+                        "ft_color": [
+                            "Black"
+                        ],
+                        "category": [
+                            "Home Office Furniture",
+                            "Home Office Desk Chairs",
+                            "Furniture",
+                            "Home Office Chairs"
+                        ],
+                        "slug": "mid-back-mesh-chair-with-contoured-mesh-seat-for-extra-breathability-black-renewed-2095",
+                        "gallery": [
+                            {
+                                "alt": "Mid-Back Mesh Chair",
+                                "url": "/media/catalog/product/9/1/91birlya6pl_dyz3aqlevcgdycvm.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/9/1/91xfut4qkcl_z21rnavwiua73kgi.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/8/1/81rkqg-wg-l_gq0eozvdqtdykgec.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1iakygtbtl_ryixeviswilsjwvb.jpg"
+                            },
+                            {
+                                "alt": "",
+                                "url": "/media/catalog/product/a/1/a1zehsdkol_lqzou932opgr3eof.jpg"
+                            }
+                        ]
+                    },
+                    "namespace": "puresight_china_store_view_product",
+                    "type": "product/simple"
+                }
+            }
+        ]
+    },
+    "aggregations": {
+        "ft_brand": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": "Stone & Beam",
+                    "doc_count": 2936
+                },
+                {
+                    "key": "Rivet",
+                    "doc_count": 2138
+                },
+                {
+                    "key": "Ravenna Home",
+                    "doc_count": 782
+                },
+                {
+                    "key": "AmazonBasics",
+                    "doc_count": 443
+                },
+                {
+                    "key": "Amazon Brand - Solimo",
+                    "doc_count": 96
+                },
+                {
+                    "key": "AmazonCommercial",
+                    "doc_count": 18
+                },
+                {
+                    "key": "Dreamfoam Bedding",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Hillsdale Furniture",
+                    "doc_count": 10
+                },
+                {
+                    "key": "Movian",
+                    "doc_count": 5
+                },
+                {
+                    "key": "Ameriwood Home",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Pinzon",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Strathwood by Amazon.com",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Nexo",
+                    "doc_count": 1
+                }
+            ]
+        },
+        "ft_material": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 1120,
+            "buckets": [
+                {
+                    "key": "stone",
+                    "doc_count": 876
+                },
+                {
+                    "key": "Wood",
+                    "doc_count": 713
+                },
+                {
+                    "key": "Polyester",
+                    "doc_count": 404
+                },
+                {
+                    "key": "Leather",
+                    "doc_count": 398
+                },
+                {
+                    "key": "Metal",
+                    "doc_count": 312
+                },
+                {
+                    "key": "wood",
+                    "doc_count": 230
+                },
+                {
+                    "key": "Textile",
+                    "doc_count": 162
+                },
+                {
+                    "key": "Velvet",
+                    "doc_count": 110
+                },
+                {
+                    "key": "Engineered Wood",
+                    "doc_count": 98
+                },
+                {
+                    "key": "Stone",
+                    "doc_count": 98
+                },
+                {
+                    "key": "Linen",
+                    "doc_count": 90
+                },
+                {
+                    "key": "Fabric",
+                    "doc_count": 72
+                },
+                {
+                    "key": "Pine",
+                    "doc_count": 64
+                },
+                {
+                    "key": "metal",
+                    "doc_count": 62
+                },
+                {
+                    "key": "Hardwood",
+                    "doc_count": 58
+                },
+                {
+                    "key": "Velvet, Hardwood frame, Metal legs",
+                    "doc_count": 56
+                },
+                {
+                    "key": "pewter",
+                    "doc_count": 52
+                },
+                {
+                    "key": "Nylon",
+                    "doc_count": 50
+                },
+                {
+                    "key": "Faux Leather",
+                    "doc_count": 40
+                },
+                {
+                    "key": "Polyester fabric, sturdy hardwood frame and solid beech wood legs",
+                    "doc_count": 38
+                }
+            ]
+        },
+        "ft_color": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 1518,
+            "buckets": [
+                {
+                    "key": "Brown",
+                    "doc_count": 796
+                },
+                {
+                    "key": "Blue",
+                    "doc_count": 668
+                },
+                {
+                    "key": "Beige",
+                    "doc_count": 626
+                },
+                {
+                    "key": "Black",
+                    "doc_count": 606
+                },
+                {
+                    "key": "Gray",
+                    "doc_count": 537
+                },
+                {
+                    "key": "White",
+                    "doc_count": 294
+                },
+                {
+                    "key": "Grey",
+                    "doc_count": 232
+                },
+                {
+                    "key": "Ivory",
+                    "doc_count": 208
+                },
+                {
+                    "key": "Green",
+                    "doc_count": 150
+                },
+                {
+                    "key": "Light Grey",
+                    "doc_count": 122
+                },
+                {
+                    "key": "Silver",
+                    "doc_count": 106
+                },
+                {
+                    "key": "Dark Grey",
+                    "doc_count": 92
+                },
+                {
+                    "key": "Cognac",
+                    "doc_count": 84
+                },
+                {
+                    "key": "Red",
+                    "doc_count": 76
+                },
+                {
+                    "key": "Natural",
+                    "doc_count": 72
+                },
+                {
+                    "key": "Yellow",
+                    "doc_count": 60
+                },
+                {
+                    "key": "Grey Linen",
+                    "doc_count": 54
+                },
+                {
+                    "key": "Saddle",
+                    "doc_count": 54
+                },
+                {
+                    "key": "Dark Espresso",
+                    "doc_count": 52
+                },
+                {
+                    "key": "Hemp",
+                    "doc_count": 42
+                }
+            ]
+        },
+        "category": {
+            "doc_count_error_upper_bound": 0,
+            "sum_other_doc_count": 0,
+            "buckets": [
+                {
+                    "key": "Furniture",
+                    "doc_count": 6449
+                },
+                {
+                    "key": "Living Room Furniture",
+                    "doc_count": 3128
+                },
+                {
+                    "key": "Chairs",
+                    "doc_count": 1699
+                },
+                {
+                    "key": "Sofas & Couches",
+                    "doc_count": 1290
+                },
+                {
+                    "key": "Bedroom Furniture",
+                    "doc_count": 944
+                },
+                {
+                    "key": "Beds, Frames & Bases",
+                    "doc_count": 792
+                },
+                {
+                    "key": "Accent Furniture",
+                    "doc_count": 783
+                },
+                {
+                    "key": "Kitchen & Dining Room Furniture",
+                    "doc_count": 577
+                },
+                {
+                    "key": "Game & Recreation Room Furniture",
+                    "doc_count": 574
+                },
+                {
+                    "key": "Home Bar Furniture",
+                    "doc_count": 542
+                },
+                {
+                    "key": "Ottomans",
+                    "doc_count": 530
+                },
+                {
+                    "key": "Barstools",
+                    "doc_count": 524
+                },
+                {
+                    "key": "Tables",
+                    "doc_count": 452
+                },
+                {
+                    "key": "Headboards",
+                    "doc_count": 436
+                },
+                {
+                    "key": "Headboards & Footboards",
+                    "doc_count": 436
+                },
+                {
+                    "key": "Home Office Furniture",
+                    "doc_count": 320
+                },
+                {
+                    "key": "Beds",
+                    "doc_count": 284
+                },
+                {
+                    "key": "End Tables",
+                    "doc_count": 158
+                },
+                {
+                    "key": "Coffee Tables",
+                    "doc_count": 154
+                },
+                {
+                    "key": "Home Office Chairs",
+                    "doc_count": 150
+                },
+                {
+                    "key": "Home Office Desk Chairs",
+                    "doc_count": 148
+                },
+                {
+                    "key": "Home Office Desks",
+                    "doc_count": 122
+                },
+                {
+                    "key": "TV & Media Furniture",
+                    "doc_count": 82
+                },
+                {
+                    "key": "Nightstands",
+                    "doc_count": 70
+                },
+                {
+                    "key": "Bed Frames",
+                    "doc_count": 58
+                },
+                {
+                    "key": "Entryway Furniture",
+                    "doc_count": 52
+                },
+                {
+                    "key": "Sofa & Console Tables",
+                    "doc_count": 50
+                },
+                {
+                    "key": "Storage Benches",
+                    "doc_count": 50
+                },
+                {
+                    "key": "Television Stands & Entertainment Centers",
+                    "doc_count": 50
+                },
+                {
+                    "key": "Dressers",
+                    "doc_count": 44
+                },
+                {
+                    "key": "Kids' Furniture",
+                    "doc_count": 44
+                },
+                {
+                    "key": "Bookcases",
+                    "doc_count": 42
+                },
+                {
+                    "key": "Media Storage",
+                    "doc_count": 32
+                },
+                {
+                    "key": "Table & Chair Sets",
+                    "doc_count": 30
+                },
+                {
+                    "key": "Buffets & Sideboards",
+                    "doc_count": 28
+                },
+                {
+                    "key": "Vanities & Vanity Benches",
+                    "doc_count": 20
+                },
+                {
+                    "key": "Chaise Lounges",
+                    "doc_count": 18
+                },
+                {
+                    "key": "Chairs & Seats",
+                    "doc_count": 16
+                },
+                {
+                    "key": "Kitchen Islands & Carts",
+                    "doc_count": 16
+                },
+                {
+                    "key": "Bar & Serving Carts",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Folding Tables",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Folding Tables & Chairs",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Gaming Chairs",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Nesting Tables",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Storage Cabinets",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Video Game Chairs",
+                    "doc_count": 12
+                },
+                {
+                    "key": "Recliners",
+                    "doc_count": 10
+                },
+                {
+                    "key": "Tables & Chairs",
+                    "doc_count": 10
+                },
+                {
+                    "key": "Vanities",
+                    "doc_count": 10
+                },
+                {
+                    "key": "Gliders",
+                    "doc_count": 8
+                },
+                {
+                    "key": "Mattresses & Box Springs",
+                    "doc_count": 8
+                },
+                {
+                    "key": "Vanity Benches",
+                    "doc_count": 8
+                },
+                {
+                    "key": "Bedroom Armoires",
+                    "doc_count": 6
+                },
+                {
+                    "key": "Bookcases, Cabinets & Shelves",
+                    "doc_count": 6
+                },
+                {
+                    "key": "Box Springs",
+                    "doc_count": 6
+                },
+                {
+                    "key": "Folding Chairs",
+                    "doc_count": 6
+                },
+                {
+                    "key": "Table Benches",
+                    "doc_count": 6
+                },
+                {
+                    "key": "Bars & Wine Cabinets",
+                    "doc_count": 4
+                },
+                {
+                    "key": "Home Office Cabinets",
+                    "doc_count": 4
+                },
+                {
+                    "key": "Bar Cabinets",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Bar Sets",
+                    "doc_count": 2
+                },
+                {
+                    "key": "China Cabinets",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Living Room Sets",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Sofas",
+                    "doc_count": 2
+                },
+                {
+                    "key": "Featured",
+                    "doc_count": 1
+                }
+            ]
+        }
+    }
+}

@@ -1,9 +1,9 @@
-import { fetchSearchResults, html } from "../../helper";
+import { debounce, fetchSearchResults, html } from "../../helper";
 import DEFAULT_CONFIG from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
 import type { QueryInputConfig } from "../../types/config";
 import type { QueryInput } from "../../types/query-input";
-import type { OpenSearchResponse } from "../../types/results";
+import type { OpenSearchResponse } from "../../types/open-search";
 import "./query-input.css";
 
 const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
@@ -20,11 +20,39 @@ const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
   return inputOption;
 };
 
+const debouceSearch = (
+  url: string,
+  callback: (data: OpenSearchResponse) => void,
+) => {
+  let controller: AbortController | null = null;
+
+  const deboucendSearch = debounce(async () => {
+    controller?.abort();
+
+    controller = new AbortController();
+
+    try {
+      const data = await fetchSearchResults(url, controller.signal);
+
+      callback(data);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+
+      console.error(error);
+    }
+  }, 300);
+
+  return deboucendSearch;
+};
+
 export function creatQueryInput(customConfig: QueryInputConfig) {
   const config = resolveConfig(customConfig);
   const inputTextId = crypto.randomUUID();
   const suggestionWrapperId = crypto.randomUUID();
   const { labels, renderers } = config;
+  let onSearch: () => void;
 
   const queryInputEl = html`
     <div class="stx-query-input">
@@ -110,30 +138,32 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
   };
 
   if (inputEl) {
+    let url = "";
+
+    if (typeof config.searchApiUrl === "string") {
+      url = config.searchApiUrl;
+    } else {
+      url = config.searchApiUrl();
+    }
+
+    onSearch = debouceSearch(url, (results) => {
+      const suggestionEl = createSuggestions(results, config);
+      suggestionListLenght = results.hits.hits.length;
+      activeIndex = -1;
+
+      if (suggestionContainer) {
+        suggestionContainer.innerHTML = "";
+        suggestionContainer.append(suggestionEl.element as Element);
+      }
+    });
+
     inputEl.addEventListener("input", async (event) => {
       const { value } = event.target as HTMLInputElement;
 
-      clearButton.classList.toggle('stx-hidden', !value.length);
+      clearButton.classList.toggle("stx-hidden", !value.length);
 
       if (value.length >= config.minSearchLength) {
-        let url = "";
-
-        if (typeof config.searchApiUrl === "string") {
-          url = config.searchApiUrl;
-        } else {
-          url = config.searchApiUrl();
-        }
-
-        await fetchSearchResults(url, (results: OpenSearchResponse) => {
-          const suggestionEl = createSuggestions(results, config);
-          suggestionListLenght = results.hits.hits.length;
-          activeIndex = -1;
-
-          if (suggestionContainer) {
-            suggestionContainer.innerHTML = "";
-            suggestionContainer.append(suggestionEl.element as Element);
-          }
-        });
+        onSearch();
       }
 
       if (!value.length && suggestionContainer) {

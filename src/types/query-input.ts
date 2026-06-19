@@ -1,4 +1,4 @@
-import type { OpenSearchItem } from "./results";
+import type { OpenSearchItem } from "./open-search";
 
 export interface QueryInputLabels {
   inputPlaceholder: string;

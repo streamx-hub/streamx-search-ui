@@ -1,9 +1,17 @@
 import { html } from "../../helper";
+import { createResultsPanel, type ResultsConfig } from "../results-panel/results-panel";
+import "./tabs.css";
 
-export type TabConfig = {
+export interface TabConfig {
   id: string;
   displayName: string;
-  dataSources: string[];
+  results: ResultsConfig;
+};
+
+export type Tab = Required<TabConfig>;
+
+const resolvedTab = (tabsConfig: TabConfig[]): Tab[] => {
+  return tabsConfig.map((c) => ({ pageSize: 10, ...c }));
 };
 
 const getTabId = (id: string) => `stx-tab-${id}`;
@@ -26,8 +34,9 @@ const createTabButton = (tabData: TabConfig, isSelected: boolean) => {
   ` as HTMLButtonElement;
 };
 
-const createTabContent = (tabData: TabConfig, isSelected: boolean) => {
+const createTabContent = (tabData: Tab, isSelected: boolean) => {
   const { id } = tabData;
+  const tabContent = createResultsPanel(tabData.results);
 
   return html`
     <div
@@ -37,18 +46,17 @@ const createTabContent = (tabData: TabConfig, isSelected: boolean) => {
       class="stx-tabs__content"
       ${isSelected ? "" : "hidden"}
     >
-      <div>Content of the tab: ${id}</div>
+      <div>${tabContent}</div>
     </div>
   `;
 };
 
 function createTabs(tabsConfig: TabConfig[]) {
-  const buttonList = tabsConfig.map((el, index) => createTabButton(el, !index));
-  const contentList = tabsConfig.map((el, index) =>
-    createTabContent(el, !index),
-  );
+  const tabs = resolvedTab(tabsConfig);
+  const buttonList = tabs.map((el, index) => createTabButton(el, !index));
+  const contentList = tabs.map((el, index) => createTabContent(el, !index));
 
-  const tabs = html`
+  const tabsEl = html`
     <div class="stx-tabs">
       <div role="tablist" class="stx-tabs__buttons">${buttonList}</div>
       ${contentList}
@@ -59,7 +67,7 @@ function createTabs(tabsConfig: TabConfig[]) {
     buttonList.forEach((button) => {
       const isSelected = button === selectedTabButton;
       const contentElId = button.getAttribute("aria-controls");
-      const contentEl = tabs.querySelector(`#${contentElId}`);
+      const contentEl = tabsEl.querySelector(`#${contentElId}`);
 
       button.setAttribute("aria-selected", String(isSelected));
       button.tabIndex = isSelected ? 0 : -1;
@@ -122,7 +130,7 @@ function createTabs(tabsConfig: TabConfig[]) {
     });
   });
 
-  return tabs;
+  return tabsEl;
 }
 
 export default createTabs;

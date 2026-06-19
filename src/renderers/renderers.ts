@@ -1,5 +1,5 @@
 import { html, parseHighlight } from '../helper';
-import type { OpenSearchItem } from '../types/results';
+import type { OpenSearchItem } from '../types/open-search';
 
 export function suggestionItem(item: OpenSearchItem): Element | undefined {
   const id = crypto.randomUUID();

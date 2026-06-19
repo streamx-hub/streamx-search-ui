@@ -3,7 +3,7 @@ import type { QueryInput } from '../../types/query-input.ts';
 import type {
   OpenSearchItem,
   OpenSearchResponse,
-} from '../../types/results.ts';
+} from '../../types/open-search.ts';
 
 const renderSuggestionListItem = (
   item: OpenSearchItem & { isFirstInGroup?: boolean },
