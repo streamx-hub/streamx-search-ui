@@ -12,6 +12,30 @@ export interface ResultsConfig {
 
 export type Results = Required<ResultsConfig>;
 
+const createLoadingState = () => {
+  return html`
+    <span>
+      <svg
+        class="stx-results-panel__loader"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+      >
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="3"
+          stroke-linecap="round"
+          stroke-dasharray="48 16"
+        ></circle>
+      </svg>
+    </span>
+  ` as HTMLElement;
+};
+
 const buildResultsForPage = (
   resultsPanel: HTMLElement,
   results: Results,
@@ -28,13 +52,11 @@ const buildResultsForPage = (
   });
 };
 
-const createLoadingState = () => {
-  return html`<span class="stx-results-panel__loader"
-    >Loading...</span
-  >` as HTMLElement;
-};
-
-const createResultsNumber = (data: OpenSearchResponse, results: Results, currentPage: number) => {
+const createResultsNumber = (
+  data: OpenSearchResponse,
+  results: Results,
+  currentPage: number,
+) => {
   const totalNumber = data.hits.total.value;
   const pageSize = results.pageSize;
   const pagesNumber = Math.ceil(totalNumber / pageSize);
@@ -191,9 +213,7 @@ export const createResultsPanel = (resultsConfig: ResultsConfig) => {
   const results = { ...DEFAULT_RESULTS_CONFIG, ...resultsConfig };
 
   const resultsPanel = html`
-    <div class="stx-results-panel">
-      ${createLoadingState()}
-    </div>
+    <div class="stx-results-panel">${createLoadingState()}</div>
   ` as HTMLDivElement;
 
   buildResultsForPage(resultsPanel, results, 1);
