@@ -12,26 +12,37 @@ export interface ResultsConfig {
 
 export type Results = Required<ResultsConfig>;
 
-const getPaginationState = (results: Results) => {
-  return {
-    pageSize: results.pageSize,
-    currentPage: 0,
-  };
+const buildResultsForPage = (
+  resultsPanel: HTMLElement,
+  results: Results,
+  pageNumber: number,
+) => {
+  const dataUrl = new URL(results.dataSources[0], window.location.href);
+  dataUrl.searchParams.set("page", String(pageNumber));
+
+  resultsPanel.innerHTML = "";
+  resultsPanel.append(createLoadingState());
+
+  fetchSearchResults(dataUrl.toString()).then((responseData) => {
+    createResults(resultsPanel, responseData, results, pageNumber);
+  });
 };
 
 const createLoadingState = () => {
-  return html`<span class="stx-results-panel__loader">Loading...</span>`;
+  return html`<span class="stx-results-panel__loader"
+    >Loading...</span
+  >` as HTMLElement;
 };
 
-const createResultsNumber = (data: OpenSearchResponse, results: Results) => {
+const createResultsNumber = (data: OpenSearchResponse, results: Results, currentPage: number) => {
   const totalNumber = data.hits.total.value;
-  const { pageSize, currentPage } = getPaginationState(results);
+  const pageSize = results.pageSize;
   const pagesNumber = Math.ceil(totalNumber / pageSize);
 
   return html`
     <div class="stx-results-panel__results-number">
       <span class="stx-results-panel__page-number"
-        >Page ${currentPage + 1} of ${pagesNumber}</span
+        >Page ${currentPage} of ${pagesNumber}</span
       >
       <span class="stx-results-panel__total-number"
         >Total results: ${data.hits.total.value}</span
@@ -60,7 +71,7 @@ const createPagination = (
   if (paginationStartPage > 1) {
     paginationButtonList.push(
       html`<li class="stx-results-panel__pagination-list-item">
-        <a href="/link-to-page">1</a>
+        <button data-page-number="1">1</a>
       </li>` as HTMLLinkElement,
     );
   }
@@ -79,7 +90,7 @@ const createPagination = (
   for (let i = paginationStartPage; i < paginationStartPage + 5; i++) {
     paginationButtonList.push(
       html`<li class="stx-results-panel__pagination-list-item">
-        <a href="/link-to-page">${i}</a>
+        <button data-page-number="${i}" class="${currentPage === i ? "stx-is-active" : ""}">${i}</b>
       </li>` as HTMLLinkElement,
     );
   }
@@ -97,7 +108,9 @@ const createPagination = (
 
   if (paginationStartPage < pagesCount - 4) {
     paginationButtonList.push(
-      html`<li class="stx-results-panel__pagination-list-item"><a href="/link-to-page">${pagesCount}</li>` as HTMLLinkElement,
+      html` <li class="stx-results-panel__pagination-list-item">
+        <button data-page-number="${pagesCount}">${pagesCount}</button>
+      </li>` as HTMLLinkElement,
     );
   }
 
@@ -143,7 +156,8 @@ const createResults = (
   currentPage: number,
 ) => {
   const items = createItems(data);
-  const resultsNumber = createResultsNumber(data, results);
+  const resultsNumber = createResultsNumber(data, results, currentPage);
+  const pagination = createPagination(data, results, currentPage);
 
   resultsPanel.innerHTML = "";
 
@@ -154,9 +168,21 @@ const createResults = (
       <ul>
         ${items}
       </ul>
-      ${createPagination(data, results, currentPage)}
+      ${pagination}
     </div>
   ` as HTMLCollection;
+
+  const paginationButtons = pagination.querySelectorAll(
+    "button[data-page-number]",
+  );
+
+  paginationButtons.forEach((btn) => {
+    const pageNumber = parseInt(btn.getAttribute("data-page-number") || "0");
+
+    btn.addEventListener("click", () => {
+      buildResultsForPage(resultsPanel, results, pageNumber);
+    });
+  });
 
   resultsPanel.append(...newResults);
 };
@@ -164,15 +190,13 @@ const createResults = (
 export const createResultsPanel = (resultsConfig: ResultsConfig) => {
   const results = { ...DEFAULT_RESULTS_CONFIG, ...resultsConfig };
 
-  const dataUrl = results.dataSources[0]; // TODO: Should we support muliple data sources on one tab?
-
   const resultsPanel = html`
-    <div class="stx-results-panel">${createLoadingState()}</div>
+    <div class="stx-results-panel">
+      ${createLoadingState()}
+    </div>
   ` as HTMLDivElement;
 
-  fetchSearchResults(dataUrl).then((responseData) => {
-    createResults(resultsPanel, responseData, results, 1);
-  });
+  buildResultsForPage(resultsPanel, results, 1);
 
   return resultsPanel;
 };
