@@ -1,13 +1,24 @@
 import { fetchSearchResults, html } from "../../helper";
-import type { OpenSearchResponse } from "../../types/open-search";
+import type {
+  OpenSearchItem,
+  OpenSearchResponse,
+} from "../../types/open-search";
 
 const DEFAULT_RESULTS_CONFIG = {
   pageSize: 20,
+  renderers: {},
+};
+
+type ResultRenderer = (item: OpenSearchItem) => HTMLElement | string;
+
+export type ResultsRendererSet = {
+  [renderName: string]: ResultRenderer;
 };
 
 export interface ResultsConfig {
   pageSize?: number;
   dataSources: string[];
+  renderers?: ResultsRendererSet;
 }
 
 export type Results = Required<ResultsConfig>;
@@ -157,13 +168,27 @@ const createPagination = (
   ` as HTMLDivElement;
 };
 
-const createItems = (data: OpenSearchResponse) => {
+const createItems = (
+  data: OpenSearchResponse,
+  renderers: ResultsRendererSet,
+) => {
   return data.hits.hits.map((item) => {
+    const { type } = item._source;
+    let itemContent: HTMLElement | string;
+
+    if (renderers[`item-${type}`]) {
+      itemContent = renderers[`item-${type}`](item);
+    } else {
+      itemContent = html`
+        <span>
+          <span>${item._id}</span>
+          <span>${item._source?.type}</span>
+        </span>
+      ` as HTMLSpanElement;
+    }
+
     return html`
-      <li class="stx-results-panel__results-item">
-        <span>${item._id}</span>
-        <span>${item._source?.type}</span>
-      </li>
+      <li class="stx-results-panel__results-item">${itemContent}</li>
     ` as HTMLDivElement;
   });
 };
@@ -186,7 +211,7 @@ const createResults = (
   results: Results,
   currentPage: number,
 ) => {
-  const items = createItems(data);
+  const items = createItems(data, results.renderers);
   const resultsNumber = createResultsNumber(data, results, currentPage);
   const pagination = createPagination(data, results, currentPage);
 

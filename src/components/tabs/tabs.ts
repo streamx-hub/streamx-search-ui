@@ -1,17 +1,36 @@
 import { html } from "../../helper";
-import { createResultsPanel, type ResultsConfig } from "../results-panel/results-panel";
+import {
+  createResultsPanel,
+  type Results,
+  type ResultsConfig,
+  type ResultsRendererSet,
+} from "../results-panel/results-panel";
 import "./tabs.css";
 
 export interface TabConfig {
   id: string;
   displayName: string;
   results: ResultsConfig;
-};
+}
 
-export type Tab = Required<TabConfig>;
+export interface Tab {
+  id: string;
+  displayName: string;
+  results: Results;
+}
 
-const resolvedTab = (tabsConfig: TabConfig[]): Tab[] => {
-  return tabsConfig.map((c) => ({ pageSize: 10, ...c }));
+const resolvedTab = (
+  tabsConfig: TabConfig[],
+  customRenderers: ResultsRendererSet = {},
+): Tab[] => {
+  return tabsConfig.map((c) => ({
+    ...c,
+    results: {
+      pageSize: 10,
+      ...c.results,
+      renderers: { ...customRenderers, ...c.results?.renderers },
+    },
+  }));
 };
 
 const getTabId = (id: string) => `stx-tab-${id}`;
@@ -51,8 +70,11 @@ const createTabContent = (tabData: Tab, isSelected: boolean) => {
   `;
 };
 
-function createTabs(tabsConfig: TabConfig[]) {
-  const tabs = resolvedTab(tabsConfig);
+function createTabs(
+  tabsConfig: TabConfig[],
+  customRenderers?: ResultsRendererSet,
+) {
+  const tabs = resolvedTab(tabsConfig, customRenderers);
   const buttonList = tabs.map((el, index) => createTabButton(el, !index));
   const contentList = tabs.map((el, index) => createTabContent(el, !index));
 

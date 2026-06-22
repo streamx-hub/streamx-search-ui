@@ -1,21 +1,29 @@
 import { creatQueryInput } from "../components/query-input/query-input";
 import { html } from "../helper";
 import type { QueryInputConfig } from "../types/config";
-import '../styles/common.css';
+import "../styles/common.css";
 import createTabs, { type TabConfig } from "../components/tabs/tabs";
+import type { ResultsRendererSet } from "../components/results-panel/results-panel";
 
-const createTextInput = (mountPoint: Element, customConfig: QueryInputConfig) => {
+const createTextInput = (
+  mountPoint: Element,
+  customConfig: QueryInputConfig,
+) => {
   const { element } = creatQueryInput(customConfig);
 
-  const inputWrapper = html` <div class="">${element}</div> ` as HTMLElement;
+  const inputWrapper = html`<div class="">${element}</div>` as HTMLElement;
 
   mountPoint.append(inputWrapper);
 };
 
-const createTabContent = (mountPoint: Element, config: TabConfig[]) => {
-  const tabs = createTabs(config);
+const createTabContent = (
+  mountPoint: Element,
+  config: TabConfig[],
+  renderers?: ResultsRendererSet,
+) => {
+  const tabs = createTabs(config, renderers);
 
   mountPoint.append(tabs);
-}
+};
 
 export { createTextInput, createTabContent };

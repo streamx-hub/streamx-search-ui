@@ -1,4 +1,7 @@
+import type { ResultsRendererSet } from "../../src/components/results-panel/results-panel";
 import type { TabConfig } from "../../src/components/tabs/tabs";
+import { html } from "../../src/helper";
+import type { OpenSearchItem } from "../../src/types/open-search";
 
 const searchApiUrl = () => {
   const mock1 = "/search-data.json";
@@ -15,12 +18,29 @@ const initSearchPage = async (mountPoint: Element) => {
     searchApiUrl,
   });
 
+  const renderers: ResultsRendererSet = {
+    "item-products": (item: OpenSearchItem) => {
+      return html`
+        <div class="custom-result-item-render">
+          <img src="${item._source.image}" />
+          <div class="custom-result-item-render__text">
+            <span>Custom render for <em>products</em></span>
+            <span>${item._id}</span>
+            <span>${item._source.type}</span>
+            <span>${item._source.description}</span>
+          </div>
+        </div>
+      ` as HTMLDivElement;
+    },
+  };
+
   const tabsConfig: TabConfig[] = [
     {
       id: "faqs",
       displayName: "Faqs",
       results: {
         dataSources: ["/results-data-tab-1.json"],
+        renderers,
       },
     },
     {
@@ -60,7 +80,7 @@ const initSearchPage = async (mountPoint: Element) => {
     },
   ];
 
-  createTabContent(mountPoint, tabsConfig);
+  createTabContent(mountPoint, tabsConfig, renderers);
 };
 
 const appEl = document.querySelector("#app");
