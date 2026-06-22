@@ -1,5 +1,6 @@
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
+import { routes } from './mocks/routes'
 
 export default defineConfig({
   build: {
@@ -11,4 +12,12 @@ export default defineConfig({
       name: 'streamx-search',
     },
   },
+  plugins: [
+    {
+      name: 'mock-json',
+      configureServer(server) {
+        routes(server);
+      },
+    },
+  ],
 })

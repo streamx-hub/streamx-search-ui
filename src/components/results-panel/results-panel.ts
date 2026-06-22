@@ -42,7 +42,9 @@ const buildResultsForPage = (
   pageNumber: number,
 ) => {
   const dataUrl = new URL(results.dataSources[0], window.location.href);
-  dataUrl.searchParams.set("page", String(pageNumber));
+
+  dataUrl.searchParams.set("from", String((pageNumber - 1) * results.pageSize));
+  dataUrl.searchParams.set("size", String(results.pageSize));
 
   resultsPanel.innerHTML = "";
   resultsPanel.append(createLoadingState());
@@ -84,6 +86,10 @@ const createPagination = (
   const paginationButtonList: HTMLElement[] = [];
   let paginationStartPage = currentPage - 2;
 
+  if (pagesCount <= 1) {
+    return "";
+  }
+
   if (currentPage <= 3) {
     paginationStartPage = 1;
   } else if (currentPage >= pagesCount - 2) {
@@ -109,7 +115,10 @@ const createPagination = (
     );
   }
 
-  for (let i = paginationStartPage; i < paginationStartPage + 5; i++) {
+  const paginationEndIndex =
+    pagesCount < 5 ? pagesCount + 1 : paginationStartPage + 5;
+
+  for (let i = paginationStartPage; i < paginationEndIndex; i++) {
     paginationButtonList.push(
       html`<li class="stx-results-panel__pagination-list-item">
         <button data-page-number="${i}" class="${currentPage === i ? "stx-is-active" : ""}">${i}</b>
@@ -153,7 +162,7 @@ const createItems = (data: OpenSearchResponse) => {
     return html`
       <li class="stx-results-panel__results-item">
         <span>${item._id}</span>
-        <span>${item._source.type}</span>
+        <span>${item._source?.type}</span>
       </li>
     ` as HTMLDivElement;
   });
@@ -194,17 +203,19 @@ const createResults = (
     </div>
   ` as HTMLCollection;
 
-  const paginationButtons = pagination.querySelectorAll(
-    "button[data-page-number]",
-  );
+  if (pagination) {
+    const paginationButtons = pagination.querySelectorAll(
+      "button[data-page-number]",
+    );
 
-  paginationButtons.forEach((btn) => {
-    const pageNumber = parseInt(btn.getAttribute("data-page-number") || "0");
+    paginationButtons.forEach((btn) => {
+      const pageNumber = parseInt(btn.getAttribute("data-page-number") || "0");
 
-    btn.addEventListener("click", () => {
-      buildResultsForPage(resultsPanel, results, pageNumber);
+      btn.addEventListener("click", () => {
+        buildResultsForPage(resultsPanel, results, pageNumber);
+      });
     });
-  });
+  }
 
   resultsPanel.append(...newResults);
 };
