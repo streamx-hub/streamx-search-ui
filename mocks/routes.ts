@@ -1,24 +1,25 @@
 import { ViteDevServer } from "vite";
 import { getData } from "./results-data";
+import { getSuggestions } from "./suggestions-data";
 
 const TABS_COUT = 6;
 
 const TABS_CONGIFS = [
   {
     type: "Products",
-    count: 100
+    count: 100,
   },
   {
     type: "Articles",
-    count: 15
+    count: 15,
   },
   {
     type: "Videos",
-    count: 23
+    count: 23,
   },
   {
     type: "Documents",
-    count: 1001
+    count: 1001,
   },
   {
     type: "Images",
@@ -30,7 +31,7 @@ const TABS_CONGIFS = [
   },
 ];
 
-const addMiddleware = (
+const addResultsDataMiddleware = (
   server: ViteDevServer,
   assetUrl: string,
   tabId: number,
@@ -43,7 +44,12 @@ const addMiddleware = (
     res.setHeader("Content-Type", "application/json");
     res.end(
       JSON.stringify(
-        getData(Number(from), Number(pageSize), TABS_CONGIFS[tabId].type,  TABS_CONGIFS[tabId].count),
+        getData(
+          Number(from),
+          Number(pageSize),
+          TABS_CONGIFS[tabId].type,
+          TABS_CONGIFS[tabId].count,
+        ),
       ),
     );
   });
@@ -51,6 +57,14 @@ const addMiddleware = (
 
 export function routes(server: ViteDevServer) {
   for (let i = 0; i < TABS_COUT; i++) {
-    addMiddleware(server, `/results-data-tab-${i + 1}.json`, i);
+    addResultsDataMiddleware(server, `/results-data-tab-${i + 1}.json`, i);
   }
+
+  server.middlewares.use("/search-data.json", (req, res) => {
+    const url = new URL(req.url!, "http://localhost");
+    const query = url.searchParams.get("query");
+
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify(getSuggestions(query || "")));
+  });
 }

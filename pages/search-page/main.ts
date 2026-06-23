@@ -4,10 +4,7 @@ import { html } from "../../src/helper";
 import type { OpenSearchItem } from "../../src/types/open-search";
 
 const searchApiUrl = () => {
-  const mock1 = "/search-data.json";
-  const mock2 = "/search-data-2.json";
-
-  return Math.random() > 0.5 ? mock1 : mock2;
+  return "/search-data.json";
 };
 
 const initSearchPage = async (mountPoint: Element) => {

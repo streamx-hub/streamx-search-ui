@@ -1,4 +1,4 @@
-import { fetchSearchResults, html } from "../../helper";
+import { addUrlChangeListener, fetchSearchResults, html } from "../../helper";
 import type {
   OpenSearchItem,
   OpenSearchResponse,
@@ -60,9 +60,14 @@ const buildResultsForPage = (
   resultsPanel.innerHTML = "";
   resultsPanel.append(createLoadingState());
 
-  fetchSearchResults(dataUrl.toString()).then((responseData) => {
-    createResults(resultsPanel, responseData, results, pageNumber);
-  });
+  const url = new URL(window.location.href);
+  const searchQueryParam = url.searchParams.get("stx-search") || "";
+
+  fetchSearchResults(dataUrl.toString(), searchQueryParam).then(
+    (responseData) => {
+      createResults(resultsPanel, responseData, results, pageNumber);
+    },
+  );
 };
 
 const createResultsNumber = (
@@ -245,6 +250,32 @@ const createResults = (
   resultsPanel.append(...newResults);
 };
 
+const addOnSearchParamChangeAction = (
+  resultsPanel: HTMLElement,
+  results: Results,
+) => {
+  let prevSearchParam =
+    new URL(window.location.href).searchParams.get("stx-search") || "";
+
+  const onUrlChagne = () => {
+    const params = new URLSearchParams(window.location.search);
+    const searchQuery = params.get("stx-search") || "";
+
+    if (prevSearchParam !== searchQuery) {
+      buildResultsForPage(resultsPanel, results, 1);
+      prevSearchParam = searchQuery;
+    }
+  };
+
+  window.addEventListener("popstate", () => {
+    onUrlChagne();
+  });
+
+  addUrlChangeListener(() => {
+    onUrlChagne();
+  });
+};
+
 export const createResultsPanel = (resultsConfig: ResultsConfig) => {
   const results = { ...DEFAULT_RESULTS_CONFIG, ...resultsConfig };
 
@@ -253,6 +284,8 @@ export const createResultsPanel = (resultsConfig: ResultsConfig) => {
   ` as HTMLDivElement;
 
   buildResultsForPage(resultsPanel, results, 1);
+
+  addOnSearchParamChangeAction(resultsPanel, results);
 
   return resultsPanel;
 };

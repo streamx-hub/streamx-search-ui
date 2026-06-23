@@ -1,4 +1,9 @@
-import { debounce, fetchSearchResults, html } from "../../helper";
+import {
+  debounce,
+  fetchSearchResults,
+  html,
+  sendUrlChagneEvent,
+} from "../../helper";
 import DEFAULT_CONFIG from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
 import type { QueryInputConfig } from "../../types/config";
@@ -26,13 +31,13 @@ const debouceSearch = (
 ) => {
   let controller: AbortController | null = null;
 
-  const deboucendSearch = debounce(async () => {
+  const deboucendSearch = debounce(async (query) => {
     controller?.abort();
 
     controller = new AbortController();
 
     try {
-      const data = await fetchSearchResults(url, controller.signal);
+      const data = await fetchSearchResults(url, query, controller.signal);
 
       callback(data);
     } catch (error) {
@@ -47,12 +52,22 @@ const debouceSearch = (
   return deboucendSearch;
 };
 
+const saveSerachQueryInUrl = (query: string) => {
+  const url = new URL(window.location.href);
+  const SEARCH_QUERY_PARAM_NAME = "stx-search";
+
+  url.searchParams.delete(SEARCH_QUERY_PARAM_NAME);
+  url.searchParams.set(SEARCH_QUERY_PARAM_NAME, query);
+  window.history.pushState({}, "", url);
+  sendUrlChagneEvent();
+};
+
 export function creatQueryInput(customConfig: QueryInputConfig) {
   const config = resolveConfig(customConfig);
   const inputTextId = crypto.randomUUID();
   const suggestionWrapperId = crypto.randomUUID();
   const { labels, renderers } = config;
-  let onSearch: () => void;
+  let onSearch: (val: string) => void;
 
   const queryInputEl = html`
     <div class="stx-query-input">
@@ -163,7 +178,7 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
       clearButton.classList.toggle("stx-hidden", !value.length);
 
       if (value.length >= config.minSearchLength) {
-        onSearch();
+        onSearch(inputEl.value);
       }
 
       if (!value.length && suggestionContainer) {
@@ -174,6 +189,25 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
     inputEl.addEventListener("keydown", (e) => {
       const { key } = e;
+
+      if (key === "Enter") {
+        if (activeIndex > -1 && suggestionContainer) {
+          e.preventDefault();
+          const elements = suggestionContainer.querySelectorAll(
+            ".stx-suggestion__item",
+          ) as NodeListOf<HTMLElement>;
+
+          elements[activeIndex]?.click();
+        } else {
+          if (config.searchPageUrl) {
+            const link = config.searchPageUrl(inputEl.value);
+
+            window.location.href = link.toString();
+          } else {
+            saveSerachQueryInUrl(inputEl.value);
+          }
+        }
+      }
 
       if (!suggestionListLenght) {
         return;
@@ -195,15 +229,6 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
         activeIndex = activeIndex > 0 ? activeIndex - 1 : maxIndex;
         updateActiveItem();
-      } else if (key === "Enter") {
-        if (activeIndex > -1 && suggestionContainer) {
-          e.preventDefault();
-          const elements = suggestionContainer.querySelectorAll(
-            ".stx-suggestion__item",
-          ) as NodeListOf<HTMLElement>;
-
-          elements[activeIndex]?.click();
-        }
       } else if (key === "Escape") {
         activeIndex = -1;
 

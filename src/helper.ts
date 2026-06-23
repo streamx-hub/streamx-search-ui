@@ -196,8 +196,15 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
-export const fetchSearchResults = async (url: string, signal?: AbortSignal) => {
-  const response = await fetch(url, { signal });
+export const fetchSearchResults = async (
+  url: string,
+  query: string,
+  signal?: AbortSignal,
+) => {
+  const searchURL = new URL(url, window.location.origin);
+  searchURL.searchParams.set("query", query);
+
+  const response = await fetch(searchURL.toString(), { signal });
 
   if (!response.ok) {
     throw new Error(`Fetch data error: ${response.status}`);
@@ -232,4 +239,14 @@ export const lazyBuildComponent = (buildFunction: () => HTMLElement) => {
     element: placeholderEl,
     build,
   };
+};
+
+export const sendUrlChagneEvent = () => {
+  window.dispatchEvent(new Event("urlchange"));
+};
+
+export const addUrlChangeListener = (handler: () => void) => {
+  window.addEventListener("urlchange", () => {
+    handler();
+  });
 };

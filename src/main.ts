@@ -1,8 +1,5 @@
 import "./style.css";
-import {
-  createSearchInModal,
-  createTextInput,
-} from "./inline-search/index.ts";
+import { createSearchInModal, createTextInput } from "./inline-search/index.ts";
 import { html } from "./helper.ts";
 
 const appEl = document.body.querySelector("#app");
@@ -65,10 +62,7 @@ appEl.innerHTML = `
 `;
 
 const searchApiUrl = () => {
-  const mock1 = "/src/assets/mocks/search-data.json";
-  const mock2 = "/src/assets/mocks/search-data-2.json";
-
-  return Math.random() > 0.5 ? mock1 : mock2;
+  return "/search-data.json";
 };
 
 // default inline search
