@@ -71,31 +71,33 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
   const queryInputEl = html`
     <div class="stx-query-input">
-      <button
-        class="stx-query-input__search-button"
-        type="button"
-        aria-label="${labels.searchButtonAria}"
-      >
-        ${renderers.searchIcon()}
-      </button>
-      <div class="stx-query-input__input-wrapper">
-        <label for="${inputTextId}">${labels.inputLabel}</label>
-        <input
-          class="stx-query-input__input"
-          type="text"
-          placeholder="${labels.inputPlaceholder}"
-          role="combobox"
-          aria-expanded="false"
-          aria-autocomplete="list"
-          aria-controls="${suggestionWrapperId}"
-          id="${inputTextId}"
-        />
+      <div class="stx-query-input__controls">
+        <div class="stx-query-input__input-wrapper">
+          <label for="${inputTextId}">${labels.inputLabel}</label>
+          <input
+            class="stx-query-input__input"
+            type="text"
+            placeholder="${labels.inputPlaceholder}"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            aria-controls="${suggestionWrapperId}"
+            id="${inputTextId}"
+          />
+          <button
+            class="stx-query-input__clear-button stx-hidden"
+            type="button"
+            aria-label="${labels.clearButtonAria}"
+          >
+            ${renderers.clearIcon()}
+          </button>
+        </div>
         <button
-          class="stx-query-input__clear-button stx-hidden"
+          class="stx-query-input__search-button"
           type="button"
-          aria-label="${labels.clearButtonAria}"
+          aria-label="${labels.searchButtonAria}"
         >
-          ${renderers.clearIcon()}
+          ${renderers.searchIcon()}
         </button>
       </div>
       <div
