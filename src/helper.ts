@@ -206,3 +206,30 @@ export const fetchSearchResults = async (url: string, signal?: AbortSignal) => {
   return response.json() as Promise<OpenSearchResponse>;
 };
 
+/**
+ * Creates a placeholder that is replaced with the built element on the first `build()` call.
+ *
+ * @param buildFunction Function creating the element.
+ */
+export const lazyBuildComponent = (buildFunction: () => HTMLElement) => {
+  let isBuild = false;
+  const placeholderEl = html`
+    <div data-lazy-build="true"></div>
+  ` as HTMLDivElement;
+
+  const build = () => {
+    if (isBuild) {
+      return;
+    }
+
+    const newEl = buildFunction();
+
+    placeholderEl.replaceWith(newEl);
+    isBuild = true;
+  };
+
+  return {
+    element: placeholderEl,
+    build,
+  };
+};

@@ -1,4 +1,4 @@
-import { html } from "../../helper";
+import { html, lazyBuildComponent } from "../../helper";
 import {
   createResultsPanel,
   type Results,
@@ -55,9 +55,12 @@ const createTabButton = (tabData: TabConfig, isSelected: boolean) => {
 
 const createTabContent = (tabData: Tab, isSelected: boolean) => {
   const { id } = tabData;
-  const tabContent = createResultsPanel(tabData.results);
 
-  return html`
+  const { element, build } = lazyBuildComponent(() => {
+    return createResultsPanel(tabData.results);
+  });
+
+  const tabEl = html`
     <div
       id="${getTabContentId(id)}"
       role="tabpanel"
@@ -65,9 +68,14 @@ const createTabContent = (tabData: Tab, isSelected: boolean) => {
       class="stx-tabs__content"
       ${isSelected ? "" : "hidden"}
     >
-      <div>${tabContent}</div>
+      <div>${element}</div>
     </div>
-  `;
+  ` as HTMLDivElement;
+
+  return {
+    element: tabEl,
+    build,
+  };
 };
 
 function createTabs(
@@ -76,7 +84,14 @@ function createTabs(
 ) {
   const tabs = resolvedTab(tabsConfig, customRenderers);
   const buttonList = tabs.map((el, index) => createTabButton(el, !index));
-  const contentList = tabs.map((el, index) => createTabContent(el, !index));
+  const tabsLazyMounts: (() => void)[] = [];
+  const contentList: HTMLDivElement[] = [];
+
+  tabs.forEach((el, index) => {
+    const { element, build } = createTabContent(el, !index);
+    tabsLazyMounts.push(build);
+    contentList.push(element);
+  });
 
   const tabsEl = html`
     <div class="stx-tabs">
@@ -86,7 +101,7 @@ function createTabs(
   ` as HTMLDivElement;
 
   const activateTab = (selectedTabButton: HTMLButtonElement) => {
-    buttonList.forEach((button) => {
+    buttonList.forEach((button, index) => {
       const isSelected = button === selectedTabButton;
       const contentElId = button.getAttribute("aria-controls");
       const contentEl = tabsEl.querySelector(`#${contentElId}`);
@@ -96,9 +111,15 @@ function createTabs(
 
       if (contentEl && contentEl instanceof HTMLElement) {
         contentEl.hidden = !isSelected;
+
+        if (isSelected) {
+          tabsLazyMounts[index]();
+        }
       }
     });
   };
+
+  tabsLazyMounts[0]();
 
   const onKeyDown = (e: KeyboardEvent) => {
     const { target } = e;
