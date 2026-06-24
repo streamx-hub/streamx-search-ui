@@ -1,4 +1,4 @@
-import type { ResultsRendererSet } from "../../src/components/results-panel/results-panel";
+import type { CustomRenderersSet } from "../../src/components/results-panel/results-panel";
 import type { TabConfig } from "../../src/components/tabs/tabs";
 import { html } from "../../src/helper";
 import type { OpenSearchItem } from "../../src/types/open-search";
@@ -15,7 +15,15 @@ const initSearchPage = async (mountPoint: Element) => {
     searchApiUrl,
   });
 
-  const renderers: ResultsRendererSet = {
+  const renderers: CustomRenderersSet = {
+    loader: () => {
+      return html`
+        <span>
+          Loading
+          <span> </span
+        ></span>
+      ` as HTMLSpanElement;
+    },
     "item-products": (item: OpenSearchItem) => {
       return html`
         <div class="custom-result-item-render">

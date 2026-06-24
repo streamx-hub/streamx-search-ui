@@ -3,7 +3,7 @@ import {
   createResultsPanel,
   type Results,
   type ResultsConfig,
-  type ResultsRendererSet,
+  type CustomRenderersSet,
 } from "../results-panel/results-panel";
 import "./tabs.css";
 
@@ -21,7 +21,7 @@ export interface Tab {
 
 const resolvedTab = (
   tabsConfig: TabConfig[],
-  customRenderers: ResultsRendererSet = {},
+  customRenderers: CustomRenderersSet = {},
 ): Tab[] => {
   return tabsConfig.map((c) => ({
     ...c,
@@ -80,7 +80,7 @@ const createTabContent = (tabData: Tab, isSelected: boolean) => {
 
 function createTabs(
   tabsConfig: TabConfig[],
-  customRenderers?: ResultsRendererSet,
+  customRenderers?: CustomRenderersSet,
 ) {
   const tabs = resolvedTab(tabsConfig, customRenderers);
   const buttonList = tabs.map((el, index) => createTabButton(el, !index));

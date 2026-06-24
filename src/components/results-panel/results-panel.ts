@@ -1,29 +1,7 @@
 import { addUrlChangeListener, fetchSearchResults, html } from "../../helper";
-import type {
-  OpenSearchItem,
-  OpenSearchResponse,
-} from "../../types/open-search";
+import type { OpenSearchResponse } from "../../types/open-search";
 
-const DEFAULT_RESULTS_CONFIG = {
-  pageSize: 20,
-  renderers: {},
-};
-
-type ResultRenderer = (item: OpenSearchItem) => HTMLElement | string;
-
-export type ResultsRendererSet = {
-  [renderName: string]: ResultRenderer;
-};
-
-export interface ResultsConfig {
-  pageSize?: number;
-  dataSources: string[];
-  renderers?: ResultsRendererSet;
-}
-
-export type Results = Required<ResultsConfig>;
-
-const createLoadingState = () => {
+const defaultRenderLoader = () => {
   return html`
     <span>
       <svg
@@ -47,6 +25,26 @@ const createLoadingState = () => {
   ` as HTMLElement;
 };
 
+const DEFAULT_RESULTS_CONFIG = {
+  pageSize: 20,
+  renderers: {
+    loader: defaultRenderLoader,
+  },
+};
+
+type CustomRenderer = (...args: any[]) => HTMLElement;
+
+export type CustomRenderersSet = {
+  [rendererName: string]: CustomRenderer;
+};
+export interface ResultsConfig {
+  pageSize?: number;
+  dataSources: string[];
+  renderers?: CustomRenderersSet;
+}
+
+export type Results = Required<ResultsConfig>;
+
 const buildResultsForPage = (
   resultsPanel: HTMLElement,
   results: Results,
@@ -58,7 +56,7 @@ const buildResultsForPage = (
   dataUrl.searchParams.set("size", String(results.pageSize));
 
   resultsPanel.innerHTML = "";
-  resultsPanel.append(createLoadingState());
+  resultsPanel.append(results.renderers.loader());
 
   const url = new URL(window.location.href);
   const searchQueryParam = url.searchParams.get("stx-search") || "";
@@ -175,7 +173,7 @@ const createPagination = (
 
 const createItems = (
   data: OpenSearchResponse,
-  renderers: ResultsRendererSet,
+  renderers: CustomRenderersSet,
 ) => {
   return data.hits.hits.map((item) => {
     const { type } = item._source;
@@ -276,11 +274,22 @@ const addOnSearchParamChangeAction = (
   });
 };
 
+const resolveConfig = (resultsConfig: ResultsConfig) => {
+  return {
+    ...DEFAULT_RESULTS_CONFIG,
+    ...resultsConfig,
+    renderers: {
+      ...DEFAULT_RESULTS_CONFIG.renderers,
+      ...resultsConfig.renderers,
+    },
+  };
+};
+
 export const createResultsPanel = (resultsConfig: ResultsConfig) => {
-  const results = { ...DEFAULT_RESULTS_CONFIG, ...resultsConfig };
+  const results = resolveConfig(resultsConfig);
 
   const resultsPanel = html`
-    <div class="stx-results-panel">${createLoadingState()}</div>
+    <div class="stx-results-panel">${results.renderers.loader()}</div>
   ` as HTMLDivElement;
 
   buildResultsForPage(resultsPanel, results, 1);
