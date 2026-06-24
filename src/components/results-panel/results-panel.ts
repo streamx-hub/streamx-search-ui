@@ -94,12 +94,34 @@ const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
   };
 };
 
+const restoreFocusForPage = () => {
+  let activePage: string | null;
+
+  if (
+    document.activeElement &&
+    document.activeElement.getAttribute("data-page-number")
+  ) {
+    activePage = document.activeElement.getAttribute("data-page-number");
+  }
+
+  return () => {
+    if (activePage) {
+      const btn = document.querySelector(`[data-page-number="${activePage}"`);
+
+      if (btn instanceof HTMLButtonElement) {
+        btn.focus();
+      }
+    }
+  };
+};
+
 const buildResultsForPage = (
   resultsPanel: HTMLElement,
   results: Results,
   pageNumber: number,
 ) => {
   const dataUrl = new URL(results.dataSources[0], window.location.href);
+  const restorePageFocus = restoreFocusForPage();
 
   dataUrl.searchParams.set("from", String((pageNumber - 1) * results.pageSize));
   dataUrl.searchParams.set("size", String(results.pageSize));
@@ -113,6 +135,7 @@ const buildResultsForPage = (
   fetchSearchResults(dataUrl.toString(), searchQueryParam).then(
     (responseData) => {
       createResults(resultsPanel, responseData, results, pageNumber);
+      restorePageFocus();
     },
   );
 };
