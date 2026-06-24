@@ -1,4 +1,9 @@
-import { addUrlChangeListener, fetchSearchResults, html } from "../../helper";
+import {
+  addUrlChangeListener,
+  fetchSearchResults,
+  html,
+  normalizeLabels,
+} from "../../helper";
 import type { OpenSearchResponse } from "../../types/open-search";
 
 const defaultRenderLoader = () => {
@@ -25,25 +30,69 @@ const defaultRenderLoader = () => {
   ` as HTMLElement;
 };
 
-const DEFAULT_RESULTS_CONFIG = {
-  pageSize: 20,
-  renderers: {
-    loader: defaultRenderLoader,
-  },
-};
-
 type CustomRenderer = (...args: any[]) => HTMLElement;
 
 export type CustomRenderersSet = {
   [rendererName: string]: CustomRenderer;
 };
+
+export type ResultsPanelLabelsConfig = {
+  paginationInfo?: (currentPage: number, pageNumber: number) => string;
+  totalResults?: (totalCount: number) => string;
+  ariaPaginationGoToPage?: (pageNumber: number) => string;
+  ariaPaginationNavigation?: string;
+};
+
+export type ResultsPanelLabels = Required<ResultsPanelLabelsConfig>;
+
+type ResultsPanelNormalizedLabels = {
+  [K in keyof ResultsPanelLabels]: (...args: any[]) => string;
+};
+
 export interface ResultsConfig {
   pageSize?: number;
   dataSources: string[];
   renderers?: CustomRenderersSet;
+  labels?: ResultsPanelLabelsConfig;
 }
 
-export type Results = Required<ResultsConfig>;
+export type Results = Omit<Required<ResultsConfig>, "labels"> & {
+  labels: ResultsPanelNormalizedLabels;
+};
+
+const DEFAULT_RESULTS_CONFIG = {
+  pageSize: 20,
+  renderers: {
+    loader: defaultRenderLoader,
+  },
+  labels: {
+    paginationInfo: (currentPage: number, pageNumber: number) =>
+      `Page ${currentPage} of ${pageNumber}`,
+    totalResults: (totalCount: number) => `Total results: ${totalCount}`,
+    ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
+    ariaPaginationNavigation: "Pagination",
+  },
+};
+
+const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
+  const defaultLabels = normalizeLabels(DEFAULT_RESULTS_CONFIG.labels);
+  const configLabels = resultsConfig.labels
+    ? normalizeLabels(resultsConfig.labels)
+    : {};
+
+  return {
+    ...DEFAULT_RESULTS_CONFIG,
+    ...resultsConfig,
+    renderers: {
+      ...DEFAULT_RESULTS_CONFIG.renderers,
+      ...resultsConfig.renderers,
+    },
+    labels: {
+      ...defaultLabels,
+      ...configLabels,
+    },
+  };
+};
 
 const buildResultsForPage = (
   resultsPanel: HTMLElement,
@@ -79,12 +128,12 @@ const createResultsNumber = (
 
   return html`
     <div class="stx-results-panel__results-number">
-      <span class="stx-results-panel__page-number"
-        >Page ${currentPage} of ${pagesNumber}</span
-      >
-      <span class="stx-results-panel__total-number"
-        >Total results: ${data.hits.total.value}</span
-      >
+      <span class="stx-results-panel__page-number">
+        ${results.labels.paginationInfo(currentPage, pagesNumber)}
+      </span>
+      <span class="stx-results-panel__total-number">
+        ${results.labels.totalResults(data.hits.total.value)}
+      </span>
     </div>
   ` as HTMLDivElement;
 };
@@ -113,7 +162,7 @@ const createPagination = (
   if (paginationStartPage > 1) {
     paginationButtonList.push(
       html`<li class="stx-results-panel__pagination-list-item">
-        <button data-page-number="1">1</a>
+        <button data-page-number="1" aria-label="${results.labels.ariaPaginationGoToPage(1)}">1</a>
       </li>` as HTMLLinkElement,
     );
   }
@@ -135,7 +184,13 @@ const createPagination = (
   for (let i = paginationStartPage; i < paginationEndIndex; i++) {
     paginationButtonList.push(
       html`<li class="stx-results-panel__pagination-list-item">
-        <button data-page-number="${i}" class="${currentPage === i ? "stx-is-active" : ""}">${i}</b>
+        <button
+          data-page-number="${i}"
+          class="${currentPage === i ? "stx-is-active" : ""}"
+          aria-label="${results.labels.ariaPaginationGoToPage(i)}"
+        >
+          ${i}
+        </button>
       </li>` as HTMLLinkElement,
     );
   }
@@ -154,14 +209,19 @@ const createPagination = (
   if (paginationStartPage < pagesCount - 4) {
     paginationButtonList.push(
       html` <li class="stx-results-panel__pagination-list-item">
-        <button data-page-number="${pagesCount}">${pagesCount}</button>
+        <button
+          data-page-number="${pagesCount}"
+          aria-label="${results.labels.ariaPaginationGoToPage(pagesCount)}"
+        >
+          ${pagesCount}
+        </button>
       </li>` as HTMLLinkElement,
     );
   }
 
   return html`
     <nav
-      aria-label="Pagination"
+      aria-label="${results.labels.ariaPaginationNavigation()}"
       class="stx-results-panel__pagination-container"
     >
       <ul class="stx-results-panel__pagination-list">
@@ -274,18 +334,7 @@ const addOnSearchParamChangeAction = (
   });
 };
 
-const resolveConfig = (resultsConfig: ResultsConfig) => {
-  return {
-    ...DEFAULT_RESULTS_CONFIG,
-    ...resultsConfig,
-    renderers: {
-      ...DEFAULT_RESULTS_CONFIG.renderers,
-      ...resultsConfig.renderers,
-    },
-  };
-};
-
-export const createResultsPanel = (resultsConfig: ResultsConfig) => {
+export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
   const results = resolveConfig(resultsConfig);
 
   const resultsPanel = html`

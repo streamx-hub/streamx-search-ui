@@ -1,9 +1,10 @@
-import { html, lazyBuildComponent } from "../../helper";
+import { html, lazyBuildComponent, normalizeLabels } from "../../helper";
 import {
   createResultsPanel,
   type Results,
   type ResultsConfig,
   type CustomRenderersSet,
+  type ResultsPanelLabelsConfig,
 } from "../results-panel/results-panel";
 import "./tabs.css";
 
@@ -22,6 +23,7 @@ export interface Tab {
 const resolvedTab = (
   tabsConfig: TabConfig[],
   customRenderers: CustomRenderersSet = {},
+  labels: ResultsPanelLabelsConfig = {},
 ): Tab[] => {
   return tabsConfig.map((c) => ({
     ...c,
@@ -29,6 +31,7 @@ const resolvedTab = (
       pageSize: 10,
       ...c.results,
       renderers: { ...customRenderers, ...c.results?.renderers },
+      labels: normalizeLabels(labels),
     },
   }));
 };
@@ -36,7 +39,7 @@ const resolvedTab = (
 const getTabId = (id: string) => `stx-tab-${id}`;
 const getTabContentId = (id: string) => `stx-tab-content-${id}`;
 
-const createTabButton = (tabData: TabConfig, isSelected: boolean) => {
+const createTabButton = (tabData: Tab, isSelected: boolean) => {
   const { id, displayName } = tabData;
 
   return html`

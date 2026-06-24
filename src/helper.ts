@@ -250,3 +250,19 @@ export const addUrlChangeListener = (handler: () => void) => {
     handler();
   });
 };
+
+type NormalizeLabels<T> = {
+  [K in keyof T]-?: NonNullable<T[K]> extends (...args: infer A) => string
+    ? (...args: A) => string
+    : () => string;
+};
+
+export const normalizeLabels = <T extends Record<string, any>>(
+  labels: T,
+): NormalizeLabels<T> => {
+  return Object.fromEntries(
+    Object.entries(labels).map(([key, value]) => {
+      return [key, typeof value === "string" ? () => value : value];
+    }),
+  ) as NormalizeLabels<T>;
+};
