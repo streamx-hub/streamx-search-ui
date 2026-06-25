@@ -50,7 +50,7 @@ const DEFAULT_RESULTS_CONFIG = {
   labels: {
     paginationInfo: (currentPage: number, pageNumber: number) =>
       `Page ${currentPage} of ${pageNumber}`,
-    totalResults: (totalCount: number) => `Total results: ${totalCount}`,
+    totalResults: (totalCount: number) => `${totalCount} results found.`,
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
     ariaPaginationNavigation: "Pagination",
   },
@@ -74,6 +74,36 @@ const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
       ...configLabels,
     },
   };
+};
+
+const getLiveRegion = () => {
+  const liveRegionEl = document.querySelector(
+    ".stx-results-panel__live-region",
+  );
+
+  if (liveRegionEl) {
+    return liveRegionEl;
+  }
+
+  const resultsPanelLiveRegion = html`<div
+    class="stx-results-panel__live-region stx-sr-only"
+    aria-live="polite"
+    aria-atomic="true"
+    role="status"
+  ></div>` as HTMLDivElement;
+
+  document.body.append(resultsPanelLiveRegion);
+
+  return resultsPanelLiveRegion;
+};
+
+const announceResults = (message: string) => {
+  const statusEl = getLiveRegion();
+  statusEl.textContent = "";
+
+  requestAnimationFrame(() => {
+    statusEl.textContent = message;
+  });
 };
 
 const restoreFocusForPage = () => {
@@ -176,7 +206,7 @@ const createPagination = (
     paginationButtonList.push(
       html`<li
         class="stx-results-panel__pagination-list-item stx-results-panel__pagination-dots "
-        aria-hidden
+        aria-hidden="true"
       >
         ...
       </li>` as HTMLSpanElement,
@@ -192,6 +222,7 @@ const createPagination = (
         <button
           data-page-number="${i}"
           class="${currentPage === i ? "stx-is-active" : ""}"
+          aria-current="${currentPage === i ? "page" : null}"
           aria-label="${results.labels.ariaPaginationGoToPage(i)}"
         >
           ${i}
@@ -204,7 +235,7 @@ const createPagination = (
     paginationButtonList.push(
       html`<li
         class="stx-results-panel__pagination-list-item stx-results-panel__pagination-dots"
-        aria-hidden
+        aria-hidden="true"
       >
         ...
       </li>` as HTMLSpanElement,
@@ -316,6 +347,8 @@ const createResults = (
   }
 
   resultsPanel.append(...newResults);
+
+  announceResults(results.labels.totalResults(data.hits.total.value));
 };
 
 const addOnSearchParamChangeAction = (

@@ -48,5 +48,5 @@ export const resultsPanelErrorRenderer = () => {
         Please try again later
       </span>
     </div>
-  `;
+  ` as HTMLElement;
 };
