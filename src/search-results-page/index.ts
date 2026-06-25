@@ -1,3 +1,4 @@
+import globalConfig from "../config";
 import { creatQueryInput } from "../components/query-input/query-input";
 import { html } from "../helper";
 import type { QueryInputConfig } from "../types/config";
@@ -20,7 +21,12 @@ const createTabContent = (
   mountPoint: Element,
   config: TabConfig[],
   renderers?: CustomRenderersSet,
+  debug?: boolean,
 ) => {
+  if (debug) {
+    globalConfig.debug = true;
+  }
+
   const tabs = createTabs(config, renderers);
 
   mountPoint.append(tabs);

@@ -17,12 +17,7 @@ const initSearchPage = async (mountPoint: Element) => {
 
   const renderers: CustomRenderersSet = {
     loader: () => {
-      return html`
-        <span>
-          Loading
-          <span> </span
-        ></span>
-      ` as HTMLSpanElement;
+      return html` <span>Loading</span> ` as HTMLSpanElement;
     },
     "item-products": (item: OpenSearchItem) => {
       return html`

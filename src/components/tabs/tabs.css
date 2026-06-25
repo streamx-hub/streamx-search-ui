@@ -126,6 +126,30 @@
   animation: stx-spin 1s linear infinite;
 }
 
+.stx-results-panel__error {
+  border: solid 1px red;
+  border-radius: 5px;
+  padding: 10px 5px;
+  color: red;
+  background: #ff000024;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.stx-results-panel__error-heading {
+  font-size: 1.5rem;
+}
+
+.stx-results-panel__no-item-renderer {
+  border: solid 1px red;
+  border-radius: 5px;
+  padding: 10px 5px;
+  color: red;
+  background: #ff000024;
+}
+
 @keyframes stx-spin {
   to {
     transform: rotate(360deg);

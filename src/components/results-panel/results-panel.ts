@@ -5,30 +5,11 @@ import {
   normalizeLabels,
 } from "../../helper";
 import type { OpenSearchResponse } from "../../types/open-search";
-
-const defaultRenderLoader = () => {
-  return html`
-    <span>
-      <svg
-        class="stx-results-panel__loader"
-        width="32"
-        height="32"
-        viewBox="0 0 24 24"
-        fill="none"
-      >
-        <circle
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-dasharray="48 16"
-        ></circle>
-      </svg>
-    </span>
-  ` as HTMLElement;
-};
+import {
+  defaultRenderLoader,
+  noItemRenderer,
+  resultsPanelErrorRenderer,
+} from "./renderers";
 
 type CustomRenderer = (...args: any[]) => HTMLElement;
 
@@ -64,6 +45,7 @@ const DEFAULT_RESULTS_CONFIG = {
   pageSize: 20,
   renderers: {
     loader: defaultRenderLoader,
+    error: resultsPanelErrorRenderer,
   },
   labels: {
     paginationInfo: (currentPage: number, pageNumber: number) =>
@@ -263,7 +245,12 @@ const createItems = (
     let itemContent: HTMLElement | string;
 
     if (renderers[`item-${type}`]) {
-      itemContent = renderers[`item-${type}`](item);
+      try {
+        itemContent = renderers[`item-${type}`](item);
+      } catch (error) {
+        console.error(error);
+        return noItemRenderer(item);
+      }
     } else {
       itemContent = html`
         <span>
@@ -364,9 +351,13 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
     <div class="stx-results-panel">${results.renderers.loader()}</div>
   ` as HTMLDivElement;
 
-  buildResultsForPage(resultsPanel, results, 1);
+  try {
+    buildResultsForPage(resultsPanel, results, 1);
+    addOnSearchParamChangeAction(resultsPanel, results);
 
-  addOnSearchParamChangeAction(resultsPanel, results);
-
-  return resultsPanel;
+    return resultsPanel;
+  } catch (error) {
+    console.error(error);
+    return results.renderers.error(results.labels);
+  }
 };
