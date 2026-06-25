@@ -7,6 +7,7 @@ const createValue = (id: number, title: string, type: string) => ({
     type: id % 5 === 0 ? `products` : type,
     image: `https://placehold.co/600x400?text=${title}%20${id}`,
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    link: `/product/${id}`,
   },
 });
 

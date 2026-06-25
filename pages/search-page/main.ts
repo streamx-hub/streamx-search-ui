@@ -22,12 +22,14 @@ const initSearchPage = async (mountPoint: Element) => {
     "item-products": (item: OpenSearchItem) => {
       return html`
         <div class="custom-result-item-render">
-          <img src="${item._source.image}" />
+          <img src="${item._source.image}" alt="" />
           <div class="custom-result-item-render__text">
             <span>Custom render for <em>products</em></span>
             <span>${item._id}</span>
             <span>${item._source.type}</span>
-            <span>${item._source.description}</span>
+            <a href="${item._source.link}">
+              <span>${item._source.description}</span>
+            </a>
           </div>
         </div>
       ` as HTMLDivElement;
