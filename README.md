@@ -20,6 +20,17 @@ The library provides ready-to-use search inputs, modal search, tabbed search pag
 
 ---
 
+## Documentation
+
+The following documents provide additional information about the library:
+
+| Document                                    | Description                      |
+| ------------------------------------------- | -------------------------------- |
+| [API.md](./docs/API.md)                     | Complete API reference.          |
+| [CUSTOMIZATION.md](./docs/CUSTOMIZATION.md) | Styling and customization guide. |
+
+---
+
 ## Installation
 
 Use the files generated in the `dist` directory.
