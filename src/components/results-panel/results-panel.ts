@@ -10,6 +10,7 @@ import {
   noItemRenderer,
   resultsPanelErrorRenderer,
 } from "./renderers";
+import "./results-panel.css";
 
 type CustomRenderer = (...args: any[]) => HTMLElement;
 
@@ -157,7 +158,7 @@ const createResultsNumber = (
   results: Results,
   currentPage: number,
 ) => {
-  const totalNumber = data.hits.total.value;
+  const totalNumber = data.hits?.total.value || 0;
   const pageSize = results.pageSize;
   const pagesNumber = Math.ceil(totalNumber / pageSize);
 
@@ -167,7 +168,7 @@ const createResultsNumber = (
         ${results.labels.paginationInfo(currentPage, pagesNumber)}
       </span>
       <span class="stx-results-panel__total-number">
-        ${results.labels.totalResults(data.hits.total.value)}
+        ${results.labels.totalResults(data.hits?.total.value || 0)}
       </span>
     </div>
   ` as HTMLDivElement;
@@ -271,7 +272,7 @@ const createItems = (
   data: OpenSearchResponse,
   renderers: CustomRenderersSet,
 ) => {
-  return data.hits.hits.map((item) => {
+  return data.hits.hits?.map((item) => {
     const { type } = item._source;
     let itemContent: HTMLElement | string;
 

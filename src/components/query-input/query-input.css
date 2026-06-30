@@ -12,6 +12,7 @@
 
 .stx-search-modal {
   overflow: visible;
+  z-index: 100; /* needed when opening the dialog as non-modal */
 }
 
 .stx-query-input__controls {
@@ -21,6 +22,7 @@
 
 .stx-query-input {
   position: relative;
+  z-index: 1000;
 }
 
 .stx-query-input__input-wrapper {
@@ -76,7 +78,7 @@
 }
 
 .stx-query-input__input:focus {
-  border-bottom-color: color-mix(in srgb, var(--stx-color-border) 75%, black);
+  border-color: var(--stx-color-border-focus, var(--stx-color-border));
 }
 
 .stx-query-input__clear-button,

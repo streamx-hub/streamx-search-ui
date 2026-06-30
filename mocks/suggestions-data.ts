@@ -1,65 +1,64 @@
 const dataList = [
   {
-    _id: "/products/lift-top-storage-coffee-table-natural-2097.html",
+    _id: "/products/1.html",
     _source: {
       payload: {
-        title: "Lift-Top Storage Coffee Table, Natural",
+        title: "Chair",
       },
       type: "page/product",
     },
   },
   {
-    _id: "/products/lift-top-storage-coffee-table-white-2098.html",
+    _id: "/products/2.html",
     _source: {
       payload: {
-        title: "Lift-Top Storage Coffee Table, White",
+        title: "Storage Coffee Table, White",
       },
       type: "page/product",
     },
   },
   {
-    _id: "/products/rivet-bristol-natural-edge-black-metal-side-table-walnut-2092.html",
+    _id: "/products/3.html",
     _source: {
       payload: {
-        title: "Rivet Bristol Natural Edge Black Metal Side Table, Walnut",
+        title: "Storage Coffee Table, Black",
       },
       type: "page/product",
     },
   },
   {
-    _id: "/products/kid-table-set-with-dry-erasable-table-top-b07ybhc881.html",
+    _id: "/products/4.html",
     _source: {
       payload: {
-        title: "Kid Table Set with Dry Erasable Table Top",
+        title: "Kid Table Set",
       },
       type: "page/product",
     },
   },
   {
-    _id: "/products/solid-pine-rustic-farmhouse-end-table-22-w-rustic-oak-b084l7sndg.html",
+    _id: "/products/5.html",
     _source: {
       payload: {
-        title: "Solid Pine Rustic Farmhouse End Table, 22&quot;W, Rustic Oak",
+        title: "Rustic Table",
       },
 
       type: "page/product",
     },
   },
   {
-    _id: "/products/ravenna-home-heights-wood-lift-top-storage-coffee-table-43-3-w-espresso-b07dbb1gqw.html",
+    _id: "/products/6.html",
     _source: {
       payload: {
-        title:
-          "Ravenna Home Heights Wood Lift Top Storage Coffee Table, 43.3&quot;W, Espresso",
+        title: "Coffee Table Espresso",
       },
       type: "page/product",
     },
   },
   {
-    _id: "/products/parson-nightstand-table-22-w-natural-b0728ksp2r.html",
+    _id: "/products/7.html",
     _source: {
       payload: {
-        title: "Parson Nightstand Table, 22&quot;W, Natural",
+        title: "Table",
       },
       type: "page/product",
     },

@@ -3,7 +3,7 @@ export interface OpenSearchItem {
   _score: number | null;
   _source: {
     type?: string;
-    [key: string]: unknown;
+    [key: string]: any;
   };
   highlight?: Record<string, string[]>;
 }
@@ -14,6 +14,6 @@ export interface OpenSearchResponse {
     total: {
       value: number;
     };
-    hits: OpenSearchItem[];
+    hits?: OpenSearchItem[];
   };
 }

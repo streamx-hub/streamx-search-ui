@@ -2,13 +2,12 @@ import globalConfig from "../config";
 import { creatQueryInput } from "../components/query-input/query-input";
 import { html } from "../helper";
 import type { QueryInputConfig } from "../types/config";
-import "../styles/common.css";
 import createTabs, { type TabConfig } from "../components/tabs/tabs";
 import type { CustomRenderersSet } from "../components/results-panel/results-panel";
 
 const createTextInput = (
-  mountPoint: Element,
   customConfig: QueryInputConfig,
+  mountPoint: Element,
 ) => {
   const { element } = creatQueryInput(customConfig);
 

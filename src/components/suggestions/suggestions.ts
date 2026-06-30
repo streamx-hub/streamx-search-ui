@@ -64,10 +64,10 @@ const createSuggestions = (
   response: OpenSearchResponse,
   config: QueryInput,
 ) => {
-  let data = response.hits.hits;
+  let data = response.hits?.hits || [];
 
   if (config.groupByCategory) {
-    data = orderByTypeWithFlags(response.hits.hits);
+    data = orderByTypeWithFlags(response.hits?.hits || []);
   }
 
   const element = html`

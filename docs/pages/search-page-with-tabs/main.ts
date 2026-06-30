@@ -1,20 +1,11 @@
-import type { CustomRenderersSet } from "../../src/components/results-panel/results-panel";
-import type { TabConfig } from "../../src/components/tabs/tabs";
-import { html } from "../../src/helper";
-import type { OpenSearchItem } from "../../src/types/open-search";
-
-const searchApiUrl = () => {
-  return "/search-data.json";
-};
+import type { CustomRenderersSet } from "../../../src/components/results-panel/results-panel";
+import type { TabConfig } from "../../../src/components/tabs/tabs";
+import { html } from "../../../src/helper";
+import type { OpenSearchItem } from "../../../src/types/open-search";
+import { createSearchTabs } from "../../../src/exports/search-tabs";
+import { addNavigation, renderCodeBlocks } from "../../js/helper";
 
 const initSearchPage = async (mountPoint: Element) => {
-  const { createTextInput, createTabContent } =
-    await import("../../src/search-results-page/index");
-
-  createTextInput(mountPoint, {
-    searchApiUrl,
-  });
-
   const renderers: CustomRenderersSet = {
     loader: () => {
       return html` <span>Loading</span> ` as HTMLSpanElement;
@@ -82,7 +73,12 @@ const initSearchPage = async (mountPoint: Element) => {
     },
   ];
 
-  createTabContent(mountPoint, tabsConfig, renderers);
+  const searchInputConfig = {
+    searchApiUrl: "/search-data.json",
+  };
+  const searchTabs = createSearchTabs(searchInputConfig, tabsConfig, renderers);
+
+  mountPoint?.append(searchTabs);
 };
 
 const appEl = document.querySelector("#app");
@@ -92,3 +88,15 @@ if (appEl) {
 } else {
   throw new Error("The #app element is not available!");
 }
+
+// adding code sippet to the doc
+const examples = {
+  default: `
+  const tabsConfig = {...}
+  const searchInputConfig = {...};
+  const searchTabs = createSearchTabs(searchInputConfig, tabsConfig, renderers);
+`,
+};
+
+renderCodeBlocks(examples);
+addNavigation(document.body);

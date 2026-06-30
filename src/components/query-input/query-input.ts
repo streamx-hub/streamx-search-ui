@@ -165,7 +165,7 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
     onSearch = debouceSearch(url, (results) => {
       const suggestionEl = createSuggestions(results, config);
-      suggestionListLenght = results.hits.hits.length;
+      suggestionListLenght = results.hits.hits?.length || 0;
       activeIndex = -1;
 
       if (suggestionContainer) {
