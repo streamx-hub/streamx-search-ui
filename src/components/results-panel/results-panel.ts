@@ -7,7 +7,7 @@ import {
 import type { OpenSearchResponse } from "../../types/open-search";
 import {
   renderDefaultLoader,
-  noItemRenderer,
+  renderNoItem,
   renderResultsPanelError,
 } from "./renderers";
 import "./results-panel.css";
@@ -42,7 +42,7 @@ export type Results = Omit<Required<ResultsConfig>, "labels"> & {
   labels: ResultsPanelNormalizedLabels;
 };
 
-const DEFAULT_RESULTS_CONFIG = {
+const defaultConfig = {
   pageSize: 20,
   renderers: {
     loader: renderDefaultLoader,
@@ -58,16 +58,16 @@ const DEFAULT_RESULTS_CONFIG = {
 };
 
 const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
-  const defaultLabels = normalizeLabels(DEFAULT_RESULTS_CONFIG.labels);
+  const defaultLabels = normalizeLabels(defaultConfig.labels);
   const configLabels = resultsConfig.labels
     ? normalizeLabels(resultsConfig.labels)
     : {};
 
   return {
-    ...DEFAULT_RESULTS_CONFIG,
+    ...defaultConfig,
     ...resultsConfig,
     renderers: {
-      ...DEFAULT_RESULTS_CONFIG.renderers,
+      ...defaultConfig.renderers,
       ...resultsConfig.renderers,
     },
     labels: {
@@ -281,7 +281,7 @@ const createItems = (
         itemContent = renderers[`item-${type}`](item);
       } catch (error) {
         console.error(error);
-        return noItemRenderer(item);
+        return renderNoItem(item);
       }
     } else {
       itemContent = html`

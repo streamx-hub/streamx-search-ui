@@ -1,11 +1,19 @@
-import type { QueryInputLabels, QueryInputRenderers } from '../types/query-input';
-import { suggestionItem, groupItem, clearIcon, searchIcon } from '../renderers/renderers';
+import type {
+  QueryInputLabels,
+  QueryInputRenderers,
+} from "../types/query-input";
+import {
+  suggestionItem,
+  groupItem,
+  clearIcon,
+  searchIcon,
+} from "../renderers/renderers";
 
 const DEFAULT_LABELS: Required<QueryInputLabels> = {
-  inputPlaceholder: 'Search',
-  inputLabel: 'Search',
-  clearButtonAria: 'Clear search input',
-  searchButtonAria: 'Go to search page'
+  inputPlaceholder: "Search",
+  inputLabel: "Search",
+  clearButtonAria: "Clear search input",
+  searchButtonAria: "Go to search page",
 };
 
 const DEFAULT_RENDERERS: Required<QueryInputRenderers> = {
@@ -15,7 +23,7 @@ const DEFAULT_RENDERERS: Required<QueryInputRenderers> = {
   searchIcon,
 };
 
-const DEFAULT_CONFIG = {
+const defaultConfig = {
   input: {
     minSearchLength: 3,
     groupByCategory: true,
@@ -23,7 +31,7 @@ const DEFAULT_CONFIG = {
     renderers: DEFAULT_RENDERERS,
   },
   useNonModal: false,
-  analytics: () => {}
+  analytics: () => {},
 };
 
-export default DEFAULT_CONFIG;
+export default defaultConfig;

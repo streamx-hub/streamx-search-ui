@@ -26,7 +26,7 @@ export const renderDefaultLoader = () => {
   ` as HTMLElement;
 };
 
-export const noItemRenderer = (item: OpenSearchItem) => {
+export const renderNoItem = (item: OpenSearchItem) => {
   if (globalConfig.debug) {
     return html`
       <div class="stx-results-panel__no-item-renderer">

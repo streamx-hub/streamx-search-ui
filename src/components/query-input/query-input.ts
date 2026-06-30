@@ -4,7 +4,7 @@ import {
   html,
   dispatchUrlChangeEvent,
 } from "../../helper";
-import DEFAULT_CONFIG from "../../inline-search/default-config";
+import defaultConfig from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
 import type { QueryInputConfig } from "../../types/config";
 import type { QueryInput } from "../../types/query-input";
@@ -13,13 +13,13 @@ import "./query-input.css";
 
 const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
   const inputOption: QueryInput = {
-    ...DEFAULT_CONFIG.input,
+    ...defaultConfig.input,
     ...customConfig,
     renderers: {
-      ...DEFAULT_CONFIG.input.renderers,
+      ...defaultConfig.input.renderers,
       ...customConfig.renderers,
     },
-    labels: { ...DEFAULT_CONFIG.input.labels, ...customConfig.labels },
+    labels: { ...defaultConfig.input.labels, ...customConfig.labels },
   };
 
   return inputOption;
@@ -52,7 +52,7 @@ const createDebouncedSearch = (
   return deboucendSearch;
 };
 
-const saveSearchQueryToUrl = (query: string) => {
+const updateSearchQuery = (query: string) => {
   const url = new URL(window.location.href);
   const SEARCH_QUERY_PARAM_NAME = "stx-search";
 
@@ -206,7 +206,7 @@ export function createQueryInput(customConfig: QueryInputConfig) {
 
             window.location.href = link.toString();
           } else {
-            saveSearchQueryToUrl(inputEl.value);
+            updateSearchQuery(inputEl.value);
           }
         }
       }

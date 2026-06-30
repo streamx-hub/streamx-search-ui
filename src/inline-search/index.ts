@@ -1,6 +1,6 @@
 import type { Modal, ModalConfig, QueryInputConfig } from "../types/config.js";
 import { createSearchModal } from "./modal/modal.js";
-import DEFAULT_CONFIG from "./default-config.js";
+import defaultConfig from "./default-config.js";
 import { createQueryInput } from "../components/query-input/query-input.js";
 
 export type ModalData = {
@@ -47,14 +47,14 @@ const bootstrapModal = (config: Modal): ModalData => {
 
 export function mountSearchModal(customConfig: ModalConfig) {
   const config: Modal = {
-    ...DEFAULT_CONFIG,
+    ...defaultConfig,
     ...customConfig,
     input: {
-      ...DEFAULT_CONFIG.input,
+      ...defaultConfig.input,
       ...customConfig.input,
-      labels: { ...DEFAULT_CONFIG.input.labels, ...customConfig.input.labels },
+      labels: { ...defaultConfig.input.labels, ...customConfig.input.labels },
       renderers: {
-        ...DEFAULT_CONFIG.input.renderers,
+        ...defaultConfig.input.renderers,
         ...customConfig.input.renderers,
       },
     },
