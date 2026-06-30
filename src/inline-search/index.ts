@@ -45,7 +45,7 @@ const bootstrapModal = (config: Modal): ModalData => {
   };
 };
 
-export function createSearchInModal(customConfig: ModalConfig) {
+export function mountSearchModal(customConfig: ModalConfig) {
   const config: Modal = {
     ...DEFAULT_CONFIG,
     ...customConfig,
@@ -85,7 +85,7 @@ export function createSearchInModal(customConfig: ModalConfig) {
   }
 }
 
-export function createTextInput(
+export function mountQueryInput(
   customConfig: QueryInputConfig,
   mountPoint?: Element,
 ) {

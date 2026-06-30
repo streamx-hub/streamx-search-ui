@@ -46,7 +46,7 @@ const bootstrapModal = (config: Modal): ModalData => {
   };
 };
 
-export function createSearchInModal(customConfig: ModalConfig) {
+export function mountSearchModal(customConfig: ModalConfig) {
   const config: Modal = {
     ...DEFAULT_CONFIG,
     ...customConfig,

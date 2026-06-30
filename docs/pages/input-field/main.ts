@@ -1,16 +1,16 @@
 import {
-  createSearchInModal,
+  mountSearchModal,
   createSearchInput,
 } from "../../../src/exports/search-inline";
 import { addNavigation, renderCodeBlocks } from "../../js/helper";
 
 const examples = {
-  default: `createSearchInModal({
+  default: `mountSearchModal({
   searchOpenElementSelector: "#search-button-default",
   input: { searchApiUrl: "/search-data.json" },
 });`,
 
-  analytics: `createSearchInModal({
+  analytics: `mountSearchModal({
   searchOpenElementSelector: "#search-button-modal-analytics",
 
   analytics(event) {
@@ -27,7 +27,7 @@ const examples = {
   input: { searchApiUrl: "/search-data.json" },
 });`,
 
-  placeholder: `createSearchInModal({
+  placeholder: `mountSearchModal({
   searchOpenElementSelector: "#custom-search-input-placeholder",
 
   input: {
@@ -38,7 +38,7 @@ const examples = {
   },
 });`,
 
-  minLength: `createSearchInModal({
+  minLength: `mountSearchModal({
   searchOpenElementSelector: "#search-custom-character-limit",
 
   input: {
@@ -47,7 +47,7 @@ const examples = {
   },
 });`,
 
-  externalClose: `createSearchInModal({
+  externalClose: `mountSearchModal({
   searchOpenElementSelector: "#search-close-button-example",
   searchCloseElementSelector: "#search-close-button",
   useNonModal: true,
@@ -55,7 +55,7 @@ const examples = {
   input: { searchApiUrl: "/search-data.json" },
 });`,
 
-  itemRenderer: `createSearchInModal({
+  itemRenderer: `mountSearchModal({
   searchOpenElementSelector: "#search-custom-item-renderer",
 
   input: {
@@ -72,7 +72,7 @@ const examples = {
   },
 });`,
 
-  groupRenderer: `createSearchInModal({
+  groupRenderer: `mountSearchModal({
   searchOpenElementSelector: "#search-no-group-render",
 
   input: {
@@ -90,7 +90,7 @@ const examples = {
   },
 });`,
 
-  clearIcon: `createSearchInModal({
+  clearIcon: `mountSearchModal({
   searchOpenElementSelector: "#custom-clear-icon",
 
   input: {
@@ -106,7 +106,7 @@ const examples = {
   },
 });`,
 
-  searchPage: `createSearchInModal({
+  searchPage: `mountSearchModal({
   searchOpenElementSelector: "#with-search-icon",
 
   input: {
@@ -133,7 +133,7 @@ addNavigation(document.body);
 const searchApiUrl = "/search-data.json";
 
 // default inline search
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#search-button-default",
   input: {
     searchApiUrl,
@@ -141,7 +141,7 @@ createSearchInModal({
 });
 
 // search with analytics
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#search-button-modal-analytics",
   analytics: (event) => {
     switch (event.type) {
@@ -159,7 +159,7 @@ createSearchInModal({
 });
 
 // custom search input placeholder
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#custom-search-input-placeholder",
   input: {
     searchApiUrl,
@@ -170,7 +170,7 @@ createSearchInModal({
 });
 
 // custom character limit
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#search-custom-character-limit",
   input: {
     minSearchLength: 5,
@@ -179,7 +179,7 @@ createSearchInModal({
 });
 
 // custom close button
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#search-close-button-example",
   searchCloseElementSelector: "#search-close-button",
   useNonModal: true,
@@ -189,7 +189,7 @@ createSearchInModal({
 });
 
 // item render
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#search-custom-item-renderer",
   input: {
     searchApiUrl,
@@ -206,7 +206,7 @@ createSearchInModal({
 });
 
 // group render
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#search-no-group-render",
   input: {
     searchApiUrl,
@@ -224,7 +224,7 @@ createSearchInModal({
 });
 
 // clear icon
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#custom-clear-icon",
   input: {
     searchApiUrl,
@@ -239,7 +239,7 @@ createSearchInModal({
 });
 
 // with search icon
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#with-search-icon",
   input: {
     searchApiUrl,

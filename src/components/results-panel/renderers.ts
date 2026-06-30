@@ -2,7 +2,7 @@ import globalConfig from "../../config";
 import { html } from "../../helper";
 import type { OpenSearchItem } from "../../types/open-search";
 
-export const defaultRenderLoader = () => {
+export const renderDefaultLoader = () => {
   return html`
     <span>
       <svg
@@ -38,7 +38,7 @@ export const noItemRenderer = (item: OpenSearchItem) => {
   return "";
 };
 
-export const resultsPanelErrorRenderer = () => {
+export const renderResultsPanelError = () => {
   return html`
     <div class="stx-results-panel__error">
       <span class="stx-results-panel__error-heading">

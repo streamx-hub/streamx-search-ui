@@ -1,4 +1,4 @@
-import { createTextInput } from "../inline-search";
+import { mountQueryInput } from "../inline-search";
 import {
   createResultsPanel as createPanel,
   type ResultsConfig,
@@ -11,7 +11,7 @@ const createResultsPanel = (
   searchIputConfig: QueryInputConfig,
   resultPanelConfig: ResultsConfig,
 ) => {
-  const searchInput = createTextInput(searchIputConfig);
+  const searchInput = mountQueryInput(searchIputConfig);
   const panel = createPanel(resultPanelConfig);
 
   return html`

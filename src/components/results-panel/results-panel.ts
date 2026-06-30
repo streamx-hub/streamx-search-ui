@@ -1,14 +1,14 @@
 import {
-  addUrlChangeListener,
+  onUrlChange,
   fetchSearchResults,
   html,
   normalizeLabels,
 } from "../../helper";
 import type { OpenSearchResponse } from "../../types/open-search";
 import {
-  defaultRenderLoader,
+  renderDefaultLoader,
   noItemRenderer,
-  resultsPanelErrorRenderer,
+  renderResultsPanelError,
 } from "./renderers";
 import "./results-panel.css";
 
@@ -45,8 +45,8 @@ export type Results = Omit<Required<ResultsConfig>, "labels"> & {
 const DEFAULT_RESULTS_CONFIG = {
   pageSize: 20,
   renderers: {
-    loader: defaultRenderLoader,
-    error: resultsPanelErrorRenderer,
+    loader: renderDefaultLoader,
+    error: renderResultsPanelError,
   },
   labels: {
     paginationInfo: (currentPage: number, pageNumber: number) =>
@@ -373,7 +373,7 @@ const addOnSearchParamChangeAction = (
     onUrlChagne();
   });
 
-  addUrlChangeListener(() => {
+  onUrlChange(() => {
     onUrlChagne();
   });
 };

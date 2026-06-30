@@ -1,4 +1,4 @@
-import { html, lazyBuildComponent, normalizeLabels } from "../../helper";
+import { html, createLazyComponent, normalizeLabels } from "../../helper";
 import {
   createResultsPanel,
   type Results,
@@ -59,7 +59,7 @@ const createTabButton = (tabData: Tab, isSelected: boolean) => {
 const createTabContent = (tabData: Tab, isSelected: boolean) => {
   const { id } = tabData;
 
-  const { element, build } = lazyBuildComponent(() => {
+  const { element, build } = createLazyComponent(() => {
     return createResultsPanel(tabData.results);
   });
 

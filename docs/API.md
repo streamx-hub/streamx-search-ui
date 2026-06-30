@@ -6,12 +6,12 @@ Compact reference for public exports, configuration objects, labels, renderers a
 
 ## Public API Overview
 
-| Bundle               | Export                  | Description                                   |
-| -------------------- | ----------------------- | --------------------------------------------- |
-| Inline Search        | `createSearchInput()`   | Creates a standalone search input.            |
-| Inline Search        | `createSearchInModal()` | Creates a modal search.                       |
-| Search Tabs          | `createSearchTabs()`    | Creates a search input with tabbed results.   |
-| Search Results Panel | `createResultsPanel()`  | Creates a search input with one result panel. |
+| Bundle               | Export                 | Description                                   |
+| -------------------- | ---------------------- | --------------------------------------------- |
+| Inline Search        | `createSearchInput()`  | Creates a standalone search input.            |
+| Inline Search        | `mountSearchModal()`   | Creates a modal search.                       |
+| Search Tabs          | `createSearchTabs()`   | Creates a search input with tabbed results.   |
+| Search Results Panel | `createResultsPanel()` | Creates a search input with one result panel. |
 
 ---
 
@@ -22,7 +22,7 @@ Import from:
 ```ts
 import {
   createSearchInput,
-  createSearchInModal,
+  mountSearchModal,
 } from "./dist/streamx-search-inline.js";
 ```
 
@@ -57,12 +57,12 @@ createSearchInput(
 
 ---
 
-## createSearchInModal()
+## mountSearchModal()
 
 Creates a search modal opened by a selected trigger element.
 
 ```ts
-createSearchInModal(config: ModalConfig): void
+mountSearchModal(config: ModalConfig): void
 ```
 
 | Parameter | Type          | Required | Description                    |
@@ -72,7 +72,7 @@ createSearchInModal(config: ModalConfig): void
 Example:
 
 ```ts
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#open-search",
   input: {
     searchApiUrl: "/api/search",
@@ -84,7 +84,7 @@ createSearchInModal({
 
 ## ModalConfig
 
-Used by `createSearchInModal()`.
+Used by `mountSearchModal()`.
 
 ```ts
 interface ModalConfig {
@@ -107,7 +107,7 @@ interface ModalConfig {
 Example:
 
 ```ts
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#open-search",
   searchCloseElementSelector: "#close-search",
   analytics: (event) => console.log(event),
@@ -121,7 +121,7 @@ createSearchInModal({
 
 ## QueryInputConfig
 
-Used by `createSearchInput()`, `createSearchInModal()`, `createSearchTabs()` and `createResultsPanel()`.
+Used by `createSearchInput()`, `mountSearchModal()`, `createSearchTabs()` and `createResultsPanel()`.
 
 ```ts
 interface QueryInputConfig {
@@ -483,7 +483,7 @@ type AnalyticsEvents =
 Example:
 
 ```ts
-createSearchInModal({
+mountSearchModal({
   searchOpenElementSelector: "#open-search",
   analytics: (event) => {
     console.log(event.type, event);

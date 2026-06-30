@@ -2,7 +2,7 @@ import {
   debounce,
   fetchSearchResults,
   html,
-  sendUrlChangeEvent,
+  dispatchUrlChangeEvent,
 } from "../../helper";
 import DEFAULT_CONFIG from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
@@ -59,7 +59,7 @@ const saveSearchQueryToUrl = (query: string) => {
   url.searchParams.delete(SEARCH_QUERY_PARAM_NAME);
   url.searchParams.set(SEARCH_QUERY_PARAM_NAME, query);
   window.history.pushState({}, "", url);
-  sendUrlChangeEvent();
+  dispatchUrlChangeEvent();
 };
 
 export function createQueryInput(customConfig: QueryInputConfig) {

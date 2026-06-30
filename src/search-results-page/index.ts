@@ -5,7 +5,7 @@ import type { QueryInputConfig } from "../types/config";
 import createTabs, { type TabConfig } from "../components/tabs/tabs";
 import type { CustomRenderersSet } from "../components/results-panel/results-panel";
 
-const createTextInput = (
+const mountQueryInput = (
   customConfig: QueryInputConfig,
   mountPoint: Element,
 ) => {
@@ -31,4 +31,4 @@ const createTabContent = (
   mountPoint.append(tabs);
 };
 
-export { createTextInput, createTabContent };
+export { mountQueryInput, createTabContent };

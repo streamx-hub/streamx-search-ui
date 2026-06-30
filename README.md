@@ -43,7 +43,7 @@ Use the files generated in the `dist` directory.
 If you use a bundler, import the selected entry and its CSS in your application code.
 
 ```ts
-import { createSearchInModal } from "./dist/streamx-search-inline.js";
+import { mountSearchModal } from "./dist/streamx-search-inline.js";
 import "./dist/streamx-search-inline.css";
 ```
 
@@ -71,7 +71,7 @@ Use for header search, navigation search, autocomplete input or modal search.
 <script type="module">
   import {
     createSearchInput,
-    createSearchInModal,
+    mountSearchModal,
   } from "./dist/streamx-search-inline.js";
 </script>
 ```
@@ -129,9 +129,9 @@ Use when results should be shown in a single panel.
 <button id="open-search">Search</button>
 
 <script type="module">
-  import { createSearchInModal } from "./dist/streamx-search-inline.js";
+  import { mountSearchModal } from "./dist/streamx-search-inline.js";
 
-  createSearchInModal({
+  mountSearchModal({
     searchOpenElementSelector: "#open-search",
     input: {
       searchApiUrl: "/api/search",
@@ -208,12 +208,12 @@ Use when results should be shown in a single panel.
 
 ## Public API Overview
 
-| Bundle               | Export                  | Description                                   |
-| -------------------- | ----------------------- | --------------------------------------------- |
-| Inline Search        | `createSearchInput()`   | Creates a standalone search input.            |
-| Inline Search        | `createSearchInModal()` | Creates a modal search.                       |
-| Search Tabs          | `createSearchTabs()`    | Creates a search page with tabs.              |
-| Search Results Panel | `createResultsPanel()`  | Creates a search input with one result panel. |
+| Bundle               | Export                 | Description                                   |
+| -------------------- | ---------------------- | --------------------------------------------- |
+| Inline Search        | `createSearchInput()`  | Creates a standalone search input.            |
+| Inline Search        | `mountSearchModal()`   | Creates a modal search.                       |
+| Search Tabs          | `createSearchTabs()`   | Creates a search page with tabs.              |
+| Search Results Panel | `createResultsPanel()` | Creates a search input with one result panel. |
 
 See [`API.md`](./API.md) for the full API reference.
 

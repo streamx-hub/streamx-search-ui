@@ -218,7 +218,7 @@ export const fetchSearchResults = async (
  *
  * @param buildFunction Function creating the element.
  */
-export const lazyBuildComponent = (buildFunction: () => HTMLElement) => {
+export const createLazyComponent = (buildFunction: () => HTMLElement) => {
   let isBuild = false;
   const placeholderEl = html`
     <div data-lazy-build="true"></div>
@@ -241,11 +241,11 @@ export const lazyBuildComponent = (buildFunction: () => HTMLElement) => {
   };
 };
 
-export const sendUrlChangeEvent = () => {
+export const dispatchUrlChangeEvent = () => {
   window.dispatchEvent(new Event("urlchange"));
 };
 
-export const addUrlChangeListener = (handler: () => void) => {
+export const onUrlChange = (handler: () => void) => {
   window.addEventListener("urlchange", () => {
     handler();
   });
