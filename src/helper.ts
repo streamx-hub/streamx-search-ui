@@ -241,7 +241,7 @@ export const lazyBuildComponent = (buildFunction: () => HTMLElement) => {
   };
 };
 
-export const sendUrlChagneEvent = () => {
+export const sendUrlChangeEvent = () => {
   window.dispatchEvent(new Event("urlchange"));
 };
 

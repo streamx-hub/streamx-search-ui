@@ -2,7 +2,7 @@ import {
   debounce,
   fetchSearchResults,
   html,
-  sendUrlChagneEvent,
+  sendUrlChangeEvent,
 } from "../../helper";
 import DEFAULT_CONFIG from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
@@ -25,7 +25,7 @@ const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
   return inputOption;
 };
 
-const debouceSearch = (
+const createDebouncedSearch = (
   url: string,
   callback: (data: OpenSearchResponse) => void,
 ) => {
@@ -52,17 +52,17 @@ const debouceSearch = (
   return deboucendSearch;
 };
 
-const saveSerachQueryInUrl = (query: string) => {
+const saveSearchQueryToUrl = (query: string) => {
   const url = new URL(window.location.href);
   const SEARCH_QUERY_PARAM_NAME = "stx-search";
 
   url.searchParams.delete(SEARCH_QUERY_PARAM_NAME);
   url.searchParams.set(SEARCH_QUERY_PARAM_NAME, query);
   window.history.pushState({}, "", url);
-  sendUrlChagneEvent();
+  sendUrlChangeEvent();
 };
 
-export function creatQueryInput(customConfig: QueryInputConfig) {
+export function createQueryInput(customConfig: QueryInputConfig) {
   const config = resolveConfig(customConfig);
   const inputTextId = crypto.randomUUID();
   const suggestionWrapperId = crypto.randomUUID();
@@ -163,7 +163,7 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
       url = config.searchApiUrl();
     }
 
-    onSearch = debouceSearch(url, (results) => {
+    onSearch = createDebouncedSearch(url, (results) => {
       const suggestionEl = createSuggestions(results, config);
       suggestionListLenght = results.hits.hits?.length || 0;
       activeIndex = -1;
@@ -206,7 +206,7 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
             window.location.href = link.toString();
           } else {
-            saveSerachQueryInUrl(inputEl.value);
+            saveSearchQueryToUrl(inputEl.value);
           }
         }
       }

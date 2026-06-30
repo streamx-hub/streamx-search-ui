@@ -1,10 +1,10 @@
 import { html, trapFocus } from "../../helper";
 import "./modal.css";
 import type { Modal } from "../../types/config";
-import { creatQueryInput } from "../../components/query-input/query-input";
+import { createQueryInput } from "../../components/query-input/query-input";
 
 const createSearchModal = (config: Modal) => {
-  const { element: queryInput, inputEl } = creatQueryInput(config.input);
+  const { element: queryInput, inputEl } = createQueryInput(config.input);
 
   const dialogEl = html`
     <dialog class="stx-search-modal">${queryInput}</dialog>

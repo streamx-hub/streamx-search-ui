@@ -1,7 +1,7 @@
 import type { Modal, ModalConfig, QueryInputConfig } from "../types/config.js";
 import { createSearchModal } from "../inline-search/modal/modal.js";
 import DEFAULT_CONFIG from "../inline-search/default-config.js";
-import { creatQueryInput } from "../components/query-input/query-input.js";
+import { createQueryInput } from "../components/query-input/query-input.js";
 import "../styles/common.css";
 
 export type ModalData = {
@@ -90,7 +90,7 @@ export function createSearchInput(
   customConfig: QueryInputConfig,
   mountPoint: Element,
 ) {
-  const { element } = creatQueryInput(customConfig);
+  const { element } = createQueryInput(customConfig);
 
   if (mountPoint.tagName === "INPUT") {
     mountPoint.replaceWith(element);

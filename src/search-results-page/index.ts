@@ -1,5 +1,5 @@
 import globalConfig from "../config";
-import { creatQueryInput } from "../components/query-input/query-input";
+import { createQueryInput } from "../components/query-input/query-input";
 import { html } from "../helper";
 import type { QueryInputConfig } from "../types/config";
 import createTabs, { type TabConfig } from "../components/tabs/tabs";
@@ -9,7 +9,7 @@ const createTextInput = (
   customConfig: QueryInputConfig,
   mountPoint: Element,
 ) => {
-  const { element } = creatQueryInput(customConfig);
+  const { element } = createQueryInput(customConfig);
 
   const inputWrapper = html`<div class="">${element}</div>` as HTMLElement;
 
