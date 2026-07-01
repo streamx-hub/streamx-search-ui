@@ -10,19 +10,16 @@
   margin: 0;
   padding: 0;
 
-  border: 1px solid #ddd;
+  border: 1px solid var(--stx-color-border);
   border-radius: 8px;
 
-  background: #fff;
-  color: #222;
+  background: var(--stx-color-background);
+  color: var(--stx-color-text);
 
   overflow: hidden;
-
   text-align: left;
 
-  box-shadow:
-    0 4px 12px rgb(0 0 0 / 0.08),
-    0 12px 32px rgb(0 0 0 / 0.12);
+  box-shadow: var(--stx-shadow-dropdown);
 
   font-family: system-ui, sans-serif;
   font-size: 14px;

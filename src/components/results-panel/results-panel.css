@@ -3,6 +3,12 @@
   gap: 2rem;
   align-items: flex-start;
   padding: 10px;
+  color: var(--stx-color-text);
+}
+
+.stx-results-panel,
+.stx-results-panel * {
+  box-sizing: border-box;
 }
 
 .stx-results-panel__facets-container {
@@ -19,7 +25,7 @@
   justify-content: space-between;
   margin-bottom: 1rem;
   font-size: 0.875rem;
-  color: #666;
+  color: color-mix(in srgb, var(--stx-color-text) 75%, black);
 }
 
 .stx-results-panel__container > ul {
@@ -33,7 +39,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--stx-color-border);
 }
 
 .stx-results-panel__pagination-container {
@@ -52,17 +58,23 @@
 .stx-results-panel__pagination-list button {
   display: block;
   padding: 0.35rem 0.65rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--stx-color-border);
   border-radius: 4px;
-  color: inherit;
+  color: var(--stx-color-text);
   text-decoration: none;
-  background-color: #fff;
+  background-color: var(--stx-color-background);
   cursor: pointer;
+  font: inherit;
 }
 
 .stx-results-panel__pagination-list button:hover,
 .stx-results-panel__pagination-list button:focus-visible {
-  background: #f5f5f5;
+  background: color-mix(in srgb, var(--stx-color-background) 85%, #000);
+}
+
+.stx-results-panel__pagination-list button:focus-visible {
+  outline: 2px solid var(--stx-color-border-focus);
+  outline-offset: 2px;
 }
 
 .stx-results-panel__pagination-dots {
@@ -72,7 +84,8 @@
 }
 
 .stx-results-panel button.stx-is-active {
-  background-color: #cecece;
+  background-color: color-mix(in srgb, var(--stx-color-background) 80%, #000);
+  border-color: var(--stx-color-border-focus);
 }
 
 .stx-results-panel:has(.stx-results-panel__loader) {
@@ -85,12 +98,16 @@
   animation: stx-spin 1s linear infinite;
 }
 
-.stx-results-panel__error {
-  border: solid 1px red;
+.stx-results-panel__error,
+.stx-results-panel__no-item-renderer {
+  border: 1px solid var(--stx-color-border);
   border-radius: 5px;
   padding: 10px 5px;
-  color: red;
-  background: #ff000024;
+  color: var(--stx-color-text);
+  background: var(--stx-color-background);
+}
+
+.stx-results-panel__error {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -99,14 +116,6 @@
 
 .stx-results-panel__error-heading {
   font-size: 1.5rem;
-}
-
-.stx-results-panel__no-item-renderer {
-  border: solid 1px red;
-  border-radius: 5px;
-  padding: 10px 5px;
-  color: red;
-  background: #ff000024;
 }
 
 @keyframes stx-spin {

@@ -1,17 +1,22 @@
 .stx-tabs {
+  padding: 10px;
+  color: var(--stx-color-text);
   font:
     14px/1.5 system-ui,
     sans-serif;
-  color: #222;
-  padding: 10px;
+}
+
+.stx-tabs,
+.stx-tabs * {
+  box-sizing: border-box;
 }
 
 .stx-tabs__buttons {
   display: flex;
+  flex-wrap: nowrap;
   gap: 0.5rem;
   margin-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-  flex-wrap: nowrap;
+  border-bottom: 1px solid var(--stx-color-border);
   overflow: auto;
 }
 
@@ -20,24 +25,32 @@
 }
 
 .stx-tabs__button {
-  padding: 0.5rem 0.75rem;
-  border: 0;
-  border-bottom: 2px solid transparent;
-  background: none;
-  color: inherit;
-  cursor: pointer;
   display: flex;
   align-items: flex-end;
   flex-shrink: 0;
+
+  padding: 0.5rem 0.75rem;
+
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: inherit;
+
+  cursor: pointer;
+  font: inherit;
+}
+
+.stx-tabs__button:hover {
+  background: color-mix(in srgb, var(--stx-color-background) 85%, #000);
 }
 
 .stx-tabs__button[aria-selected="true"] {
-  border-color: #0d6efd;
-  font-weight: 600;
+  border-color: var(--stx-color-border-focus);
   border-radius: 0;
+  font-weight: 600;
 }
 
 .stx-tabs__button:focus-visible {
-  outline: 2px solid #0d6efd;
+  outline: 2px solid var(--stx-color-border-focus);
   outline-offset: 2px;
 }
