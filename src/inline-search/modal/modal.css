@@ -13,7 +13,7 @@
   border: 1px solid var(--stx-color-border);
   border-radius: 8px;
 
-  background: var(--stx-color-background);
+  background: var(--stx-color-surface);
   color: var(--stx-color-text);
 
   overflow: hidden;

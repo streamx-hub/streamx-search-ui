@@ -1,8 +1,10 @@
 :root {
   --stx-color-text: #222;
+  --stx-color-muted: #666;
   --stx-color-background: #fff;
+  --stx-color-surface: #fff;
   --stx-color-border: #eee;
-  --stx-color-border-focus: var(--stx-color-border);
+  --stx-color-focus: #4d90fe;
   --stx-shadow-dropdown: rgba(100, 100, 111, 0.2) 0 7px 29px 0;
 }
 

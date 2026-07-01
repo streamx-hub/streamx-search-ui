@@ -1,14 +1,10 @@
 .stx-tabs {
   padding: 10px;
+  background: var(--stx-color-background);
   color: var(--stx-color-text);
   font:
     14px/1.5 system-ui,
     sans-serif;
-}
-
-.stx-tabs,
-.stx-tabs * {
-  box-sizing: border-box;
 }
 
 .stx-tabs__buttons {
@@ -28,29 +24,30 @@
   display: flex;
   align-items: flex-end;
   flex-shrink: 0;
-
   padding: 0.5rem 0.75rem;
-
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: inherit;
-
+  color: var(--stx-color-text);
   cursor: pointer;
   font: inherit;
 }
 
 .stx-tabs__button:hover {
-  background: color-mix(in srgb, var(--stx-color-background) 85%, #000);
+  background: color-mix(
+    in srgb,
+    var(--stx-color-surface) 85%,
+    var(--stx-color-text)
+  );
 }
 
 .stx-tabs__button[aria-selected="true"] {
-  border-color: var(--stx-color-border-focus);
+  border-color: var(--stx-color-focus);
   border-radius: 0;
   font-weight: 600;
 }
 
 .stx-tabs__button:focus-visible {
-  outline: 2px solid var(--stx-color-border-focus);
+  outline: 2px solid var(--stx-color-focus);
   outline-offset: 2px;
 }
