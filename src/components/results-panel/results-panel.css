@@ -131,3 +131,12 @@
     transform: rotate(360deg);
   }
 }
+
+.stx-results-panel__missing-renderer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: red;
+  background-color: rgba(256, 0, 0, 0.2);
+  padding: 5px;
+}

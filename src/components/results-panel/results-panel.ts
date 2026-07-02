@@ -15,7 +15,7 @@ import "./results-panel.css";
 
 type CustomRenderer = (...args: any[]) => HTMLElement;
 
-export type CustomRenderersSet = {
+export type ResultsPanelRenderers = {
   [rendererName: string]: CustomRenderer;
 };
 
@@ -35,7 +35,7 @@ type ResultsPanelNormalizedLabels = {
 export interface ResultsConfig {
   pageSize?: number;
   dataSources: string[];
-  renderers?: CustomRenderersSet;
+  renderers?: ResultsPanelRenderers;
   labels?: ResultsPanelLabelsConfig;
 }
 
@@ -179,7 +179,7 @@ const createResultsNumber = (
 
 const createItems = (
   data: OpenSearchResponse,
-  renderers: CustomRenderersSet,
+  renderers: ResultsPanelRenderers,
 ) => {
   return data.hits.hits?.map((item) => {
     const { type } = item._source;
@@ -194,9 +194,9 @@ const createItems = (
       }
     } else {
       itemContent = html`
-        <span>
-          <span>${item._id}</span>
-          <span>${item._source?.type}</span>
+        <span class="stx-results-panel__missing-renderer">
+          <span>Missing renderer for "item-${item?._source?.type}"</span>
+          <span>${JSON.stringify(item)}</span>
         </span>
       ` as HTMLSpanElement;
     }

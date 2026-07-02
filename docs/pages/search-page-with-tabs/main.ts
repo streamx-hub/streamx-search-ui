@@ -1,4 +1,4 @@
-import type { CustomRenderersSet } from "../../../src/components/results-panel/results-panel";
+import type { ResultsPanelRenderers } from "../../../src/components/results-panel/results-panel";
 import type { TabConfig } from "../../../src/components/tabs/tabs";
 import { html } from "../../../src/helper";
 import type { OpenSearchItem } from "../../../src/types/open-search";
@@ -6,7 +6,7 @@ import { createSearchTabs } from "../../../src/exports/search-tabs";
 import { addNavigation, renderCodeBlocks } from "../../js/helper";
 
 const initSearchPage = async (mountPoint: Element) => {
-  const renderers: CustomRenderersSet = {
+  const renderers: ResultsPanelRenderers = {
     loader: () => {
       return html` <span>Loading</span> ` as HTMLSpanElement;
     },

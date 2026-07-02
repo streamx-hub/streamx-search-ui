@@ -3,7 +3,7 @@ import { createQueryInput } from "../components/query-input/query-input";
 import { html } from "../helper";
 import type { QueryInputConfig } from "../types/config";
 import createTabs, { type TabConfig } from "../components/tabs/tabs";
-import type { CustomRenderersSet } from "../components/results-panel/results-panel";
+import type { ResultsPanelRenderers } from "../components/results-panel/results-panel";
 
 const mountQueryInput = (
   customConfig: QueryInputConfig,
@@ -19,7 +19,7 @@ const mountQueryInput = (
 const createTabContent = (
   mountPoint: Element,
   config: TabConfig[],
-  renderers?: CustomRenderersSet,
+  renderers?: ResultsPanelRenderers,
   debug?: boolean,
 ) => {
   if (debug) {

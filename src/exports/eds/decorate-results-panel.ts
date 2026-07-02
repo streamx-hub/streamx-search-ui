@@ -1,9 +1,11 @@
+import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
   getEDSConfig,
   loadCssFile,
   renderEDSLableTemplate,
   replaceElWithError,
 } from "../../eds-helper";
+import type { QueryInputRenderers } from "../../types/query-input";
 import { createResultsPanel } from "../search-results-panel";
 
 type EDSResultsPanelConfig = {
@@ -22,7 +24,13 @@ type EDSResultsPanelConfig = {
   ariaPaginationNavigation?: string;
 };
 
-export default function decorate(block: HTMLElement) {
+type EDSResultsPanelRenderers = Partial<QueryInputRenderers> &
+  Partial<ResultsPanelRenderers>;
+
+export default function decorate(
+  block: HTMLElement,
+  renderers?: EDSResultsPanelRenderers,
+) {
   loadCssFile("/scripts/search/streamx-search.css");
   const config = getEDSConfig<EDSResultsPanelConfig>(block);
 
@@ -50,13 +58,18 @@ export default function decorate(block: HTMLElement) {
       clearButtonAria: config.clearButtonAria,
       searchButtonAria: config.searchButtonAria,
     },
-    renderers: {},
+    renderers,
   };
 
+  const resultsRenderers = Object.fromEntries(
+    Object.entries(renderers || {}).filter(
+      ([, renderer]) => renderer !== undefined,
+    ),
+  ) as ResultsPanelRenderers;
   const panelConfig = {
     pageSize: Number(config.pageSize) || 10,
     dataSources: config.dataSources ? [config.dataSources] : [],
-    renderers: {},
+    renderers: resultsRenderers,
     labels: {
       paginationInfo: (currentPage: number, pageNumber: number) =>
         renderEDSLableTemplate(config.paginationInfo, {

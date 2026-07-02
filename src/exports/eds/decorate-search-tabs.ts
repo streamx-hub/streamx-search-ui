@@ -1,9 +1,11 @@
+import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
   getEDSConfig,
   loadCssFile,
   renderEDSLableTemplate,
   replaceElWithError,
 } from "../../eds-helper";
+import type { QueryInputRenderers } from "../../types/query-input";
 import { createSearchTabs } from "../search-tabs";
 
 type EDSSearchTabsConfig = {
@@ -27,7 +29,14 @@ type EDSTabConfig = {
   ariaPaginationNavigation?: string;
 };
 
-export default function decorate(block: HTMLElement, tabSelector: string) {
+type EDSTabsRenderers = Partial<QueryInputRenderers> &
+  Partial<ResultsPanelRenderers>;
+
+export default function decorate(
+  block: HTMLElement,
+  tabSelector: string,
+  renderers?: EDSTabsRenderers,
+) {
   loadCssFile("/scripts/search/streamx-search.css");
   const config = getEDSConfig<EDSSearchTabsConfig>(block);
 
@@ -53,7 +62,7 @@ export default function decorate(block: HTMLElement, tabSelector: string) {
       clearButtonAria: config.clearButtonAria,
       searchButtonAria: config.searchButtonAria,
     },
-    renderers: {},
+    renderers,
   };
 
   const tabs = [...document.querySelectorAll(tabSelector)] as HTMLElement[];
@@ -95,7 +104,6 @@ export default function decorate(block: HTMLElement, tabSelector: string) {
       results: {
         pageSize: Number(tabConfig.pageSize) || 10,
         dataSources: [tabConfig.dataSources],
-        renderers: {},
         labels: {
           paginationInfo: (currentPage: number, pageNumber: number) =>
             renderEDSLableTemplate(tabConfig.paginationInfo, {
@@ -116,7 +124,12 @@ export default function decorate(block: HTMLElement, tabSelector: string) {
     };
   });
 
-  const resultsRenderers = {};
+  const resultsRenderers = Object.fromEntries(
+    Object.entries(renderers || {}).filter(
+      ([, renderer]) => renderer !== undefined,
+    ),
+  ) as ResultsPanelRenderers;
+
   const searchTab = createSearchTabs(
     inputConfig,
     tabsConfigs.filter((tab) => tab !== undefined),
