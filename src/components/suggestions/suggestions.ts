@@ -1,9 +1,9 @@
-import { html } from '../../helper.ts';
-import type { QueryInput } from '../../types/query-input.ts';
+import { html } from "../../helper.ts";
+import type { QueryInput } from "../../types/query-input.ts";
 import type {
   OpenSearchItem,
   OpenSearchResponse,
-} from '../../types/results.ts';
+} from "../../types/open-search.ts";
 
 const renderSuggestionListItem = (
   item: OpenSearchItem & { isFirstInGroup?: boolean },
@@ -15,14 +15,14 @@ const renderSuggestionListItem = (
     const groupItem = config.renderers.groupItem(item);
 
     if (groupItem) {
-      elements.push(groupItem);
+      elements.push(html`<li>${groupItem}</li>`);
     }
   }
 
   const suggestionItem = config.renderers.suggestionItem(item);
 
   if (suggestionItem) {
-    elements.push(suggestionItem);
+    elements.push(html`<li role="option">${suggestionItem}</li>`);
   }
 
   return elements;
@@ -34,7 +34,7 @@ export function orderByTypeWithFlags(items: OpenSearchItem[]) {
 
   // grouping and remembering the type order
   for (const item of items) {
-    const type = item._source.type ?? '__no_type__';
+    const type = item._source.type ?? "__no_type__";
 
     if (!groups.has(type)) {
       groups.set(type, []);
@@ -64,20 +64,20 @@ const createSuggestions = (
   response: OpenSearchResponse,
   config: QueryInput,
 ) => {
-  let data = response.hits.hits;
+  let data = response.hits?.hits || [];
 
   if (config.groupByCategory) {
-    data = orderByTypeWithFlags(response.hits.hits);
+    data = orderByTypeWithFlags(response.hits?.hits || []);
   }
 
   const element = html`
-    <div class="stx-suggestions-wrapper">
+    <ul class="stx-suggestions-wrapper" role="listbox">
       ${data
         .map((el) => {
           return renderSuggestionListItem(el, config);
         })
         .flat()}
-    </div>
+    </ul>
   `;
 
   return {

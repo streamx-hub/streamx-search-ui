@@ -1,58 +1,103 @@
-import { fetchSearchResults, html } from "../../helper";
-import DEFAULT_CONFIG from "../../inline-search/default-config";
+import {
+  debounce,
+  fetchSearchResults,
+  html,
+  dispatchUrlChangeEvent,
+} from "../../helper";
+import defaultConfig from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
 import type { QueryInputConfig } from "../../types/config";
 import type { QueryInput } from "../../types/query-input";
-import type { OpenSearchResponse } from "../../types/results";
+import type { OpenSearchResponse } from "../../types/open-search";
 import "./query-input.css";
 
 const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
   const inputOption: QueryInput = {
-    ...DEFAULT_CONFIG.input,
+    ...defaultConfig.input,
     ...customConfig,
     renderers: {
-      ...DEFAULT_CONFIG.input.renderers,
+      ...defaultConfig.input.renderers,
       ...customConfig.renderers,
     },
-    labels: { ...DEFAULT_CONFIG.input.labels, ...customConfig.labels },
+    labels: { ...defaultConfig.input.labels, ...customConfig.labels },
   };
 
   return inputOption;
 };
 
-export function creatQueryInput(customConfig: QueryInputConfig) {
+const createDebouncedSearch = (
+  url: string,
+  callback: (data: OpenSearchResponse) => void,
+) => {
+  let controller: AbortController | null = null;
+
+  const deboucendSearch = debounce(async (query) => {
+    controller?.abort();
+
+    controller = new AbortController();
+
+    try {
+      const data = await fetchSearchResults(url, query, controller.signal);
+
+      callback(data);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+
+      console.error(error);
+    }
+  }, 300);
+
+  return deboucendSearch;
+};
+
+const updateSearchQuery = (query: string) => {
+  const url = new URL(window.location.href);
+  const SEARCH_QUERY_PARAM_NAME = "stx-search";
+
+  url.searchParams.delete(SEARCH_QUERY_PARAM_NAME);
+  url.searchParams.set(SEARCH_QUERY_PARAM_NAME, query);
+  window.history.pushState({}, "", url);
+  dispatchUrlChangeEvent();
+};
+
+export function createQueryInput(customConfig: QueryInputConfig) {
   const config = resolveConfig(customConfig);
   const inputTextId = crypto.randomUUID();
   const suggestionWrapperId = crypto.randomUUID();
   const { labels, renderers } = config;
+  let onSearch: (val: string) => void;
 
   const queryInputEl = html`
     <div class="stx-query-input">
-      <button
-        class="stx-query-input__search-button"
-        type="button"
-        aria-label="${labels.searchButtonAria}"
-      >
-        ${renderers.searchIcon()}
-      </button>
-      <div class="stx-query-input__input-wrapper">
-        <label for="${inputTextId}">${labels.inputLabel}</label>
-        <input
-          class="stx-query-input__input"
-          type="text"
-          placeholder="${labels.inputPlaceholder}"
-          role="combobox"
-          aria-expanded="false"
-          aria-autocomplete="list"
-          aria-controls="${suggestionWrapperId}"
-          id="${inputTextId}"
-        />
+      <div class="stx-query-input__controls">
+        <div class="stx-query-input__input-wrapper">
+          <label for="${inputTextId}">${labels.inputLabel}</label>
+          <input
+            class="stx-query-input__input"
+            type="text"
+            placeholder="${labels.inputPlaceholder}"
+            role="combobox"
+            aria-expanded="false"
+            aria-autocomplete="list"
+            aria-controls="${suggestionWrapperId}"
+            id="${inputTextId}"
+          />
+          <button
+            class="stx-query-input__clear-button stx-hidden"
+            type="button"
+            aria-label="${labels.clearButtonAria}"
+          >
+            ${renderers.clearIcon()}
+          </button>
+        </div>
         <button
-          class="stx-query-input__clear-button stx-hidden"
+          class="stx-query-input__search-button"
           type="button"
-          aria-label="${labels.clearButtonAria}"
+          aria-label="${labels.searchButtonAria}"
         >
-          ${renderers.clearIcon()}
+          ${renderers.searchIcon()}
         </button>
       </div>
       <div
@@ -110,30 +155,32 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
   };
 
   if (inputEl) {
+    let url = "";
+
+    if (typeof config.searchApiUrl === "string") {
+      url = config.searchApiUrl;
+    } else {
+      url = config.searchApiUrl();
+    }
+
+    onSearch = createDebouncedSearch(url, (results) => {
+      const suggestionEl = createSuggestions(results, config);
+      suggestionListLenght = results.hits.hits?.length || 0;
+      activeIndex = -1;
+
+      if (suggestionContainer) {
+        suggestionContainer.innerHTML = "";
+        suggestionContainer.append(suggestionEl.element as Element);
+      }
+    });
+
     inputEl.addEventListener("input", async (event) => {
       const { value } = event.target as HTMLInputElement;
 
-      clearButton.classList.toggle('stx-hidden', !value.length);
+      clearButton.classList.toggle("stx-hidden", !value.length);
 
       if (value.length >= config.minSearchLength) {
-        let url = "";
-
-        if (typeof config.searchApiUrl === "string") {
-          url = config.searchApiUrl;
-        } else {
-          url = config.searchApiUrl();
-        }
-
-        await fetchSearchResults(url, (results: OpenSearchResponse) => {
-          const suggestionEl = createSuggestions(results, config);
-          suggestionListLenght = results.hits.hits.length;
-          activeIndex = -1;
-
-          if (suggestionContainer) {
-            suggestionContainer.innerHTML = "";
-            suggestionContainer.append(suggestionEl.element as Element);
-          }
-        });
+        onSearch(inputEl.value);
       }
 
       if (!value.length && suggestionContainer) {
@@ -144,6 +191,25 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
     inputEl.addEventListener("keydown", (e) => {
       const { key } = e;
+
+      if (key === "Enter") {
+        if (activeIndex > -1 && suggestionContainer) {
+          e.preventDefault();
+          const elements = suggestionContainer.querySelectorAll(
+            ".stx-suggestion__item",
+          ) as NodeListOf<HTMLElement>;
+
+          elements[activeIndex]?.click();
+        } else {
+          if (config.searchPageUrl) {
+            const link = config.searchPageUrl(inputEl.value);
+
+            window.location.href = link.toString();
+          } else {
+            updateSearchQuery(inputEl.value);
+          }
+        }
+      }
 
       if (!suggestionListLenght) {
         return;
@@ -165,15 +231,6 @@ export function creatQueryInput(customConfig: QueryInputConfig) {
 
         activeIndex = activeIndex > 0 ? activeIndex - 1 : maxIndex;
         updateActiveItem();
-      } else if (key === "Enter") {
-        if (activeIndex > -1 && suggestionContainer) {
-          e.preventDefault();
-          const elements = suggestionContainer.querySelectorAll(
-            ".stx-suggestion__item",
-          ) as NodeListOf<HTMLElement>;
-
-          elements[activeIndex]?.click();
-        }
       } else if (key === "Escape") {
         activeIndex = -1;
 

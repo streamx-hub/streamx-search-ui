@@ -1,4 +1,4 @@
-import type { OpenSearchResponse } from './types/results';
+import type { OpenSearchResponse } from "./types/open-search";
 
 /**
  * A tagged template function that parses an HTML string into DOM elements.
@@ -24,7 +24,7 @@ export function html(
   strings: TemplateStringsArray,
   ...values: unknown[]
 ): Element | HTMLCollection {
-  const template = document.createElement('template');
+  const template = document.createElement("template");
 
   template.innerHTML = strings.reduce((acc: string, str: string, i: number) => {
     const val = values[i];
@@ -36,14 +36,14 @@ export function html(
       return `${acc}${str}<template data-html-id="value-${i}"></template>`;
     }
 
-    return acc + str + (val ?? '');
-  }, '');
+    return acc + str + (val ?? "");
+  }, "");
 
-  template.content.querySelectorAll('[data-html-id]').forEach((el) => {
+  template.content.querySelectorAll("[data-html-id]").forEach((el) => {
     const htmlId = (el as HTMLElement).dataset.htmlId;
     if (!htmlId) return;
 
-    const idString = htmlId.split('-')[1];
+    const idString = htmlId.split("-")[1];
     if (!idString) return;
 
     const numberFromID = parseInt(idString, 10);
@@ -64,7 +64,7 @@ export function html(
       return;
     }
 
-    console.error('Case not handled for', el);
+    console.error("Case not handled for", el);
   });
 
   const { children } = template.content;
@@ -112,7 +112,7 @@ export function trapFocus() {
  * decodeEntities("&#169; &lt;test&gt;") // "© <test>"
  */
 function decodeEntities(text: string) {
-  const textarea = document.createElement('textarea');
+  const textarea = document.createElement("textarea");
   textarea.innerHTML = text;
 
   return textarea.value;
@@ -157,12 +157,12 @@ export function parseHighlight(text: string) {
   for (const part of parts) {
     if (!part) continue;
 
-    if (part === '<em>') {
+    if (part === "<em>") {
       insideEm = true;
       continue;
     }
 
-    if (part === '</em>') {
+    if (part === "</em>") {
       insideEm = false;
       continue;
     }
@@ -170,7 +170,7 @@ export function parseHighlight(text: string) {
     const decoded = decodeEntities(part);
 
     if (insideEm) {
-      const em = document.createElement('em');
+      const em = document.createElement("em");
       em.textContent = decoded;
       result.push(em);
     } else {
@@ -181,7 +181,10 @@ export function parseHighlight(text: string) {
   return result;
 }
 
-function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
+export function debounce<T extends (...args: any[]) => void>(
+  fn: T,
+  delay: number,
+) {
   let timeoutId: ReturnType<typeof setTimeout>;
 
   return (...args: Parameters<T>) => {
@@ -193,17 +196,73 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
   };
 }
 
-export const fetchSearchResults = debounce(
-  async (url: string, callback: (data: OpenSearchResponse) => void) => {
-    const response = await fetch(url);
+export const fetchSearchResults = async (
+  url: string,
+  query: string,
+  signal?: AbortSignal,
+) => {
+  const searchURL = new URL(url, window.location.origin);
+  searchURL.searchParams.set("query", query);
 
-    if (!response.ok) {
-      throw new Error(`Fetch data error: ${response.status}`);
+  const response = await fetch(searchURL.toString(), { signal });
+
+  if (!response.ok) {
+    throw new Error(`Fetch data error: ${response.status}`);
+  }
+
+  return response.json() as Promise<OpenSearchResponse>;
+};
+
+/**
+ * Creates a placeholder that is replaced with the built element on the first `build()` call.
+ *
+ * @param buildFunction Function creating the element.
+ */
+export const createLazyComponent = (buildFunction: () => HTMLElement) => {
+  let isBuild = false;
+  const placeholderEl = html`
+    <div data-lazy-build="true"></div>
+  ` as HTMLDivElement;
+
+  const build = () => {
+    if (isBuild) {
+      return;
     }
 
-    const data: OpenSearchResponse = await response.json();
+    const newEl = buildFunction();
 
-    callback(data);
-  },
-  300,
-);
+    placeholderEl.replaceWith(newEl);
+    isBuild = true;
+  };
+
+  return {
+    element: placeholderEl,
+    build,
+  };
+};
+
+export const dispatchUrlChangeEvent = () => {
+  window.dispatchEvent(new Event("urlchange"));
+};
+
+export const onUrlChange = (handler: () => void) => {
+  window.addEventListener("urlchange", () => {
+    handler();
+  });
+};
+
+type NormalizeLabels<T> = {
+  [K in keyof T]-?: NonNullable<T[K]> extends (...args: infer A) => string
+    ? (...args: A) => string
+    : () => string;
+};
+
+export const normalizeLabels = <T extends Record<string, any>>(
+  labels: T,
+): NormalizeLabels<T> => {
+  return Object.fromEntries(
+    Object.entries(labels).map(([key, value]) => {
+      return [key, typeof value === "string" ? () => value : value];
+    }),
+  ) as NormalizeLabels<T>;
+};

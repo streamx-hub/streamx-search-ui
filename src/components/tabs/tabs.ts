@@ -1,15 +1,45 @@
-import { html } from "../../helper";
+import { html, createLazyComponent, normalizeLabels } from "../../helper";
+import {
+  createResultsPanel,
+  type Results,
+  type ResultsConfig,
+  type CustomRenderersSet,
+  type ResultsPanelLabelsConfig,
+} from "../results-panel/results-panel";
+import "./tabs.css";
 
-export type TabConfig = {
+export interface TabConfig {
   id: string;
   displayName: string;
-  dataSources: string[];
+  results: ResultsConfig;
+}
+
+export interface Tab {
+  id: string;
+  displayName: string;
+  results: Results;
+}
+
+const resolvedTab = (
+  tabsConfig: TabConfig[],
+  customRenderers: CustomRenderersSet = {},
+  labels: ResultsPanelLabelsConfig = {},
+): Tab[] => {
+  return tabsConfig.map((c) => ({
+    ...c,
+    results: {
+      pageSize: 10,
+      ...c.results,
+      renderers: { ...customRenderers, ...c.results?.renderers },
+      labels: normalizeLabels(labels),
+    },
+  }));
 };
 
 const getTabId = (id: string) => `stx-tab-${id}`;
 const getTabContentId = (id: string) => `stx-tab-content-${id}`;
 
-const createTabButton = (tabData: TabConfig, isSelected: boolean) => {
+const createTabButton = (tabData: Tab, isSelected: boolean) => {
   const { id, displayName } = tabData;
 
   return html`
@@ -26,10 +56,14 @@ const createTabButton = (tabData: TabConfig, isSelected: boolean) => {
   ` as HTMLButtonElement;
 };
 
-const createTabContent = (tabData: TabConfig, isSelected: boolean) => {
+const createTabContent = (tabData: Tab, isSelected: boolean) => {
   const { id } = tabData;
 
-  return html`
+  const { element, build } = createLazyComponent(() => {
+    return createResultsPanel(tabData.results);
+  });
+
+  const tabEl = html`
     <div
       id="${getTabContentId(id)}"
       role="tabpanel"
@@ -37,18 +71,32 @@ const createTabContent = (tabData: TabConfig, isSelected: boolean) => {
       class="stx-tabs__content"
       ${isSelected ? "" : "hidden"}
     >
-      <div>Content of the tab: ${id}</div>
+      <div>${element}</div>
     </div>
-  `;
+  ` as HTMLDivElement;
+
+  return {
+    element: tabEl,
+    build,
+  };
 };
 
-function createTabs(tabsConfig: TabConfig[]) {
-  const buttonList = tabsConfig.map((el, index) => createTabButton(el, !index));
-  const contentList = tabsConfig.map((el, index) =>
-    createTabContent(el, !index),
-  );
+function createTabs(
+  tabsConfig: TabConfig[],
+  customRenderers?: CustomRenderersSet,
+) {
+  const tabs = resolvedTab(tabsConfig, customRenderers);
+  const buttonList = tabs.map((el, index) => createTabButton(el, !index));
+  const tabsLazyMounts: (() => void)[] = [];
+  const contentList: HTMLDivElement[] = [];
 
-  const tabs = html`
+  tabs.forEach((el, index) => {
+    const { element, build } = createTabContent(el, !index);
+    tabsLazyMounts.push(build);
+    contentList.push(element);
+  });
+
+  const tabsEl = html`
     <div class="stx-tabs">
       <div role="tablist" class="stx-tabs__buttons">${buttonList}</div>
       ${contentList}
@@ -56,19 +104,25 @@ function createTabs(tabsConfig: TabConfig[]) {
   ` as HTMLDivElement;
 
   const activateTab = (selectedTabButton: HTMLButtonElement) => {
-    buttonList.forEach((button) => {
+    buttonList.forEach((button, index) => {
       const isSelected = button === selectedTabButton;
       const contentElId = button.getAttribute("aria-controls");
-      const contentEl = tabs.querySelector(`#${contentElId}`);
+      const contentEl = tabsEl.querySelector(`#${contentElId}`);
 
       button.setAttribute("aria-selected", String(isSelected));
       button.tabIndex = isSelected ? 0 : -1;
 
       if (contentEl && contentEl instanceof HTMLElement) {
         contentEl.hidden = !isSelected;
+
+        if (isSelected) {
+          tabsLazyMounts[index]();
+        }
       }
     });
   };
+
+  tabsLazyMounts[0]();
 
   const onKeyDown = (e: KeyboardEvent) => {
     const { target } = e;
@@ -122,7 +176,7 @@ function createTabs(tabsConfig: TabConfig[]) {
     });
   });
 
-  return tabs;
+  return tabsEl;
 }
 
 export default createTabs;
