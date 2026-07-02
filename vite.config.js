@@ -20,6 +20,18 @@ export default defineConfig({
           import.meta.dirname,
           "src/exports/search-results-panel.ts",
         ),
+        "eds/search-tabs": resolve(
+          import.meta.dirname,
+          "src/exports/eds/decorate-search-tabs.ts",
+        ),
+        "eds/search-tab": resolve(
+          import.meta.dirname,
+          "src/exports/eds/decorate-search-tab.ts",
+        ),
+        "eds/search-results-panel": resolve(
+          import.meta.dirname,
+          "src/exports/eds/decorate-results-panel.ts",
+        ),
       },
       name: "streamx-search",
       formats: ["es"],

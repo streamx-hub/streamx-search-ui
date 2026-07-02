@@ -61,6 +61,16 @@ import "./dist/streamx-search-inline.css";
 
 ---
 
+## Adobe Edge Delivery Services
+
+The library provides EDS-specific entry points that simplify integration with Adobe Edge Delivery Services.
+
+Instead of manually creating and configuring components, an EDS block only needs to delegate to the corresponding StreamX integration helper.
+
+See `docs/EDS.md` for details.
+
+---
+
 ## Which files should I import?
 
 ### Inline Search

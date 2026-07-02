@@ -5,6 +5,9 @@
   padding: 10px;
   background: var(--stx-color-background);
   color: var(--stx-color-text);
+  font:
+    14px/1.5 system-ui,
+    sans-serif;
 }
 
 .stx-results-panel__facets-container {

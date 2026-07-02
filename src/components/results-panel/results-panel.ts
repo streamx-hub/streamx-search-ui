@@ -54,7 +54,7 @@ const defaultConfig = {
       `Page ${currentPage} of ${pageNumber}`,
     totalResults: (totalCount: number) => `${totalCount} results found.`,
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
-    ariaPaginationNavigation: "Pagination",
+    ariaPaginationNavigation: () => "Pagination",
   },
 };
 
@@ -73,7 +73,9 @@ const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
     },
     labels: {
       ...defaultLabels,
-      ...configLabels,
+      ...Object.fromEntries(
+        Object.entries(configLabels).filter(([, value]) => value !== undefined),
+      ),
     },
   };
 };
