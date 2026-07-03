@@ -1,8 +1,8 @@
 import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
+  generatePannelLabels,
   getEDSConfig,
   loadCssFile,
-  renderEDSLableTemplate,
   replaceElWithError,
 } from "../../eds-helper";
 import type { QueryInputRenderers } from "../../types/query-input";
@@ -104,22 +104,7 @@ export default function decorate(
       results: {
         pageSize: Number(tabConfig.pageSize) || 10,
         dataSources: [tabConfig.dataSources],
-        labels: {
-          paginationInfo: (currentPage: number, pageNumber: number) =>
-            renderEDSLableTemplate(tabConfig.paginationInfo, {
-              currentPage,
-              pageNumber,
-            }),
-          totalResults: (totalCount: number) =>
-            renderEDSLableTemplate(tabConfig.totalResults, {
-              totalCount,
-            }),
-          ariaPaginationGoToPage: (pageNumber: number) =>
-            renderEDSLableTemplate(tabConfig.ariaPaginationGoToPage, {
-              pageNumber,
-            }),
-          ariaPaginationNavigation: tabConfig.ariaPaginationNavigation,
-        },
+        labels: generatePannelLabels(tabConfig),
       },
     };
   });

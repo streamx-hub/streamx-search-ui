@@ -1,3 +1,4 @@
+import type { ResultsPanelLabels } from "./components/results-panel/results-panel";
 import { html } from "./helper";
 
 export const loadCssFile = (cssFile: string) => {
@@ -65,4 +66,43 @@ export const replaceElWithError = (root: HTMLElement, error: string) => {
   ` as HTMLElement;
 
   root.append(errorEl);
+};
+
+export type EDSPannelLabels = {
+  paginationInfo?: string;
+  totalResults?: string;
+  ariaPaginationGoToPage?: string;
+  ariaPaginationNavigation?: string;
+};
+
+export const generatePannelLabels = (config: EDSPannelLabels) => {
+  const lables: Partial<ResultsPanelLabels> = {};
+
+  if (config.paginationInfo) {
+    lables.paginationInfo = (currentPage: number, pageNumber: number) =>
+      renderEDSLableTemplate(config.paginationInfo, {
+        currentPage,
+        pageNumber,
+      });
+  }
+
+  if (config.totalResults) {
+    lables.totalResults = (totalCount: number) =>
+      renderEDSLableTemplate(config.totalResults, {
+        totalCount,
+      });
+  }
+
+  if (config.ariaPaginationGoToPage) {
+    lables.ariaPaginationGoToPage = (pageNumber: number) =>
+      renderEDSLableTemplate(config.ariaPaginationGoToPage, {
+        pageNumber,
+      });
+  }
+
+  if (config.ariaPaginationNavigation) {
+    lables.ariaPaginationNavigation = config.ariaPaginationNavigation;
+  }
+
+  return lables;
 };
