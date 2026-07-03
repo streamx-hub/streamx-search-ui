@@ -241,17 +241,17 @@ Creates a search input with tabbed result panels.
 createSearchTabs(
   inputConfig: QueryInputConfig,
   tabsConfig: TabConfig[],
-  resultsRenderers?: CustomRenderersSet,
+  resultsRenderers?: ResultsPanelRenderers,
   debug?: boolean
 ): HTMLDivElement
 ```
 
-| Parameter          | Type                 | Required | Description                           |
-| ------------------ | -------------------- | :------: | ------------------------------------- |
-| `inputConfig`      | `QueryInputConfig`   |    ✅    | Search input configuration.           |
-| `tabsConfig`       | `TabConfig[]`        |    ✅    | Tabs and their result panel configs.  |
-| `resultsRenderers` | `CustomRenderersSet` |    ❌    | Shared result renderers for all tabs. |
-| `debug`            | `boolean`            |    ❌    | Enables debug mode.                   |
+| Parameter          | Type                    | Required | Description                           |
+| ------------------ | ----------------------- | :------: | ------------------------------------- |
+| `inputConfig`      | `QueryInputConfig`      |    ✅    | Search input configuration.           |
+| `tabsConfig`       | `TabConfig[]`           |    ✅    | Tabs and their result panel configs.  |
+| `resultsRenderers` | `ResultsPanelRenderers` |    ❌    | Shared result renderers for all tabs. |
+| `debug`            | `boolean`               |    ❌    | Enables debug mode.                   |
 
 Example:
 
@@ -369,7 +369,7 @@ Used by `createResultsPanel()` and `TabConfig.results`.
 interface ResultsConfig {
   pageSize?: number;
   dataSources: string[];
-  renderers?: CustomRenderersSet;
+  renderers?: ResultsPanelRenderers;
   labels?: ResultsPanelLabelsConfig;
 }
 ```
@@ -378,7 +378,7 @@ interface ResultsConfig {
 | ------------- | -------------------------- | :------: | :-------------: | -------------------------------------------------------------------- |
 | `dataSources` | `string[]`                 |    ✅    |        —        | Search result endpoints. Current implementation uses the first item. |
 | `pageSize`    | `number`                   |    ❌    |      `20`       | Number of results per page.                                          |
-| `renderers`   | `CustomRenderersSet`       |    ❌    |    Built-in     | Custom result renderers.                                             |
+| `renderers`   | `ResultsPanelRenderers`    |    ❌    |    Built-in     | Custom result renderers.                                             |
 | `labels`      | `ResultsPanelLabelsConfig` |    ❌    | Built-in labels | Pagination and results labels.                                       |
 
 Example:
@@ -426,14 +426,14 @@ labels: {
 
 ---
 
-## CustomRenderersSet
+## ResultsPanelRenderers
 
 Used by result panels and tabs.
 
 ```ts
 type CustomRenderer = (...args: any[]) => HTMLElement;
 
-type CustomRenderersSet = {
+type ResultsPanelRenderers = {
   [rendererName: string]: CustomRenderer;
 };
 ```

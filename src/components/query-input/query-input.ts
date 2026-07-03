@@ -19,7 +19,14 @@ const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
       ...defaultConfig.input.renderers,
       ...customConfig.renderers,
     },
-    labels: { ...defaultConfig.input.labels, ...customConfig.labels },
+    labels: {
+      ...defaultConfig.input.labels,
+      ...Object.fromEntries(
+        Object.entries(customConfig.labels || {}).filter(
+          ([, value]) => value !== undefined,
+        ),
+      ),
+    },
   };
 
   return inputOption;

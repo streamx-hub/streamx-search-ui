@@ -1,6 +1,7 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
 import { routes } from "./mocks/routes";
+import dts from "vite-plugin-dts";
 
 export default defineConfig({
   build: {
@@ -16,9 +17,21 @@ export default defineConfig({
           import.meta.dirname,
           "src/exports/search-tabs.ts",
         ),
-        "streamx-serach-result-panel": resolve(
+        "streamx-search-results-panel": resolve(
           import.meta.dirname,
           "src/exports/search-results-panel.ts",
+        ),
+        "eds/search-tabs": resolve(
+          import.meta.dirname,
+          "src/exports/eds/decorate-search-tabs.ts",
+        ),
+        "eds/search-tab": resolve(
+          import.meta.dirname,
+          "src/exports/eds/decorate-search-tab.ts",
+        ),
+        "eds/search-results-panel": resolve(
+          import.meta.dirname,
+          "src/exports/eds/decorate-results-panel.ts",
         ),
       },
       name: "streamx-search",
@@ -32,5 +45,9 @@ export default defineConfig({
         routes(server);
       },
     },
+    dts({
+      entryRoot: "src/exports",
+      outDir: "dist",
+    }),
   ],
 });
