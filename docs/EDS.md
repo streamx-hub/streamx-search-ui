@@ -164,3 +164,71 @@ Then import them by relative path:
 ```
   import decorateResultsPanel from '../../scripts/search/eds/search-results-panel.js';
 ```
+
+## Creating blocks in an EDS document
+
+Create blocks in your EDS document and provide their configuration as key-value pairs.
+
+Each configuration row contains:
+
+- The first column with the configuration property name.
+- The second column with its value.
+
+### Search Results Panel
+
+| Search Results Panel     |                                        |
+| ------------------------ | -------------------------------------- |
+| searchApiUrl             | /api/search                            |
+| searchPageUrl            | /search                                |
+| minSearchLength          | 3                                      |
+| pageSize                 | 10                                     |
+| dataSources              | /api/results                           |
+| inputPlaceholder         | Search                                 |
+| inputLabel               | Search                                 |
+| clearButtonAria          | Clear search                           |
+| searchButtonAria         | Submit search                          |
+| paginationInfo           | Page {{currentPage}} of {{pageNumber}} |
+| totalResults             | {{totalCount}} results found           |
+| ariaPaginationGoToPage   | Go to page {{pageNumber}}              |
+| ariaPaginationNavigation | Search results pagination              |
+
+### Search Tabs
+
+The Search Tabs block contains the configuration shared by the entire search page.
+
+| Search Tabs      |               |
+| ---------------- | ------------- |
+| searchApiUrl     | /api/search   |
+| searchPageUrl    | /search       |
+| minSearchLength  | 3             |
+| inputPlaceholder | Search        |
+| inputLabel       | Search        |
+| clearButtonAria  | Clear search  |
+| searchButtonAria | Submit search |
+
+Each tab is configured using a separate Search Tab block.
+
+### Search Tab
+
+Add one Search Tab block for each results tab.
+
+| Search Tab               |                                        |
+| ------------------------ | -------------------------------------- |
+| id                       | products                               |
+| displayName              | Products                               |
+| pageSize                 | 10                                     |
+| dataSources              | /api/products                          |
+| paginationInfo           | Page {{currentPage}} of {{pageNumber}} |
+| totalResults             | {{totalCount}} results found           |
+| ariaPaginationGoToPage   | Go to page {{pageNumber}}              |
+| ariaPaginationNavigation | Products pagination                    |
+
+For example, to create a search page with **Products** and **Articles** tabs, add:
+
+1. One **Search Tabs** block with the shared search input configuration.
+2. One **Search Tab** block with `id` set to `products`.
+3. One **Search Tab** block with `id` set to `articles`.
+
+The Search Tabs decorator reads the main block configuration and uses the Search Tab blocks to build the individual result tabs.
+
+Dynamic labels can use template variables such as `{{currentPage}}`, `{{pageNumber}}`, and `{{totalCount}}`. The available variables depend on the selected label.
