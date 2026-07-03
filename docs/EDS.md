@@ -143,3 +143,24 @@ export default function decorate(block) {
 ```
 
 Custom renderers can be passed directly to `createSearchInput()` in the same way as described in the API documentation.
+
+### Using with a bundler
+
+```js
+import decorateResultsPanel from "streamx-search/eds/search-results-panel";
+```
+
+### Using directly in Adobe Edge Delivery Services
+
+Copy the generated files to your EDS project, for example:
+
+```js
+scripts / search / streamx - search.css;
+eds / search - results - panel.js;
+```
+
+Then import them by relative path:
+
+```
+  import decorateResultsPanel from '../../scripts/search/eds/search-results-panel.js';
+```
