@@ -131,7 +131,7 @@ const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
   const configLabels = resultsConfig.labels
     ? normalizeLabels(resultsConfig.labels)
     : {};
-  // Spreading an explicitly-undefined override would drop the default — e.g.
+  // Spreading an explicitly-undefined override would drop the default - e.g.
   // `queryParam: undefined` would make the panel read a param named "undefined".
   const overrides = Object.fromEntries(
     Object.entries(resultsConfig).filter(([, value]) => value !== undefined),
@@ -563,7 +563,7 @@ const getChildFacetInputs = (node: Element): HTMLInputElement[] => {
     .filter((input): input is HTMLInputElement => input !== null);
 };
 
-/** Hides a node's whole subtree — used once a branch is selected as a whole. */
+/** Hides a node's whole subtree - used once a branch is selected as a whole. */
 const collapseFacetSubtree = (node: Element) => {
   node.querySelectorAll(FACET_CHILDREN_SELECTOR).forEach((panel) => {
     if (panel instanceof HTMLElement) {
@@ -653,7 +653,7 @@ const hasSelectedDescendant = (
  * propagating it on click, so it stays correct across ticks, unticks and
  * re-renders: a node is `checked` when its own path is selected, and
  * `indeterminate` when only a path below it is. The indeterminate state is
- * purely visual — it never contributes a value to the request payload.
+ * purely visual - it never contributes a value to the request payload.
  */
 const refreshFacetStates = (
   facetsContainer: HTMLElement,
@@ -772,7 +772,7 @@ const initFacets = (
 
         if (checkbox.checked) {
           // The path already encodes its ancestors, so only the ticked value is
-          // ever sent — never the chain above it. Anything ticked below it is
+          // ever sent - never the chain above it. Anything ticked below it is
           // now redundant, so it is dropped and the subtree folds away.
           clearDescendantSelections(panelState, treeField, path, separator);
           addSelection(panelState, treeField, path);
@@ -796,7 +796,7 @@ const initFacets = (
 
 /**
  * Builds the facets sidebar, or `null` when the response carries no usable
- * aggregations — a `GET` panel has none, and an empty `<aside>` would still
+ * aggregations - a `GET` panel has none, and an empty `<aside>` would still
  * claim its 220px column.
  */
 const createFacets = (
@@ -1006,7 +1006,7 @@ const renderFullResults = (
 };
 
 interface BuildResultsOptions {
-  /** Clears the selected facet filters — used when the query itself changes. */
+  /** Clears the selected facet filters - used when the query itself changes. */
   resetFilters?: boolean;
 }
 
@@ -1037,7 +1037,7 @@ const buildResultsForPage = (
 
   // Once the panel is rendered, update it in place (dim + swap) so it never
   // collapses to a centered loader and reflows the page. Only a brand-new query
-  // rebuilds the facets — a facet change keeps them (and their expanded state).
+  // rebuilds the facets - a facet change keeps them (and their expanded state).
   const hasContent = resultsContainer instanceof HTMLElement;
 
   if (hasContent) {
@@ -1095,7 +1095,7 @@ const buildResultsForPage = (
         hideResultsLoading(resultsContainer);
       } else {
         // Nothing has rendered yet, so leaving the loader in place would spin
-        // forever — swap it for the error state instead.
+        // forever - swap it for the error state instead.
         resultsPanel.innerHTML = "";
         resultsPanel.append(results.renderers.error(results.labels));
       }

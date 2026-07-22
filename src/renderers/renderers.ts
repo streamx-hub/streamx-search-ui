@@ -5,8 +5,8 @@ import type { OpenSearchItem } from "../types/open-search";
  * Resolves the destination URL of a hit from its `_id`.
  *
  * The index namespaces `_id` (e.g. `en:/en/blog/post`), so the `${namespace}:`
- * prefix has to be stripped to get a usable URL. Hits without a namespace — or
- * whose `_id` does not carry that exact prefix — are returned unchanged.
+ * prefix has to be stripped to get a usable URL. Hits without a namespace - or
+ * whose `_id` does not carry that exact prefix - are returned unchanged.
  *
  * @example
  * getHitUrl({ _id: "en:/en/blog/post", _source: { namespace: "en" } })

@@ -202,17 +202,17 @@ Search-specific options:
 | Option             | Default              | Description                                                                                   |
 | ------------------ | -------------------- | --------------------------------------------------------------------------------------------- |
 | `queryParam`       | `query`              | URL param holding the query. Use the same value on every block that takes part in the search. |
-| `initialQuery`     | —                    | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
-| `requestId`        | —                    | Saved query/template id sent as the request body `id`.                                        |
+| `initialQuery`     | -                    | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
+| `requestId`        | -                    | Saved query/template id sent as the request body `id`.                                        |
 | `facetDepthLevel`  | `1`                  | Facet nesting depth. `1` is a flat facet; `3` requests `category_level0` → `1` → `2`.         |
 | `facetFilterField` | `category_hierarchy` | Field the selected facet values are filtered against.                                         |
 | `facetFieldPrefix` | `category_level`     | Field name prefix for the facet levels.                                                       |
-| `searchPageUrl`    | —                    | Send submissions to a separate search page instead of refreshing the panel below the input.   |
+| `searchPageUrl`    | -                    | Send submissions to a separate search page instead of refreshing the panel below the input.   |
 
 > The results panel always uses `POST`, because facets and filtering travel in
 > the request body. Facets render from whatever `aggregations` the endpoint
 > returns, so no extra configuration is needed to display them. Selections are
-> OR-ed within one facet tree and AND-ed across trees — see
+> OR-ed within one facet tree and AND-ed across trees - see
 > [Facets](API.md#facets) for the full semantics.
 
 > **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the

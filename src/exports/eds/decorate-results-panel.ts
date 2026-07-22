@@ -70,7 +70,7 @@ export default function decorate(
     minSearchLength: Number(config.minSearchLength) || 3,
     queryParam,
     initialQuery: config.initialQuery || undefined,
-    // The results panel sits right below, so submitting refreshes it in place —
+    // The results panel sits right below, so submitting refreshes it in place -
     // unless the block points at a dedicated search page, which then wins.
     submitInPlace: !config.searchPageUrl,
     labels: {

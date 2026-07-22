@@ -26,7 +26,7 @@ export interface OpenSearchItem {
  * A single facet bucket.
  *
  * Besides `key`/`doc_count`, a bucket may carry a nested sub-aggregation keyed
- * by the child field name (e.g. `category_level1`) — that is how OpenSearch
+ * by the child field name (e.g. `category_level1`) - that is how OpenSearch
  * returns hierarchical facets.
  */
 export interface OpenSearchAggregationBucket {

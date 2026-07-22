@@ -204,7 +204,7 @@ export function debounce<T extends (...args: never[]) => void>(
  *
  * Two transports are supported: the default `GET` sends the query as a URL
  * param (used for typeahead/highlight lookups), while `POST` sends a prepared
- * body — see {@link buildSearchRequestBody} — and is used when results need
+ * body - see {@link buildSearchRequestBody} - and is used when results need
  * facet aggregations or filtering.
  *
  * @param url Endpoint. For `POST` any query string on it is stripped, since

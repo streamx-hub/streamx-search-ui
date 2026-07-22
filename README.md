@@ -263,6 +263,6 @@ The default components include accessible labels, keyboard navigation, modal beh
 
 ## Next Documents
 
-- [`API.md`](./API.md) — full public API reference
-- `CUSTOMIZATION.md` — custom labels, renderers and themes
-- `EXAMPLES.md` — complete integration examples
+- [`API.md`](./API.md) - full public API reference
+- `CUSTOMIZATION.md` - custom labels, renderers and themes
+- `EXAMPLES.md` - complete integration examples

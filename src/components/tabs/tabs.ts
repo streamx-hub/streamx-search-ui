@@ -17,7 +17,7 @@ export interface Tab {
   id: string;
   displayName: string;
   /**
-   * Left unresolved on purpose — `createResultsPanel` applies the defaults and
+   * Left unresolved on purpose - `createResultsPanel` applies the defaults and
    * normalizes the labels when the tab's panel is built.
    */
   results: ResultsConfig;

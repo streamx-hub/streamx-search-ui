@@ -44,7 +44,7 @@ export type QueryInput = {
   initialQuery?: string;
   /**
    * Submit by writing `queryParam` to the current URL instead of navigating to
-   * `searchPageUrl` — used when a results panel sits next to the input.
+   * `searchPageUrl` - used when a results panel sits next to the input.
    */
   submitInPlace?: boolean;
   labels: QueryInputLabels;

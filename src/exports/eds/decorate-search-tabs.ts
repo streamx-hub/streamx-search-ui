@@ -77,7 +77,7 @@ export default function decorate(
     queryParam,
     initialQuery: config.initialQuery || undefined,
     // The tab panels sit right below, so submitting refreshes the active one in
-    // place — unless the block points at a dedicated search page, which wins.
+    // place - unless the block points at a dedicated search page, which wins.
     submitInPlace: !config.searchPageUrl,
     labels: {
       inputPlaceholder: config.inputPlaceholder,

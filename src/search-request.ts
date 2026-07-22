@@ -86,7 +86,7 @@ export interface BuildSearchRequestBodyOptions {
   query?: string;
   /**
    * Selected facet values, grouped by the facet **tree** they were selected
-   * under — one key per top-level facet, whatever depth the values come from.
+   * under - one key per top-level facet, whatever depth the values come from.
    */
   filters?: Record<string, string[]>;
   /** Field the selected facet values are filtered against. */
@@ -100,7 +100,7 @@ export interface BuildSearchRequestBodyOptions {
  * Builds the POST body for the search endpoint.
  *
  * Selected filters become `params.filter_query.fields`: one entry per facet
- * tree — values within a tree are OR-ed, separate trees are AND-ed — with
+ * tree - values within a tree are OR-ed, separate trees are AND-ed - with
  * `last: true` on the final entry.
  *
  * Values are full hierarchical paths (`"Electronics>Tablet"`), so a nested
