@@ -38,6 +38,20 @@ export const renderNoItem = (item: OpenSearchItem) => {
   return "";
 };
 
+/**
+ * Overlay shown while results refresh in place.
+ *
+ * It is absolutely positioned over the results container so the panel keeps its
+ * dimensions during a request instead of collapsing and reflowing the page.
+ */
+export const renderResultsLoadingOverlay = () => {
+  return html`
+    <div class="stx-results-panel__loading-overlay" aria-hidden="true">
+      ${renderDefaultLoader()}
+    </div>
+  ` as HTMLElement;
+};
+
 export const renderResultsPanelError = () => {
   return html`
     <div class="stx-results-panel__error">

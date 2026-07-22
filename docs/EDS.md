@@ -179,10 +179,15 @@ Each configuration row contains:
 | Search Results Panel     |                                        |
 | ------------------------ | -------------------------------------- |
 | searchApiUrl             | /api/search                            |
-| searchPageUrl            | /search                                |
 | minSearchLength          | 3                                      |
 | pageSize                 | 10                                     |
 | dataSources              | /api/results                           |
+| queryParam               | query                                  |
+| initialQuery             | popular topics                         |
+| requestId                | eds-pages                              |
+| facetDepthLevel          | 3                                      |
+| facetFilterField         | category_hierarchy                     |
+| facetFieldPrefix         | category_level                         |
 | inputPlaceholder         | Search                                 |
 | inputLabel               | Search                                 |
 | clearButtonAria          | Clear search                           |
@@ -192,19 +197,54 @@ Each configuration row contains:
 | ariaPaginationGoToPage   | Go to page {{pageNumber}}              |
 | ariaPaginationNavigation | Search results pagination              |
 
+Search-specific options:
+
+| Option             | Default              | Description                                                                                   |
+| ------------------ | -------------------- | --------------------------------------------------------------------------------------------- |
+| `queryParam`       | `query`              | URL param holding the query. Use the same value on every block that takes part in the search. |
+| `initialQuery`     | —                    | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
+| `requestId`        | —                    | Saved query/template id sent as the request body `id`.                                        |
+| `facetDepthLevel`  | `1`                  | Facet nesting depth. `1` is a flat facet; `3` requests `category_level0` → `1` → `2`.         |
+| `facetFilterField` | `category_hierarchy` | Field the selected facet values are filtered against.                                         |
+| `facetFieldPrefix` | `category_level`     | Field name prefix for the facet levels.                                                       |
+| `searchPageUrl`    | —                    | Send submissions to a separate search page instead of refreshing the panel below the input.   |
+
+> The results panel always uses `POST`, because facets and filtering travel in
+> the request body. Facets render from whatever `aggregations` the endpoint
+> returns, so no extra configuration is needed to display them. Selections are
+> OR-ed within one facet tree and AND-ed across trees — see
+> [Facets](API.md#facets) for the full semantics.
+
+> **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the
+> example above) and the input refreshes the panel on the same page. Set it and
+> the input navigates to that page instead, which is what you want for a header
+> input but not for a block that renders its own results.
+
 ### Search Tabs
 
 The Search Tabs block contains the configuration shared by the entire search page.
 
-| Search Tabs      |               |
-| ---------------- | ------------- |
-| searchApiUrl     | /api/search   |
-| searchPageUrl    | /search       |
-| minSearchLength  | 3             |
-| inputPlaceholder | Search        |
-| inputLabel       | Search        |
-| clearButtonAria  | Clear search  |
-| searchButtonAria | Submit search |
+| Search Tabs      |                |
+| ---------------- | -------------- |
+| searchApiUrl     | /api/search    |
+| minSearchLength  | 3              |
+| queryParam       | query          |
+| initialQuery     | popular topics |
+| requestId        | eds-pages      |
+| facetDepthLevel  | 3              |
+| inputPlaceholder | Search         |
+| inputLabel       | Search         |
+| clearButtonAria  | Clear search   |
+| searchButtonAria | Submit search  |
+
+`requestId` and `facetDepthLevel` set here act as defaults for every tab; a
+Search Tab block can override them individually.
+
+`searchPageUrl` behaves as it does for the results panel: unset, submitting
+refreshes the active tab in place; set, the input navigates to that page.
+
+The active tab is mirrored in the URL (`stx-tab`), so a selected tab survives a
+reload and can be linked to. The param is omitted while the first tab is active.
 
 Each tab is configured using a separate Search Tab block.
 
@@ -218,6 +258,8 @@ Add one Search Tab block for each results tab.
 | displayName              | Products                               |
 | pageSize                 | 10                                     |
 | dataSources              | /api/products                          |
+| requestId                | eds-products                           |
+| facetDepthLevel          | 2                                      |
 | paginationInfo           | Page {{currentPage}} of {{pageNumber}} |
 | totalResults             | {{totalCount}} results found           |
 | ariaPaginationGoToPage   | Go to page {{pageNumber}}              |

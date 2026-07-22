@@ -38,6 +38,7 @@ Override the variables after importing the library stylesheet.
 :root {
   --stx-color-primary: #2563eb;
   --stx-color-text: #222;
+  --stx-color-text-query-input: #222;
   --stx-color-background: #ffffff;
   --stx-color-border: #e5e7eb;
 }

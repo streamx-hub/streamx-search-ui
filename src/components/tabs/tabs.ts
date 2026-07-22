@@ -1,10 +1,9 @@
-import { html, createLazyComponent, normalizeLabels } from "../../helper";
+import { html, createLazyComponent } from "../../helper";
+import { ACTIVE_TAB_PARAM } from "../../config";
 import {
   createResultsPanel,
-  type Results,
   type ResultsConfig,
   type ResultsPanelRenderers,
-  type ResultsPanelLabelsConfig,
 } from "../results-panel/results-panel";
 import "./tabs.css";
 
@@ -17,21 +16,26 @@ export interface TabConfig {
 export interface Tab {
   id: string;
   displayName: string;
-  results: Results;
+  /**
+   * Left unresolved on purpose — `createResultsPanel` applies the defaults and
+   * normalizes the labels when the tab's panel is built.
+   */
+  results: ResultsConfig;
 }
 
 const resolvedTab = (
   tabsConfig: TabConfig[],
   customRenderers: ResultsPanelRenderers = {},
-  labels: ResultsPanelLabelsConfig = {},
 ): Tab[] => {
   return tabsConfig.map((c) => ({
     ...c,
+    // Per-tab labels ride along in `...c.results`; overwriting them here (as an
+    // unused shared-labels parameter once did) silently dropped every label
+    // authored on a tab.
     results: {
       pageSize: 10,
       ...c.results,
       renderers: { ...customRenderers, ...c.results?.renderers },
-      labels: normalizeLabels(labels),
     },
   }));
 };
@@ -86,12 +90,38 @@ function createTabs(
   customRenderers?: ResultsPanelRenderers,
 ) {
   const tabs = resolvedTab(tabsConfig, customRenderers);
-  const buttonList = tabs.map((el, index) => createTabButton(el, !index));
+
+  // The active tab is mirrored in the URL so it survives a reload and can be
+  // deep-linked. The param is only present for a non-default tab, keeping the
+  // URL clean while the first tab is selected.
+  const initialTabParam = new URLSearchParams(window.location.search).get(
+    ACTIVE_TAB_PARAM,
+  );
+  const initialIndex = Math.max(
+    0,
+    tabs.findIndex((tab) => String(tab.id) === initialTabParam),
+  );
+
+  const updateActiveTabParam = (tabId: string, isDefault: boolean) => {
+    const url = new URL(window.location.href);
+
+    if (isDefault) {
+      url.searchParams.delete(ACTIVE_TAB_PARAM);
+    } else {
+      url.searchParams.set(ACTIVE_TAB_PARAM, tabId);
+    }
+
+    window.history.replaceState({}, "", url);
+  };
+
+  const buttonList = tabs.map((el, index) =>
+    createTabButton(el, index === initialIndex),
+  );
   const tabsLazyMounts: (() => void)[] = [];
   const contentList: HTMLDivElement[] = [];
 
   tabs.forEach((el, index) => {
-    const { element, build } = createTabContent(el, !index);
+    const { element, build } = createTabContent(el, index === initialIndex);
     tabsLazyMounts.push(build);
     contentList.push(element);
   });
@@ -104,8 +134,10 @@ function createTabs(
   ` as HTMLDivElement;
 
   const activateTab = (selectedTabButton: HTMLButtonElement) => {
+    const selectedIndex = buttonList.indexOf(selectedTabButton);
+
     buttonList.forEach((button, index) => {
-      const isSelected = button === selectedTabButton;
+      const isSelected = index === selectedIndex;
       const contentElId = button.getAttribute("aria-controls");
       const contentEl = tabsEl.querySelector(`#${contentElId}`);
 
@@ -120,9 +152,13 @@ function createTabs(
         }
       }
     });
+
+    if (selectedIndex >= 0) {
+      updateActiveTabParam(String(tabs[selectedIndex].id), selectedIndex === 0);
+    }
   };
 
-  tabsLazyMounts[0]();
+  tabsLazyMounts[initialIndex]();
 
   const onKeyDown = (e: KeyboardEvent) => {
     const { target } = e;
@@ -133,7 +169,8 @@ function createTabs(
 
     const currentButtonIndex = buttonList.indexOf(target);
     const tabCount = buttonList.length;
-    let nextIndex = currentButtonIndex;
+    // Every branch below either assigns this or returns, so no initial value.
+    let nextIndex: number;
 
     switch (e.key) {
       case "ArrowRight":

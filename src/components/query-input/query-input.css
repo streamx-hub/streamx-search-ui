@@ -46,7 +46,7 @@
   border-bottom: 1px solid var(--stx-color-border);
   border-radius: 0;
   background: var(--stx-color-surface);
-  color: var(--stx-color-text);
+  color: var(--stx-color-text-query-input);
   outline: none;
   font: inherit;
 }
@@ -114,7 +114,7 @@
   max-height: 600px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--stx-color-surface);
+  background: var(--stx-color-background);
   box-shadow: var(--stx-shadow-dropdown);
 }
 
@@ -142,7 +142,7 @@
   margin: 0;
   padding: 8px 12px;
   background: transparent;
-  color: var(--stx-color-text);
+  color: var(--stx-color-text-query-input);
   text-decoration: none;
   font: inherit;
   line-height: 1.4;

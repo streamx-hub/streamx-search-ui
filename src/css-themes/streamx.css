@@ -2,6 +2,7 @@
 
 :root main {
   --stx-color-text: #fff;
+  --stx-color-text-query-input: #fff;
   --stx-color-muted: #b9bec9;
   --stx-color-background: #191b22;
   --stx-color-surface: #272b36;

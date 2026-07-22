@@ -134,14 +134,48 @@ interface QueryInputConfig {
 }
 ```
 
-| Property          | Type                           | Required |      Default       | Description                               |
-| ----------------- | ------------------------------ | :------: | :----------------: | ----------------------------------------- |
-| `searchApiUrl`    | `string \| (() => string)`     |    ✅    |         —          | Suggestions/search endpoint URL.          |
-| `searchPageUrl`   | `(val: string) => string`      |    ❌    |         —          | Builds the target search page URL.        |
-| `minSearchLength` | `number`                       |    ❌    |        `3`         | Minimum query length before search.       |
-| `groupByCategory` | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category. |
-| `labels`          | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                   |
-| `renderers`       | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                |
+| Property          | Type                           | Required |      Default       | Description                                                                     |
+| ----------------- | ------------------------------ | :------: | :----------------: | ------------------------------------------------------------------------------- |
+| `searchApiUrl`    | `string \| (() => string)`     |    ✅    |         —          | Suggestions/search endpoint URL.                                                |
+| `searchPageUrl`   | `(val: string) => string`      |    ❌    |         —          | Builds the target search page URL.                                              |
+| `minSearchLength` | `number`                       |    ❌    |        `3`         | Minimum query length before search.                                             |
+| `groupByCategory` | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category.                                       |
+| `queryParam`      | `string`                       |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`. |
+| `initialQuery`    | `string`                       |    ❌    |         —          | Query pre-fetched on render and offered while the input is focused and empty.   |
+| `submitInPlace`   | `boolean`                      |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.   |
+| `labels`          | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                                                         |
+| `renderers`       | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                                                      |
+
+### Submitting
+
+Pressing <kbd>Enter</kbd>, picking a suggestion, or clicking the search button
+all submit the current query. Where it goes depends on the configuration:
+
+- `submitInPlace: true` — writes `queryParam` to the current URL, so a results
+  panel on the same page refreshes without a navigation. Use this when the input
+  sits above its own results.
+- otherwise — navigates to `searchPageUrl(query)`. Use this for a header input
+  that should take the user to a search results page.
+
+`submitInPlace` is checked first, so setting it alongside a `searchPageUrl`
+makes the latter dead configuration. The EDS decorators derive it for you: they
+set `submitInPlace` only when the block has no `searchPageUrl`.
+
+### `initialQuery`
+
+When set, its results are fetched once on render and shown whenever the input is
+focused while empty — so the dropdown offers something before the user types.
+Typing dismisses them; clearing the input brings them back.
+
+Because focus alone is not a reliable trigger (`.focus()` emits no event when the
+element is already focused), the returned element also exposes
+`showInitialSuggestions()` for cases where something else opens the input:
+
+```ts
+const input = createSearchInput({ searchApiUrl, initialQuery: "popular" }, el);
+
+navToggle.addEventListener("click", () => input.showInitialSuggestions());
+```
 
 Example:
 
@@ -371,15 +405,110 @@ interface ResultsConfig {
   dataSources: string[];
   renderers?: ResultsPanelRenderers;
   labels?: ResultsPanelLabelsConfig;
+  method?: "GET" | "POST";
+  queryParam?: string;
+  facetDepthLevel?: number;
+  requestId?: string;
+  facetFilterField?: string;
+  facetFieldPrefix?: string;
+  facetPathSeparator?: string;
+  facetFieldSize?: number;
 }
 ```
 
-| Property      | Type                       | Required |     Default     | Description                                                          |
-| ------------- | -------------------------- | :------: | :-------------: | -------------------------------------------------------------------- |
-| `dataSources` | `string[]`                 |    ✅    |        —        | Search result endpoints. Current implementation uses the first item. |
-| `pageSize`    | `number`                   |    ❌    |      `20`       | Number of results per page.                                          |
-| `renderers`   | `ResultsPanelRenderers`    |    ❌    |    Built-in     | Custom result renderers.                                             |
-| `labels`      | `ResultsPanelLabelsConfig` |    ❌    | Built-in labels | Pagination and results labels.                                       |
+| Property             | Type                       | Required |        Default         | Description                                                                          |
+| -------------------- | -------------------------- | :------: | :--------------------: | ------------------------------------------------------------------------------------ |
+| `dataSources`        | `string[]`                 |    ✅    |           —            | Search result endpoints. Current implementation uses the first item.                 |
+| `pageSize`           | `number`                   |    ❌    |          `20`          | Number of results per page.                                                          |
+| `renderers`          | `ResultsPanelRenderers`    |    ❌    |        Built-in        | Custom result renderers.                                                             |
+| `labels`             | `ResultsPanelLabelsConfig` |    ❌    |    Built-in labels     | Pagination and results labels.                                                       |
+| `method`             | `"GET" \| "POST"`          |    ❌    |        `"GET"`         | Transport. **Facets and filtering require `"POST"`**, since they travel in the body. |
+| `queryParam`         | `string`                   |    ❌    |       `"query"`        | URL param carrying the query. Must match the query input's `queryParam`.             |
+| `facetDepthLevel`    | `number`                   |    ❌    |          `1`           | How deep the facet aggregations nest. `1` requests a single flat level.              |
+| `requestId`          | `string`                   |    ❌    |           —            | Saved query/template id sent as the request body `id`.                               |
+| `facetFilterField`   | `string`                   |    ❌    | `"category_hierarchy"` | Field the selected facet values are filtered against.                                |
+| `facetFieldPrefix`   | `string`                   |    ❌    |   `"category_level"`   | Field name prefix for facet levels; the level index is appended.                     |
+| `facetPathSeparator` | `string`                   |    ❌    |         `">"`          | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).       |
+| `facetFieldSize`     | `number`                   |    ❌    |          `20`          | Max buckets requested per facet level.                                               |
+
+### Facets
+
+Facets are rendered from the `aggregations` the endpoint returns, so the panel
+adapts to whatever comes back — a flat aggregation renders as a plain checkbox
+list, a nested one as a collapsible tree. When the response carries no usable
+aggregations — as with the default `method: "GET"` — the facets sidebar is not
+rendered at all and the results take the full width.
+
+Selecting a value filters on `facetFilterField` using the value's **full
+hierarchical path** (`Electronics>Tablet`, joined with `facetPathSeparator`).
+The path already encodes its ancestors, so only the value the user actually
+ticked is ever sent — the ancestors are never added alongside it.
+
+#### How selections combine
+
+Selections are grouped per facet **tree** — the top-level aggregation a value
+belongs to, whatever depth it sits at:
+
+- values within one tree are **OR-ed** into a single `filter_query.fields` entry
+- separate trees become separate entries, which are **AND-ed**
+
+So ticking `Electronics > Tablet` and the top-level `Technology` — both in the
+`category_level0` tree — sends one entry with both paths and returns the union.
+Splitting them across two entries would AND them and match nothing, which is why
+grouping is per tree rather than per aggregation level.
+
+```jsonc
+// Electronics>Tablet + Technology, one tree
+{
+  "filter_query": {
+    "fields": [
+      {
+        "name": "category_hierarchy",
+        "values": ["Electronics>Tablet", "Technology"],
+        "last": true,
+      },
+    ],
+  },
+}
+```
+
+When nothing is selected, `filter_query` is omitted entirely.
+
+#### Parent and child interaction
+
+Because ancestors are not sent, the checkbox tree keeps parents in sync
+visually instead:
+
+- a parent whose own path is selected renders **checked**
+- a parent with a selection somewhere beneath it renders **indeterminate**
+  (exposed to assistive tech as "mixed"). This is presentation only — an
+  indeterminate node contributes nothing to the request.
+
+Both states are derived from the current selection on every render, so they stay
+correct through ticking, unticking and refetching.
+
+Two rules keep the selection minimal:
+
+- **Ticking a parent** clears any selection beneath it, selects the parent, and
+  collapses its subtree — the parent already matches those documents.
+- **Ticking the last unselected child** of a parent rolls the selection up: the
+  children are replaced by the parent and the subtree collapses. `(A OR B OR C)`
+  becomes `(parent)`.
+
+> The rollup is a deliberate simplification. It matches the same documents
+> whenever every document under the parent is also filed under one of its
+> children — true for the current index — but a document filed directly on the
+> parent with no child value would be matched by the rolled-up filter and not by
+> the explicit union.
+
+```ts
+{
+  dataSources: ["/api/search"],
+  method: "POST",
+  requestId: "eds-pages",
+  facetDepthLevel: 3, // category_level0 → category_level1 → category_level2
+}
+```
 
 Example:
 
