@@ -34,10 +34,24 @@ export interface QueryInputConfig {
    */
   initialQuery?: string;
   /**
+   * Restricts suggestions to one content namespace, sent as a `namespace` query
+   * param. Omit to search across all namespaces.
+   */
+  namespace?: string;
+  /**
    * Submit by writing `queryParam` to the current URL instead of navigating to
    * `searchPageUrl` - used when a results panel sits next to the input.
    */
   submitInPlace?: boolean;
+  /**
+   * Renders the built-in search (submit) button. Defaults to `true`, in which
+   * case the button is still dropped when the input has nowhere to submit.
+   *
+   * Set to `false` when the surrounding markup already provides its own submit
+   * affordance - e.g. a nav search behind its own magnifier toggle - so the
+   * button is never rendered rather than hidden with CSS.
+   */
+  showSearchButton?: boolean;
   labels?: Partial<QueryInputLabels>;
   renderers?: Partial<QueryInputRenderers>;
 }

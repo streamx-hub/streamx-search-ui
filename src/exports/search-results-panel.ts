@@ -20,3 +20,4 @@ const createResultsPanel = (
 };
 
 export { createResultsPanel };
+export { getHitUrl } from "../renderers/renderers";

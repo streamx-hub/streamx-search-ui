@@ -1,41 +1,20 @@
 import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
-  generatePannelLabels,
+  type EDSInputOptions,
+  type EDSPanelOptions,
   getEDSConfig,
   loadCssFile,
+  readInputOptions,
+  readPanelOptions,
   replaceElWithError,
 } from "../../eds-helper";
 import type { QueryInputRenderers } from "../../types/query-input";
-import { DEFAULT_QUERY_PARAM } from "../../config";
 import { createResultsPanel } from "../search-results-panel";
 
-type EDSResultsPanelConfig = {
-  searchApiUrl: string;
-  searchPageUrl?: string;
-  minSearchLength?: string;
-  inputPlaceholder?: string;
-  inputLabel?: string;
-  clearButtonAria?: string;
-  searchButtonAria?: string;
-  pageSize?: string;
-  dataSources?: string;
-  paginationInfo?: string;
-  totalResults?: string;
-  ariaPaginationGoToPage?: string;
-  ariaPaginationNavigation?: string;
-  /** URL param carrying the query. Shared by the input and the panel. */
-  queryParam?: string;
-  /** Query pre-fetched on render and offered while the input is empty. */
-  initialQuery?: string;
-  /** How deep the facet aggregations nest. Defaults to a single flat level. */
-  facetDepthLevel?: string;
-  /** Saved query/template id sent as the request body `id`. */
-  requestId?: string;
-  /** Field the selected facet values are filtered against. */
-  facetFilterField?: string;
-  /** Field name prefix for the facet levels. */
-  facetFieldPrefix?: string;
-};
+type EDSResultsPanelConfig = EDSPanelOptions &
+  EDSInputOptions & {
+    searchApiUrl: string;
+  };
 
 type EDSResultsPanelRenderers = Partial<QueryInputRenderers> &
   Partial<ResultsPanelRenderers>;
@@ -58,27 +37,11 @@ export default function decorate(
     return;
   }
 
-  // The input writes this param and the panel reads it, so both get the same one.
-  const queryParam = config.queryParam || DEFAULT_QUERY_PARAM;
-
+  const inputOptions = readInputOptions(config);
   const inputConfig = {
+    // Narrowed to a string by the guard above, which is why it stays here.
     searchApiUrl: config.searchApiUrl,
-    searchPageUrl: config.searchPageUrl
-      ? (query: string) =>
-          `${config.searchPageUrl}?${queryParam}=${encodeURIComponent(query)}`
-      : undefined,
-    minSearchLength: Number(config.minSearchLength) || 3,
-    queryParam,
-    initialQuery: config.initialQuery || undefined,
-    // The results panel sits right below, so submitting refreshes it in place -
-    // unless the block points at a dedicated search page, which then wins.
-    submitInPlace: !config.searchPageUrl,
-    labels: {
-      inputPlaceholder: config.inputPlaceholder,
-      inputLabel: config.inputLabel,
-      clearButtonAria: config.clearButtonAria,
-      searchButtonAria: config.searchButtonAria,
-    },
+    ...inputOptions,
     renderers,
   };
 
@@ -88,17 +51,9 @@ export default function decorate(
     ),
   ) as ResultsPanelRenderers;
   const panelConfig = {
-    pageSize: Number(config.pageSize) || 10,
-    dataSources: config.dataSources ? [config.dataSources] : [],
-    // Facets and filtering travel in the request body, so results use POST.
-    method: "POST" as const,
-    queryParam,
-    facetDepthLevel: Number(config.facetDepthLevel) || undefined,
-    requestId: config.requestId || undefined,
-    facetFilterField: config.facetFilterField || undefined,
-    facetFieldPrefix: config.facetFieldPrefix || undefined,
+    ...readPanelOptions(config),
+    queryParam: inputOptions.queryParam,
     renderers: resultsRenderers,
-    labels: generatePannelLabels(config),
   };
 
   const resultPanel = createResultsPanel(inputConfig, panelConfig);

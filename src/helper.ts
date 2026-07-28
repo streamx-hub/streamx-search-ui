@@ -273,6 +273,26 @@ export const createLazyComponent = (buildFunction: () => HTMLElement) => {
   };
 };
 
+/**
+ * Adds the `namespace` query param to a `GET` search URL, so results are
+ * limited to one content namespace. A missing namespace is left off entirely,
+ * which searches across all of them.
+ *
+ * `POST` requests carry the namespace in the body instead - see
+ * `buildSearchRequestBody`.
+ */
+export const withNamespaceParam = (url: string, namespace?: string) => {
+  if (!namespace) {
+    return url;
+  }
+
+  const namespacedUrl = new URL(url, window.location.origin);
+
+  namespacedUrl.searchParams.set("namespace", namespace);
+
+  return namespacedUrl.toString();
+};
+
 export const dispatchUrlChangeEvent = () => {
   window.dispatchEvent(new Event("urlchange"));
 };

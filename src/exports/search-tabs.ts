@@ -25,3 +25,4 @@ const createSearchTabs = (
 };
 
 export { createSearchTabs };
+export { getHitUrl } from "../renderers/renderers";

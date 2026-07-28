@@ -42,11 +42,15 @@ export type QueryInput = {
    * focused and empty. Omit to disable.
    */
   initialQuery?: string;
+  /** Restricts suggestions to one content namespace. */
+  namespace?: string;
   /**
    * Submit by writing `queryParam` to the current URL instead of navigating to
    * `searchPageUrl` - used when a results panel sits next to the input.
    */
   submitInPlace?: boolean;
+  /** Renders the built-in search (submit) button. */
+  showSearchButton: boolean;
   labels: QueryInputLabels;
   renderers: QueryInputRenderers;
 };

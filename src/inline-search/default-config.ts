@@ -28,6 +28,7 @@ const defaultConfig = {
   input: {
     minSearchLength: 3,
     groupByCategory: true,
+    showSearchButton: true,
     queryParam: DEFAULT_QUERY_PARAM,
     labels: DEFAULT_LABELS,
     renderers: DEFAULT_RENDERERS,

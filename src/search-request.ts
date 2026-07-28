@@ -94,6 +94,11 @@ export interface BuildSearchRequestBodyOptions {
   facetDepthLevel?: number;
   facetFieldPrefix?: string;
   facetFieldSize?: number;
+  /**
+   * Restricts results to one content namespace. Belongs inside `params` - the
+   * endpoint returns HTTP 500 for a namespace at the body root.
+   */
+  namespace?: string;
 }
 
 /**
@@ -118,6 +123,7 @@ export const buildSearchRequestBody = ({
   facetDepthLevel,
   facetFieldPrefix,
   facetFieldSize,
+  namespace,
 }: BuildSearchRequestBodyOptions = {}): SearchRequestBody => {
   const body: SearchRequestBody = {
     params: {
@@ -137,6 +143,10 @@ export const buildSearchRequestBody = ({
 
   if (query) {
     body.params.query = query;
+  }
+
+  if (namespace) {
+    body.params.namespace = namespace;
   }
 
   const filterGroups = filters

@@ -13,9 +13,14 @@
   align-items: center;
 }
 
+/* The input owns a stacking context so its suggestions dropdown paints above
+   the page content below it. The value is themeable because the default is high
+   enough to out-stack a host's site header - which would put a header search's
+   dropdown *under* a second input further down the page. Lower it when the
+   component sits inside a page that manages its own stacking. */
 .stx-query-input {
   position: relative;
-  z-index: 1000;
+  z-index: var(--stx-z-query-input, 1000);
 }
 
 .stx-query-input__input-wrapper {

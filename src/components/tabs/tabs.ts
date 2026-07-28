@@ -35,6 +35,8 @@ const resolvedTab = (
     results: {
       pageSize: 10,
       ...c.results,
+      // Namespaces this tab's facet URL param so tabs don't share a selection.
+      stateKey: c.results?.stateKey ?? String(c.id),
       renderers: { ...customRenderers, ...c.results?.renderers },
     },
   }));

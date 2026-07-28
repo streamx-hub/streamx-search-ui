@@ -16,6 +16,8 @@ The library provides ready-to-use search inputs, modal search, tabbed search pag
 - Search page without tabs
 - Custom labels and renderers
 - Optional analytics callback
+- Namespace-scoped search (e.g. per locale)
+- Debug mode for unhandled result types
 - Accessible default markup
 
 ---
@@ -225,7 +227,7 @@ Use when results should be shown in a single panel.
 | Search Tabs          | `createSearchTabs()`   | Creates a search page with tabs.              |
 | Search Results Panel | `createResultsPanel()` | Creates a search input with one result panel. |
 
-See [`API.md`](./API.md) for the full API reference.
+See [`API.md`](./docs/API.md) for the full API reference.
 
 ---
 
@@ -251,18 +253,47 @@ Result panel requests include pagination params:
 ?from=0&size=20
 ```
 
-The current search query is read from the `stx-search` URL parameter.
+The current search query is read from the `query` URL parameter by default,
+configurable per component via `queryParam` (the search input writes it and the
+results panel reads it, so both sides must use the same value).
 
----
+### Shareable / deep-linkable URLs
 
-## Accessibility
+Search state is persisted in the URL so a search can be shared or reloaded and
+comes back as it was:
 
-The default components include accessible labels, keyboard navigation, modal behavior, pagination labels and screen reader announcements.
+- `query` - the active query (fills the input and runs the search)
+- `stx-tab` - the active tab (search tabs only)
+- `stx-facets` - the selected facets (URL-encoded JSON; inside tabs it is
+  suffixed with the tab id, e.g. `stx-facets-products`)
 
----
+All three are restored on load. See [`API.md`](./docs/API.md#url-parameters) for
+the exact format.
 
-## Next Documents
+## Namespaces
 
-- [`API.md`](./API.md) - full public API reference
-- `CUSTOMIZATION.md` - custom labels, renderers and themes
-- `EXAMPLES.md` - complete integration examples
+Indexes can hold content from several namespaces at once - typically one per
+locale. Set `namespace` to limit a search to one of them:
+
+```ts
+createResultsPanel(
+  { searchApiUrl: "/api/suggestions", namespace: "de" },
+  { dataSources: ["/api/search"], method: "POST", namespace: "de" },
+);
+```
+
+It is optional everywhere. Omit it and the endpoint searches across **all**
+namespaces, which is the right choice for a single-locale site - and the wrong
+one for a localized page, which would then show results from other languages.
+
+How it travels depends on the transport, and both are handled for you:
+
+| Transport             | Where the namespace goes             |
+| --------------------- | ------------------------------------ |
+| `GET` (suggestions)   | `namespace` query param              |
+| `POST` (result panel) | `namespace` inside the body `params` |
+
+The option exists on both `QueryInputConfig` and `ResultsConfig`, so a header
+input and its results page are limited independently - set it on both to keep
+them consistent. In EDS, author a `namespace` row on the block and it feeds the
+input and the panel(s) at once.

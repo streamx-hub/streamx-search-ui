@@ -1,4 +1,3 @@
-import globalConfig from "../../config";
 import { html } from "../../helper";
 import type { OpenSearchItem } from "../../types/open-search";
 
@@ -26,17 +25,17 @@ export const renderDefaultLoader = () => {
   ` as HTMLElement;
 };
 
-export const renderNoItem = (item: OpenSearchItem) => {
-  if (globalConfig.debug) {
-    return html`
-      <div class="stx-results-panel__no-item-renderer">
-        No custom renderer for type: ${item._source.type}
-      </div>
-    `;
-  }
-
-  return "";
-};
+/**
+ * Debug diagnostic shown when a registered renderer throws. Whether it is
+ * rendered at all is decided by the caller (`debugMode`); this only builds the
+ * markup.
+ */
+export const renderNoItem = (item: OpenSearchItem) =>
+  html`
+    <div class="stx-results-panel__no-item-renderer">
+      No custom renderer for type: ${item._source.type}
+    </div>
+  ` as HTMLElement;
 
 /**
  * Overlay shown while results refresh in place.

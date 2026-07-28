@@ -3,6 +3,7 @@ import {
   fetchSearchResults,
   html,
   dispatchUrlChangeEvent,
+  withNamespaceParam,
 } from "../../helper";
 import defaultConfig from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
@@ -76,10 +77,14 @@ export function createQueryInput(customConfig: QueryInputConfig) {
   const suggestionWrapperId = crypto.randomUUID();
   const { labels, renderers, queryParam } = config;
 
-  const searchUrl =
+  // Every suggestion fetch goes through this URL, so the namespace is applied
+  // once here rather than at each call site.
+  const searchUrl = withNamespaceParam(
     typeof config.searchApiUrl === "string"
       ? config.searchApiUrl
-      : config.searchApiUrl();
+      : config.searchApiUrl(),
+    config.namespace,
+  );
 
   const queryInputEl = html`
     <div class="stx-query-input">
@@ -382,7 +387,11 @@ export function createQueryInput(customConfig: QueryInputConfig) {
   }
 
   if (searchButton) {
-    if (config.submitInPlace || config.searchPageUrl) {
+    // The button is dropped outright - not just hidden - when it would be dead
+    // (nothing to submit to) or when the host provides its own submit control.
+    const hasSubmitTarget = config.submitInPlace || config.searchPageUrl;
+
+    if (config.showSearchButton && hasSubmitTarget) {
       searchButton.addEventListener("click", () => {
         submitQuery(inputEl.value);
       });

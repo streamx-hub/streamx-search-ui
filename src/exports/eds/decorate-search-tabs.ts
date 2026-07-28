@@ -1,45 +1,27 @@
 import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
-  generatePannelLabels,
+  type EDSInputOptions,
+  type EDSPanelOptions,
   getEDSConfig,
   loadCssFile,
+  mergeEDSConfigs,
+  readInputOptions,
+  readPanelOptions,
   replaceElWithError,
 } from "../../eds-helper";
 import type { QueryInputRenderers } from "../../types/query-input";
-import { DEFAULT_QUERY_PARAM } from "../../config";
 import { createSearchTabs } from "../search-tabs";
 
-type EDSSearchTabsConfig = {
-  searchApiUrl: string;
-  searchPageUrl?: string;
-  minSearchLength?: string;
-  inputPlaceholder?: string;
-  inputLabel?: string;
-  clearButtonAria?: string;
-  searchButtonAria?: string;
-  /** URL param carrying the query. Shared by the input and the tab panels. */
-  queryParam?: string;
-  /** Query pre-fetched on render and offered while the input is empty. */
-  initialQuery?: string;
-  /** Block-level fallback for each tab's facet nesting depth. */
-  facetDepthLevel?: string;
-  /** Block-level fallback for the saved query/template id. */
-  requestId?: string;
-};
+// Panel options authored on the block act as defaults for every tab.
+type EDSSearchTabsConfig = EDSPanelOptions &
+  EDSInputOptions & {
+    searchApiUrl: string;
+  };
 
-type EDSTabConfig = {
+// Every panel option can be overridden per tab.
+type EDSTabConfig = EDSPanelOptions & {
   id: string;
   displayName: string;
-  pageSize?: string;
-  dataSources: string;
-  paginationInfo?: string;
-  totalResults?: string;
-  ariaPaginationGoToPage?: string;
-  ariaPaginationNavigation?: string;
-  /** Facet nesting depth for this tab; falls back to the block-level value. */
-  facetDepthLevel?: string;
-  /** Saved query/template id for this tab; falls back to the block-level value. */
-  requestId?: string;
 };
 
 type EDSTabsRenderers = Partial<QueryInputRenderers> &
@@ -64,33 +46,22 @@ export default function decorate(
     return;
   }
 
-  // The input writes this param and every tab panel reads it.
-  const queryParam = config.queryParam || DEFAULT_QUERY_PARAM;
-
+  const inputOptions = readInputOptions(config);
   const inputConfig = {
-    searchApiUrl: config!.searchApiUrl,
-    searchPageUrl: config.searchPageUrl
-      ? (query: string) =>
-          `${config.searchPageUrl}?${queryParam}=${encodeURIComponent(query)}`
-      : undefined,
-    minSearchLength: Number(config.minSearchLength) || 3,
-    queryParam,
-    initialQuery: config.initialQuery || undefined,
-    // The tab panels sit right below, so submitting refreshes the active one in
-    // place - unless the block points at a dedicated search page, which wins.
-    submitInPlace: !config.searchPageUrl,
-    labels: {
-      inputPlaceholder: config.inputPlaceholder,
-      inputLabel: config.inputLabel,
-      clearButtonAria: config.clearButtonAria,
-      searchButtonAria: config.searchButtonAria,
-    },
+    // Narrowed to a string by the guard above, which is why it stays here.
+    searchApiUrl: config.searchApiUrl,
+    ...inputOptions,
     renderers,
   };
 
   const tabs = [...document.querySelectorAll(tabSelector)] as HTMLElement[];
   const tabsConfigs = tabs.map((tab) => {
     const tabConfig = getEDSConfig<EDSTabConfig>(tab);
+    // Block-level panel options are the defaults; tab rows override key by key.
+    const panelOptions = mergeEDSConfigs<EDSSearchTabsConfig & EDSTabConfig>(
+      config,
+      tabConfig,
+    );
 
     if (!tabConfig.id) {
       replaceElWithError(
@@ -110,7 +81,7 @@ export default function decorate(
       return;
     }
 
-    if (!tabConfig.dataSources) {
+    if (!panelOptions.dataSources) {
       replaceElWithError(
         block,
         "The <em>Search Tab</em> block requires <i>dataSources</i>",
@@ -125,16 +96,8 @@ export default function decorate(
       id: tabConfig.id,
       displayName: tabConfig.displayName,
       results: {
-        pageSize: Number(tabConfig.pageSize) || 10,
-        dataSources: [tabConfig.dataSources],
-        // Facets and filtering travel in the request body, so results use POST.
-        method: "POST" as const,
-        queryParam,
-        facetDepthLevel:
-          Number(tabConfig.facetDepthLevel || config.facetDepthLevel) ||
-          undefined,
-        requestId: tabConfig.requestId || config.requestId || undefined,
-        labels: generatePannelLabels(tabConfig),
+        ...readPanelOptions(panelOptions),
+        queryParam: inputOptions.queryParam,
       },
     };
   });

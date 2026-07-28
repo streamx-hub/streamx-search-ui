@@ -100,3 +100,5 @@ export function createSearchInput(
 
   return element;
 }
+
+export { getHitUrl } from "../renderers/renderers";

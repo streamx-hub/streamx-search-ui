@@ -3,8 +3,9 @@ import {
   fetchSearchResults,
   html,
   normalizeLabels,
+  withNamespaceParam,
 } from "../../helper";
-import { DEFAULT_QUERY_PARAM } from "../../config";
+import globalConfig, { DEFAULT_QUERY_PARAM } from "../../config";
 import {
   buildSearchRequestBody,
   joinFacetPath,
@@ -80,10 +81,33 @@ export interface ResultsConfig {
   facetPathSeparator?: string;
   /** Max buckets requested per facet level. */
   facetFieldSize?: number;
+  /**
+   * Renders debug diagnostics in the results list - the "Missing renderer"
+   * notice for a result type with no registered renderer, and a notice when a
+   * renderer throws. Defaults to `false`, which drops those rows entirely.
+   */
+  debugMode?: boolean;
+  /**
+   * Namespaces this panel's facet-selection URL param so sibling panels (e.g.
+   * search tabs) each persist their own facets without colliding. Set
+   * automatically to the tab id inside search tabs; omit for a standalone panel.
+   */
+  stateKey?: string;
+  /**
+   * Restricts results to one content namespace. Sent as a `namespace` query
+   * param on `GET` and inside the request body's `params` on `POST`. Omit to
+   * search across all namespaces.
+   */
+  namespace?: string;
 }
 
-export type Results = Omit<Required<ResultsConfig>, "labels" | "requestId"> & {
+export type Results = Omit<
+  Required<ResultsConfig>,
+  "labels" | "requestId" | "stateKey" | "namespace"
+> & {
   requestId?: string;
+  stateKey?: string;
+  namespace?: string;
   labels: ResultsPanelNormalizedLabels;
 };
 
@@ -113,6 +137,7 @@ const defaultConfig = {
   facetFieldPrefix: DEFAULT_FACET_FIELD_PREFIX,
   facetPathSeparator: DEFAULT_FACET_PATH_SEPARATOR,
   facetFieldSize: DEFAULT_FACET_FIELD_SIZE,
+  debugMode: false,
   renderers: {
     loader: renderDefaultLoader,
     error: renderResultsPanelError,
@@ -231,7 +256,9 @@ const buildSearchUrl = (results: Results, pageNumber: number) => {
   dataUrl.searchParams.set("from", String((pageNumber - 1) * results.pageSize));
   dataUrl.searchParams.set("size", String(results.pageSize));
 
-  return dataUrl.toString();
+  // Only meaningful for GET - a POST request drops the query string and carries
+  // the namespace in its body instead.
+  return withNamespaceParam(dataUrl.toString(), results.namespace);
 };
 
 const serializeFilters = (selectedFilters: Map<string, Set<string>>) =>
@@ -241,6 +268,69 @@ const serializeFilters = (selectedFilters: Map<string, Set<string>>) =>
       [...values],
     ]),
   );
+
+const DEFAULT_FACETS_PARAM = "stx-facets";
+
+/**
+ * URL param the panel persists its facet selection under. Suffixed with the
+ * panel's `stateKey` (the tab id inside search tabs) so sibling panels keep
+ * separate selections in one URL.
+ */
+const facetsParamName = (results: Results) =>
+  results.stateKey
+    ? `${DEFAULT_FACETS_PARAM}-${results.stateKey}`
+    : DEFAULT_FACETS_PARAM;
+
+/** Restores a facet selection from the URL - the deep-link/share entry point. */
+const readFacetsFromUrl = (paramName: string): Map<string, Set<string>> => {
+  const raw = new URLSearchParams(window.location.search).get(paramName);
+  const selected = new Map<string, Set<string>>();
+
+  if (!raw) {
+    return selected;
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>;
+
+    Object.entries(parsed).forEach(([field, values]) => {
+      if (Array.isArray(values)) {
+        const paths = values.filter(
+          (value): value is string => typeof value === "string",
+        );
+
+        if (paths.length > 0) {
+          selected.set(field, new Set(paths));
+        }
+      }
+    });
+  } catch (error) {
+    console.error("Could not parse facet selection from the URL", error);
+  }
+
+  return selected;
+};
+
+/**
+ * Mirrors the current facet selection into the URL via `replaceState` (no
+ * history entry per click), removing the param entirely when nothing is
+ * selected so a shared link stays clean.
+ */
+const writeFacetsToUrl = (
+  paramName: string,
+  selectedFilters: Map<string, Set<string>>,
+) => {
+  const url = new URL(window.location.href);
+  const serialized = serializeFilters(selectedFilters);
+
+  if (Object.keys(serialized).length > 0) {
+    url.searchParams.set(paramName, JSON.stringify(serialized));
+  } else {
+    url.searchParams.delete(paramName);
+  }
+
+  window.history.replaceState({}, "", url);
+};
 
 const buildResultsRequestOptions = (
   results: Results,
@@ -264,6 +354,7 @@ const buildResultsRequestOptions = (
       facetDepthLevel: results.facetDepthLevel,
       facetFieldPrefix: results.facetFieldPrefix,
       facetFieldSize: results.facetFieldSize,
+      namespace: results.namespace,
     }),
   };
 };
@@ -292,31 +383,73 @@ const createResultsNumber = (
 const createItems = (
   data: OpenSearchResponse,
   renderers: ResultsPanelRenderers,
+  debugMode: boolean,
 ) => {
-  return data.hits.hits?.map((item) => {
-    const { type } = item._source;
-    let itemContent: HTMLElement | string;
+  // The legacy global `debug` flag (set via createSearchTabs(debug)) still
+  // forces diagnostics on, so the per-panel flag only ever adds visibility.
+  const showDebug = debugMode || globalConfig.debug;
+  /** Result types with no renderer, counted so one summary is logged per render. */
+  const unrendered = new Map<string, number>();
 
-    if (renderers[`item-${type}`]) {
-      try {
-        itemContent = renderers[`item-${type}`](item);
-      } catch (error) {
-        console.error(error);
-        return renderNoItem(item);
+  const items = data.hits.hits
+    ?.map((item) => {
+      const { type } = item._source;
+      const rendererName = `item-${type}`;
+      let itemContent: HTMLElement | string;
+
+      if (renderers[rendererName]) {
+        try {
+          itemContent = renderers[rendererName](item);
+        } catch (error) {
+          console.error(error);
+
+          // A registered renderer threw. Surface it only in debug mode;
+          // otherwise drop the row entirely.
+          if (!showDebug) {
+            return null;
+          }
+
+          itemContent = renderNoItem(item);
+        }
+      } else {
+        unrendered.set(rendererName, (unrendered.get(rendererName) ?? 0) + 1);
+
+        if (!showDebug) {
+          // Nothing to render this type with: drop the row. The summary below
+          // reports it, so a missing renderer is never silent.
+          return null;
+        }
+
+        itemContent = html`
+          <span class="stx-results-panel__missing-renderer">
+            <span>Missing renderer for "item-${item?._source?.type}"</span>
+            <span>${JSON.stringify(item)}</span>
+          </span>
+        ` as HTMLSpanElement;
       }
-    } else {
-      itemContent = html`
-        <span class="stx-results-panel__missing-renderer">
-          <span>Missing renderer for "item-${item?._source?.type}"</span>
-          <span>${JSON.stringify(item)}</span>
-        </span>
-      ` as HTMLSpanElement;
-    }
 
-    return html`
-      <li class="stx-results-panel__results-item">${itemContent}</li>
-    ` as HTMLDivElement;
-  });
+      return html`
+        <li class="stx-results-panel__results-item">${itemContent}</li>
+      ` as HTMLElement;
+    })
+    .filter((item): item is HTMLElement => item !== null);
+
+  if (unrendered.size > 0) {
+    const summary = [...unrendered.entries()]
+      .map(([name, count]) => `${name} (x${count})`)
+      .join(", ");
+
+    // Logged in every mode: without it, dropped rows make the results list
+    // disagree with the reported total for no visible reason.
+    console.warn(
+      `[streamx-search] No renderer registered for: ${summary}.`,
+      showDebug
+        ? "Shown in the list as a diagnostic because debugMode is on."
+        : "Those results were left out of the list. Register an `item-<type>` renderer, or set debugMode to show them.",
+    );
+  }
+
+  return items;
 };
 
 /* ------------------------------------------------------------------ facets */
@@ -353,9 +486,20 @@ const humanizeFacetName = (field: string) =>
 /**
  * Finds a bucket's nested sub-aggregation, i.e. the property that is not one of
  * the bucket's own fields and carries its own `buckets` array.
+ *
+ * Guards against the degenerate shapes the backend returns when the requested
+ * facet depth exceeds what the index actually nests (`parentField` is the
+ * field the bucket itself belongs to):
+ * - a bucket nesting its own field again (`category_level1` inside
+ *   `category_level1`, holding a copy of the bucket) would render the node as
+ *   its own child;
+ * - an empty child aggregation would render an expander that opens onto
+ *   nothing.
+ * Both count as "no children".
  */
 const getBucketChildAgg = (
   bucket: OpenSearchAggregationBucket,
+  parentField: string,
 ): FacetChildAggregation | null => {
   for (const key of Object.keys(bucket)) {
     if (key === "key" || key === "key_as_string" || key === "doc_count") {
@@ -364,7 +508,12 @@ const getBucketChildAgg = (
 
     const value = bucket[key] as OpenSearchAggregation | undefined;
 
-    if (value && Array.isArray(value.buckets)) {
+    if (
+      value &&
+      Array.isArray(value.buckets) &&
+      key !== parentField &&
+      value.buckets.length > 0
+    ) {
       return { field: key, buckets: value.buckets };
     }
   }
@@ -373,6 +522,7 @@ const getBucketChildAgg = (
 };
 
 const createFacetNodeList = (
+  field: string,
   buckets: OpenSearchAggregationBucket[],
   context: FacetRenderContext,
   parentPath = "",
@@ -380,15 +530,16 @@ const createFacetNodeList = (
   // Only reserve chevron space when at least one sibling actually nests, so a
   // fully flat facet renders as a clean checkbox list with no dangling indent.
   const siblingsHaveChildren = buckets.some((bucket) =>
-    getBucketChildAgg(bucket),
+    getBucketChildAgg(bucket, field),
   );
 
   return buckets.map((bucket) =>
-    createFacetNode(bucket, context, siblingsHaveChildren, parentPath),
+    createFacetNode(field, bucket, context, siblingsHaveChildren, parentPath),
   );
 };
 
 const createFacetNode = (
+  field: string,
   bucket: OpenSearchAggregationBucket,
   context: FacetRenderContext,
   siblingsHaveChildren: boolean,
@@ -398,7 +549,7 @@ const createFacetNode = (
   // The filter value is the full ancestor path (e.g. "Electronics>Tablet"),
   // which is what the endpoint filters against; the label shows just this key.
   const path = joinFacetPath(parentPath, key, context.pathSeparator);
-  const child = getBucketChildAgg(bucket);
+  const child = getBucketChildAgg(bucket, field);
   const childrenId = `stx-facet-children-${facetNodeIdSeq++}`;
 
   const childrenPanel = child
@@ -408,7 +559,7 @@ const createFacetNode = (
           class="stx-results-panel__facet-children"
           hidden
         >
-          ${createFacetNodeList(child.buckets, context, path)}
+          ${createFacetNodeList(child.field, child.buckets, context, path)}
         </div>
       ` as HTMLElement)
     : "";
@@ -512,7 +663,7 @@ const createFacetGroup = (
         ></span>
       </button>
       <div id="${valuesId}" class="stx-results-panel__facet-values" hidden>
-        ${createFacetNodeList(buckets, context)}
+        ${createFacetNodeList(field, buckets, context)}
       </div>
     </div>
   ` as HTMLElement;
@@ -789,6 +940,7 @@ const initFacets = (
         }
 
         refreshFacetStates(facetsContainer, panelState, separator);
+        writeFacetsToUrl(facetsParamName(results), panelState.selectedFilters);
         buildResultsForPage(resultsPanel, results, 1);
       });
     });
@@ -883,7 +1035,7 @@ const createResultsContainer = (
   results: Results,
   currentPage: number,
 ) => {
-  const items = createItems(data, results.renderers);
+  const items = createItems(data, results.renderers, results.debugMode);
   const resultsNumber = createResultsNumber(data, results, currentPage);
   const pagination = createPagination(data, results, currentPage);
 
@@ -970,7 +1122,9 @@ const updateResultsList = (
 
   // A renderer may yield a collection (or an empty string for "render nothing"),
   // so flatten before swapping the list contents.
-  const items = (createItems(data, results.renderers) || []).flatMap((item) =>
+  const items = (
+    createItems(data, results.renderers, results.debugMode) || []
+  ).flatMap((item) =>
     item instanceof HTMLCollection ? Array.from(item) : [item],
   );
 
@@ -986,13 +1140,24 @@ const renderFullResults = (
   results: Results,
   currentPage: number,
   panelState: PanelState,
+  /**
+   * Response the facet tree is built from. Defaults to the results response,
+   * but a deep-linked load passes the *unfiltered* one so the tree still shows
+   * the siblings the active filter excludes.
+   */
+  facetsData: OpenSearchResponse = data,
 ) => {
   const { element: resultsContainer, pagination } = createResultsContainer(
     data,
     results,
     currentPage,
   );
-  const facetsContainer = createFacets(data, panelState, resultsPanel, results);
+  const facetsContainer = createFacets(
+    facetsData,
+    panelState,
+    resultsPanel,
+    results,
+  );
 
   resultsPanel.innerHTML = "";
   resultsPanel.append(
@@ -1027,6 +1192,8 @@ const buildResultsForPage = (
 
   if (resetFilters) {
     panelState.selectedFilters.clear();
+    // A new query drops the old facets, so the shared URL must not keep them.
+    writeFacetsToUrl(facetsParamName(results), panelState.selectedFilters);
   }
 
   panelState.currentPage = pageNumber;
@@ -1065,8 +1232,41 @@ const buildResultsForPage = (
 
   panelState.request = controller;
 
-  fetchSearchResults(searchUrl, query, controller.signal, requestOptions)
-    .then((responseData) => {
+  /**
+   * Facets are built once per query and then left alone, so in-session they
+   * always describe the unfiltered result set. A deep-linked load has no such
+   * unfiltered response - its very first request already carries the restored
+   * filters, whose aggregations only cover the selection, which would drop
+   * every unselected sibling from the tree (and leave no way to widen the
+   * search). So fetch the aggregations separately, unfiltered.
+   *
+   * It runs in parallel with the results request (not after it), asks for no
+   * hits (`pageSize: 0`), and only ever happens on a filtered first paint.
+   */
+  const needsUnfilteredFacets =
+    !hasContent &&
+    results.method === "POST" &&
+    panelState.selectedFilters.size > 0;
+
+  const unfilteredFacetsRequest = needsUnfilteredFacets
+    ? fetchSearchResults(
+        searchUrl,
+        query,
+        controller.signal,
+        buildResultsRequestOptions(
+          { ...results, pageSize: 0 },
+          1,
+          new Map(),
+          query,
+        ),
+      ).catch(() => null)
+    : Promise.resolve(null);
+
+  Promise.all([
+    fetchSearchResults(searchUrl, query, controller.signal, requestOptions),
+    unfilteredFacetsRequest,
+  ])
+    .then(([responseData, unfilteredData]) => {
       if (hasContent) {
         updateResultsList(resultsPanel, responseData, results, pageNumber);
 
@@ -1080,6 +1280,8 @@ const buildResultsForPage = (
           results,
           pageNumber,
           panelState,
+          // Falls back to the results response if the extra call failed.
+          unfilteredData ?? responseData,
         );
       }
 
@@ -1140,7 +1342,9 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
 
   panelStates.set(resultsPanel, {
     currentPage: 1,
-    selectedFilters: new Map(),
+    // Seeded from the URL so a shared/deep-linked selection is applied to the
+    // first request and reflected in the checkboxes once facets render.
+    selectedFilters: readFacetsFromUrl(facetsParamName(results)),
     facetsElement: null,
     resultsContainer: null,
     request: null,

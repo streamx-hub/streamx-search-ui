@@ -82,6 +82,8 @@ export interface SearchRequestBody {
     from: number;
     size: number;
     query?: string;
+    /** Content namespace the results are limited to. */
+    namespace?: string;
     facets: {
       fields: SearchFacetField[];
     };

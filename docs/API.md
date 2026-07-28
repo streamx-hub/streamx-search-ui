@@ -129,22 +129,29 @@ interface QueryInputConfig {
   searchApiUrl: string | (() => string);
   searchPageUrl?: (val: string) => string;
   groupByCategory?: boolean;
+  queryParam?: string;
+  initialQuery?: string;
+  submitInPlace?: boolean;
+  showSearchButton?: boolean;
+  namespace?: string;
   labels?: Partial<QueryInputLabels>;
   renderers?: Partial<QueryInputRenderers>;
 }
 ```
 
-| Property          | Type                           | Required |      Default       | Description                                                                     |
-| ----------------- | ------------------------------ | :------: | :----------------: | ------------------------------------------------------------------------------- |
-| `searchApiUrl`    | `string \| (() => string)`     |    ✅    |         -          | Suggestions/search endpoint URL.                                                |
-| `searchPageUrl`   | `(val: string) => string`      |    ❌    |         -          | Builds the target search page URL.                                              |
-| `minSearchLength` | `number`                       |    ❌    |        `3`         | Minimum query length before search.                                             |
-| `groupByCategory` | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category.                                       |
-| `queryParam`      | `string`                       |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`. |
-| `initialQuery`    | `string`                       |    ❌    |         -          | Query pre-fetched on render and offered while the input is focused and empty.   |
-| `submitInPlace`   | `boolean`                      |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.   |
-| `labels`          | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                                                         |
-| `renderers`       | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                                                      |
+| Property           | Type                           | Required |      Default       | Description                                                                                                    |
+| ------------------ | ------------------------------ | :------: | :----------------: | -------------------------------------------------------------------------------------------------------------- |
+| `searchApiUrl`     | `string \| (() => string)`     |    ✅    |         -          | Suggestions/search endpoint URL.                                                                               |
+| `searchPageUrl`    | `(val: string) => string`      |    ❌    |         -          | Builds the target search page URL.                                                                             |
+| `minSearchLength`  | `number`                       |    ❌    |        `3`         | Minimum query length before search.                                                                            |
+| `groupByCategory`  | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category.                                                                      |
+| `queryParam`       | `string`                       |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`.                                |
+| `initialQuery`     | `string`                       |    ❌    |         -          | Query pre-fetched on render and offered while the input is focused and empty.                                  |
+| `submitInPlace`    | `boolean`                      |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.                                  |
+| `showSearchButton` | `boolean`                      |    ❌    |       `true`       | Renders the built-in search (submit) button. Set `false` when the host markup provides its own submit control. |
+| `namespace`        | `string`                       |    ❌    |         -          | Limits suggestions to one content namespace, sent as a `namespace` query param. Omit to search all of them.    |
+| `labels`           | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                                                                                        |
+| `renderers`        | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                                                                                     |
 
 ### Submitting
 
@@ -160,6 +167,17 @@ all submit the current query. Where it goes depends on the configuration:
 `submitInPlace` is checked first, so setting it alongside a `searchPageUrl`
 makes the latter dead configuration. The EDS decorators derive it for you: they
 set `submitInPlace` only when the block has no `searchPageUrl`.
+
+### The search button
+
+The built-in search button is a submit affordance, so it is **removed from the
+DOM** (not hidden) when it would do nothing - i.e. when neither `submitInPlace`
+nor `searchPageUrl` is set.
+
+Set `showSearchButton: false` to drop it even when the input _can_ submit. Use
+this when the surrounding markup already offers its own control - for example a
+nav search that lives behind its own magnifier toggle, where the built-in button
+would be a duplicate icon. Submitting with <kbd>Enter</kbd> is unaffected.
 
 ### `initialQuery`
 
@@ -413,31 +431,44 @@ interface ResultsConfig {
   facetFieldPrefix?: string;
   facetPathSeparator?: string;
   facetFieldSize?: number;
+  debugMode?: boolean;
+  stateKey?: string;
+  namespace?: string;
 }
 ```
 
-| Property             | Type                       | Required |        Default         | Description                                                                          |
-| -------------------- | -------------------------- | :------: | :--------------------: | ------------------------------------------------------------------------------------ |
-| `dataSources`        | `string[]`                 |    ✅    |           -            | Search result endpoints. Current implementation uses the first item.                 |
-| `pageSize`           | `number`                   |    ❌    |          `20`          | Number of results per page.                                                          |
-| `renderers`          | `ResultsPanelRenderers`    |    ❌    |        Built-in        | Custom result renderers.                                                             |
-| `labels`             | `ResultsPanelLabelsConfig` |    ❌    |    Built-in labels     | Pagination and results labels.                                                       |
-| `method`             | `"GET" \| "POST"`          |    ❌    |        `"GET"`         | Transport. **Facets and filtering require `"POST"`**, since they travel in the body. |
-| `queryParam`         | `string`                   |    ❌    |       `"query"`        | URL param carrying the query. Must match the query input's `queryParam`.             |
-| `facetDepthLevel`    | `number`                   |    ❌    |          `1`           | How deep the facet aggregations nest. `1` requests a single flat level.              |
-| `requestId`          | `string`                   |    ❌    |           -            | Saved query/template id sent as the request body `id`.                               |
-| `facetFilterField`   | `string`                   |    ❌    | `"category_hierarchy"` | Field the selected facet values are filtered against.                                |
-| `facetFieldPrefix`   | `string`                   |    ❌    |   `"category_level"`   | Field name prefix for facet levels; the level index is appended.                     |
-| `facetPathSeparator` | `string`                   |    ❌    |         `">"`          | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).       |
-| `facetFieldSize`     | `number`                   |    ❌    |          `20`          | Max buckets requested per facet level.                                               |
+| Property             | Type                       | Required |        Default         | Description                                                                                                                                                                                                                              |
+| -------------------- | -------------------------- | :------: | :--------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dataSources`        | `string[]`                 |    ✅    |           -            | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
+| `pageSize`           | `number`                   |    ❌    |          `20`          | Number of results per page.                                                                                                                                                                                                              |
+| `renderers`          | `ResultsPanelRenderers`    |    ❌    |        Built-in        | Custom result renderers.                                                                                                                                                                                                                 |
+| `labels`             | `ResultsPanelLabelsConfig` |    ❌    |    Built-in labels     | Pagination and results labels.                                                                                                                                                                                                           |
+| `method`             | `"GET" \| "POST"`          |    ❌    |        `"GET"`         | Transport. **Facets and filtering require `"POST"`**, since they travel in the body.                                                                                                                                                     |
+| `queryParam`         | `string`                   |    ❌    |       `"query"`        | URL param carrying the query. Must match the query input's `queryParam`.                                                                                                                                                                 |
+| `facetDepthLevel`    | `number`                   |    ❌    |          `1`           | How deep the facet aggregations nest. `1` requests a single flat level.                                                                                                                                                                  |
+| `requestId`          | `string`                   |    ❌    |           -            | Saved query/template id sent as the request body `id`.                                                                                                                                                                                   |
+| `facetFilterField`   | `string`                   |    ❌    | `"category_hierarchy"` | Field the selected facet values are filtered against.                                                                                                                                                                                    |
+| `facetFieldPrefix`   | `string`                   |    ❌    |   `"category_level"`   | Field name prefix for facet levels; the level index is appended.                                                                                                                                                                         |
+| `facetPathSeparator` | `string`                   |    ❌    |         `">"`          | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).                                                                                                                                                           |
+| `facetFieldSize`     | `number`                   |    ❌    |          `20`          | Max buckets requested per facet level.                                                                                                                                                                                                   |
+| `debugMode`          | `boolean`                  |    ❌    |        `false`         | Renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type, and a notice when a renderer throws). When `false`, those rows are dropped entirely - a console warning is logged either way. |
+| `stateKey`           | `string`                   |    ❌    |           -            | Namespaces the panel's `stx-facets` URL param. Set automatically to the tab id inside search tabs; omit for a standalone panel.                                                                                                          |
+| `namespace`          | `string`                   |    ❌    |           -            | Limits results to one content namespace. Sent as a `namespace` query param on `GET`, and inside `params` in the body on `POST`. Omit to search all of them.                                                                              |
 
 ### Facets
 
 Facets are rendered from the `aggregations` the endpoint returns, so the panel
 adapts to whatever comes back - a flat aggregation renders as a plain checkbox
 list, a nested one as a collapsible tree. When the response carries no usable
-aggregations - as with the default `method: "GET"` - the facets sidebar is not
-rendered at all and the results take the full width.
+aggregations - as with the default `method: "GET"`, or when every aggregation
+comes back with empty buckets - the facets sidebar is not rendered at all and
+the results take the full width.
+
+Requesting a `facetDepthLevel` deeper than the index actually nests is safe:
+the degenerate sub-aggregations some backends return in that case - a level
+nesting its own field again (which would duplicate the node as its own child)
+or a child level with no buckets (which would render an expander that opens
+onto nothing) - are treated as "no children" and skipped.
 
 Selecting a value filters on `facetFilterField` using the value's **full
 hierarchical path** (`Electronics>Tablet`, joined with `facetPathSeparator`).
@@ -555,6 +586,40 @@ labels: {
 
 ---
 
+## getHitUrl()
+
+Derives a hit's URL from its `_id`, which carries the content namespace as a
+prefix. Exported from every entry point, so a custom `item-*` renderer can link
+results without re-implementing the convention.
+
+```ts
+getHitUrl(item: OpenSearchItem): string
+```
+
+```txt
+{ _id: "en:/en/blog/post", _source: { namespace: "en" } }  ->  "/en/blog/post"
+{ _id: "/about",           _source: { namespace: null } }  ->  "/about"
+```
+
+The prefix is stripped only when the hit actually carries that namespace, so
+hits with a null, empty or missing one keep their `_id` as the URL.
+
+Result rows are rendered as plain list items - wrap them in a link yourself when
+you want the row to be clickable:
+
+```ts
+const renderers = {
+  "item-page/eds-page": (item) => {
+    const link = document.createElement("a");
+    link.href = getHitUrl(item);
+    link.textContent = String(item._source.payload.title);
+    return link;
+  },
+};
+```
+
+---
+
 ## ResultsPanelRenderers
 
 Used by result panels and tabs.
@@ -661,17 +726,48 @@ interface OpenSearchResponse {
 
 # URL Parameters
 
-Result panels read the current search query from:
+The components persist their state in the URL so a search is shareable and
+survives a reload. All three params are restored on load.
+
+| Param        | Written by    | Purpose                                                                                          |
+| ------------ | ------------- | ------------------------------------------------------------------------------------------------ |
+| `query`      | Search input  | Active query. Configurable via `queryParam`; the input writes it and the results panel reads it. |
+| `stx-tab`    | Search tabs   | Active tab id. Present only for a non-default tab, so the first tab keeps the URL clean.         |
+| `stx-facets` | Results panel | Selected facets, as URL-encoded JSON (`{ "<treeField>": ["<path>", ...] }`). Absent when none.   |
+
+Inside search tabs the facet param is suffixed with the tab id
+(`stx-facets-<tabId>`) via the panel's `stateKey`, so each tab persists its own
+selection in the same URL without colliding.
+
+Example of a fully deep-linked search:
 
 ```txt
-stx-search
+/search?query=laptop&stx-tab=products&stx-facets-products=%7B%22category_level0%22%3A%5B%22Electronics%3ETablet%22%5D%7D
 ```
 
-Example:
+The query and tab params use `pushState`; facet changes use `replaceState`, so
+ticking checkboxes does not spam the browser history. Changing the query clears
+the facet param.
 
-```txt
-/search?stx-search=laptop
-```
+### Deep-linked facets and the aggregations request
+
+Facets are built once per query and then left in place, so during a session the
+tree always describes the **unfiltered** result set - selecting a value narrows
+the results without removing its siblings from the sidebar.
+
+A deep-linked load has no unfiltered response to build from: its first request
+already carries the restored filters, and those aggregations only describe the
+selection. Building the tree from them would drop every unselected sibling and
+leave no way to widen the search.
+
+So when (and only when) a panel loads **with facets restored from the URL**, it
+issues a second request for the aggregations alone - unfiltered, `size: 0`, in
+parallel with the results request, sharing the same abort signal. If it fails,
+the tree falls back to the filtered response.
+
+> A backend that computes aggregations before applying the filter (OpenSearch
+> `post_filter`) would make the extra request unnecessary - the single response
+> would carry filtered hits and unfiltered facets.
 
 Pagination requests add:
 
