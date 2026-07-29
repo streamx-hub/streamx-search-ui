@@ -8,6 +8,7 @@ import {
   clearIcon,
   searchIcon,
 } from "../renderers/renderers";
+import { DEFAULT_QUERY_PARAM } from "../config";
 
 const DEFAULT_LABELS: Required<QueryInputLabels> = {
   inputPlaceholder: "Search",
@@ -27,6 +28,8 @@ const defaultConfig = {
   input: {
     minSearchLength: 3,
     groupByCategory: true,
+    showSearchButton: true,
+    queryParam: DEFAULT_QUERY_PARAM,
     labels: DEFAULT_LABELS,
     renderers: DEFAULT_RENDERERS,
   },

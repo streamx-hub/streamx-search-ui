@@ -174,15 +174,56 @@ Each configuration row contains:
 - The first column with the configuration property name.
 - The second column with its value.
 
+### Panel options
+
+The Search Results Panel block and the Search Tab blocks render the same
+results panel, so they accept the same panel options:
+
+| Option                     | Default              | Description                                                                                                                                                                           |
+| -------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pageSize`                 | `10`                 | Number of results per page.                                                                                                                                                           |
+| `dataSources`              | -                    | Results endpoint the panel POSTs to.                                                                                                                                                  |
+| `requestId`                | -                    | Saved query/template id sent as the request body `id`.                                                                                                                                |
+| `facetDepthLevel`          | `1`                  | Facet nesting depth. `1` is a flat facet; `3` requests `category_level0` → `1` → `2`. Requesting deeper than the index nests is safe - degenerate levels in the response are skipped. |
+| `facetFilterField`         | `category_hierarchy` | Field the selected facet values are filtered against.                                                                                                                                 |
+| `facetFieldPrefix`         | `category_level`     | Field name prefix for the facet levels.                                                                                                                                               |
+| `facetPathSeparator`       | `>`                  | Separator between the levels of a hierarchical facet path.                                                                                                                            |
+| `facetFieldSize`           | `20`                 | Maximum number of values requested per facet field.                                                                                                                                   |
+| `debugMode`                | `false`              | `true` renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type). When unset/`false`, those rows are dropped entirely.               |
+| `namespace`                | -                    | Limits results to one content namespace (e.g. `en`). Omit to search across all of them.                                                                                               |
+| `paginationInfo`           | -                    | Label template, e.g. `Page {{currentPage}} of {{pageNumber}}`.                                                                                                                        |
+| `totalResults`             | -                    | Label template, e.g. `{{totalCount}} results found`.                                                                                                                                  |
+| `ariaPaginationGoToPage`   | -                    | ARIA label template, e.g. `Go to page {{pageNumber}}`.                                                                                                                                |
+| `ariaPaginationNavigation` | -                    | ARIA label for the pagination navigation.                                                                                                                                             |
+
+On a Search Results Panel block, author these options directly on the block.
+
+On a search page with tabs they layer: options authored on the **Search Tabs**
+block act as defaults for every tab, and each **Search Tab** block can override
+any of them key by key (an empty cell falls through to the block-level value).
+`dataSources` must be present at one of the two levels — usually per tab, since
+pointing every tab at the same endpoint defeats the purpose of tabs.
+
+> The results panel always uses `POST`, because facets and filtering travel in
+> the request body. Facets render from whatever `aggregations` the endpoint
+> returns, so no extra configuration is needed to display them. Selections are
+> OR-ed within one facet tree and AND-ed across trees - see
+> [Facets](API.md#facets) for the full semantics.
+
 ### Search Results Panel
 
 | Search Results Panel     |                                        |
 | ------------------------ | -------------------------------------- |
 | searchApiUrl             | /api/search                            |
-| searchPageUrl            | /search                                |
 | minSearchLength          | 3                                      |
 | pageSize                 | 10                                     |
 | dataSources              | /api/results                           |
+| queryParam               | query                                  |
+| initialQuery             | popular topics                         |
+| requestId                | eds-pages                              |
+| facetDepthLevel          | 3                                      |
+| facetFilterField         | category_hierarchy                     |
+| facetFieldPrefix         | category_level                         |
 | inputPlaceholder         | Search                                 |
 | inputLabel               | Search                                 |
 | clearButtonAria          | Clear search                           |
@@ -192,25 +233,68 @@ Each configuration row contains:
 | ariaPaginationGoToPage   | Go to page {{pageNumber}}              |
 | ariaPaginationNavigation | Search results pagination              |
 
+The block accepts every [panel option](#panel-options) plus the search-input
+options shared with the Search Tabs block:
+
+| Option          | Default | Description                                                                                   |
+| --------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `queryParam`    | `query` | URL param holding the query. Use the same value on every block that takes part in the search. |
+| `initialQuery`  | -       | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
+| `searchPageUrl` | -       | Send submissions to a separate search page instead of refreshing the panel below the input.   |
+| `namespace`     | -       | Limits the input's suggestions to one content namespace. Omit to search all of them.          |
+
+> **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the
+> example above) and the input refreshes the panel on the same page. Set it and
+> the input navigates to that page instead, which is what you want for a header
+> input but not for a block that renders its own results.
+
 ### Search Tabs
 
 The Search Tabs block contains the configuration shared by the entire search page.
 
-| Search Tabs      |               |
-| ---------------- | ------------- |
-| searchApiUrl     | /api/search   |
-| searchPageUrl    | /search       |
-| minSearchLength  | 3             |
-| inputPlaceholder | Search        |
-| inputLabel       | Search        |
-| clearButtonAria  | Clear search  |
-| searchButtonAria | Submit search |
+| Search Tabs      |                |
+| ---------------- | -------------- |
+| searchApiUrl     | /api/search    |
+| minSearchLength  | 3              |
+| queryParam       | query          |
+| initialQuery     | popular topics |
+| requestId        | eds-pages      |
+| facetDepthLevel  | 3              |
+| inputPlaceholder | Search         |
+| inputLabel       | Search         |
+| clearButtonAria  | Clear search   |
+| searchButtonAria | Submit search  |
+
+Any [panel option](#panel-options) set here acts as a default for every tab; a
+Search Tab block can override each one individually.
+
+`searchPageUrl` behaves as it does for the results panel: unset, submitting
+refreshes the active tab in place; set, the input navigates to that page.
+
+The active tab is mirrored in the URL (`stx-tab`), so a selected tab survives a
+reload and can be linked to. The param is omitted while the first tab is active.
 
 Each tab is configured using a separate Search Tab block.
 
+### Shareable search URLs
+
+Nothing to author - the blocks keep the whole search state in the URL, so a
+reader can copy the address bar and the recipient sees the same search:
+
+| Param        | Holds                                                               |
+| ------------ | ------------------------------------------------------------------- |
+| `query`      | the query, which also refills the input (rename via `queryParam`)   |
+| `stx-tab`    | the active tab (Search Tabs only; absent on the first tab)          |
+| `stx-facets` | the ticked facets; inside tabs it is per tab (`stx-facets-<tabId>`) |
+
+Changing the query clears the facets. See
+[URL Parameters](API.md#url-parameters) for the exact format.
+
 ### Search Tab
 
-Add one Search Tab block for each results tab.
+Add one Search Tab block for each results tab. Besides `id` and `displayName`,
+a tab accepts every [panel option](#panel-options), overriding the block-level
+default where both are set.
 
 | Search Tab               |                                        |
 | ------------------------ | -------------------------------------- |
@@ -218,6 +302,8 @@ Add one Search Tab block for each results tab.
 | displayName              | Products                               |
 | pageSize                 | 10                                     |
 | dataSources              | /api/products                          |
+| requestId                | eds-products                           |
+| facetDepthLevel          | 2                                      |
 | paginationInfo           | Page {{currentPage}} of {{pageNumber}} |
 | totalResults             | {{totalCount}} results found           |
 | ariaPaginationGoToPage   | Go to page {{pageNumber}}              |

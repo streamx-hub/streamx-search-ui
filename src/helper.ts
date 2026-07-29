@@ -1,4 +1,7 @@
-import type { OpenSearchResponse } from "./types/open-search";
+import type {
+  OpenSearchResponse,
+  SearchRequestOptions,
+} from "./types/open-search";
 
 /**
  * A tagged template function that parses an HTML string into DOM elements.
@@ -181,7 +184,7 @@ export function parseHighlight(text: string) {
   return result;
 }
 
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: never[]) => void>(
   fn: T,
   delay: number,
 ) {
@@ -196,15 +199,44 @@ export function debounce<T extends (...args: any[]) => void>(
   };
 }
 
+/**
+ * Fetches search results.
+ *
+ * Two transports are supported: the default `GET` sends the query as a URL
+ * param (used for typeahead/highlight lookups), while `POST` sends a prepared
+ * body - see {@link buildSearchRequestBody} - and is used when results need
+ * facet aggregations or filtering.
+ *
+ * @param url Endpoint. For `POST` any query string on it is stripped, since
+ * everything travels in the body.
+ * @param query Search phrase. Only used by the `GET` transport.
+ * @param signal Abort signal, so in-flight requests can be superseded.
+ * @param requestOptions Transport selection and the `POST` body.
+ */
 export const fetchSearchResults = async (
   url: string,
   query: string,
   signal?: AbortSignal,
+  requestOptions: SearchRequestOptions = {},
 ) => {
-  const searchURL = new URL(url, window.location.origin);
-  searchURL.searchParams.set("query", query);
+  let response: Response;
 
-  const response = await fetch(searchURL.toString(), { signal });
+  if (requestOptions.method === "POST") {
+    const postURL = new URL(url, window.location.origin);
+    postURL.search = "";
+
+    response = await fetch(postURL.toString(), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestOptions.body),
+      signal,
+    });
+  } else {
+    const searchURL = new URL(url, window.location.origin);
+    searchURL.searchParams.set("query", query);
+
+    response = await fetch(searchURL.toString(), { signal });
+  }
 
   if (!response.ok) {
     throw new Error(`Fetch data error: ${response.status}`);
@@ -241,6 +273,26 @@ export const createLazyComponent = (buildFunction: () => HTMLElement) => {
   };
 };
 
+/**
+ * Adds the `namespace` query param to a `GET` search URL, so results are
+ * limited to one content namespace. A missing namespace is left off entirely,
+ * which searches across all of them.
+ *
+ * `POST` requests carry the namespace in the body instead - see
+ * `buildSearchRequestBody`.
+ */
+export const withNamespaceParam = (url: string, namespace?: string) => {
+  if (!namespace) {
+    return url;
+  }
+
+  const namespacedUrl = new URL(url, window.location.origin);
+
+  namespacedUrl.searchParams.set("namespace", namespace);
+
+  return namespacedUrl.toString();
+};
+
 export const dispatchUrlChangeEvent = () => {
   window.dispatchEvent(new Event("urlchange"));
 };
@@ -257,7 +309,7 @@ type NormalizeLabels<T> = {
     : () => string;
 };
 
-export const normalizeLabels = <T extends Record<string, any>>(
+export const normalizeLabels = <T extends Record<string, unknown>>(
   labels: T,
 ): NormalizeLabels<T> => {
   return Object.fromEntries(

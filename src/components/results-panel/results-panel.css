@@ -14,9 +14,205 @@
   flex: 0 0 220px;
 }
 
-.stx-results-panel__container {
+/* --------------------------------------------------------------- facets --
+   A facet renders as a collapsible group of checkboxes. Nested aggregations
+   add an expandable subtree per node; a flat facet renders as a plain list
+   with no chevron or indent. */
+
+.stx-results-panel__facet + .stx-results-panel__facet {
+  margin-top: 0.75rem;
+}
+
+.stx-results-panel__facet-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--stx-color-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+}
+
+.stx-results-panel__facet-toggle:hover,
+.stx-results-panel__facet-toggle:focus,
+.stx-results-panel__facet-toggle[aria-expanded="true"] {
+  background-color: transparent;
+  border-bottom: 2px solid var(--stx-color-focus);
+  border-radius: 0;
+}
+
+.stx-results-panel__facet-toggle:focus-visible {
+  outline: 2px solid var(--stx-color-focus);
+  outline-offset: 2px;
+}
+
+.stx-results-panel__facet-chevron {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-left: 0.5rem;
+}
+
+.stx-results-panel__facet-chevron::before {
+  content: "";
+  display: block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin: auto;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(45deg);
+  transition: transform 0.1s ease;
+}
+
+.stx-results-panel__facet-toggle[aria-expanded="true"]
+  .stx-results-panel__facet-chevron::before {
+  transform: rotate(225deg);
+}
+
+.stx-results-panel__facet-values,
+.stx-results-panel__facet-node,
+.stx-results-panel__facet-children {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stx-results-panel__facet-values {
+  margin-top: 0.5rem;
+  padding-left: 0.25rem;
+}
+
+.stx-results-panel__facet-values[hidden],
+.stx-results-panel__facet-children[hidden] {
+  display: none;
+}
+
+.stx-results-panel__facet-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stx-results-panel__facet-option {
+  display: flex;
   flex: 1;
   min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.stx-results-panel__facet-option input {
+  width: auto;
+  margin: 0;
+  cursor: pointer;
+}
+
+.stx-results-panel__facet-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.stx-results-panel__facet-count {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  color: var(--stx-color-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The reset is deliberate: host pages often style every <button>, which would
+   otherwise paint this icon-sized toggle as a filled, rounded button. */
+.stx-results-panel__facet-subtoggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--stx-color-text);
+  cursor: pointer;
+}
+
+.stx-results-panel__facet-subtoggle:hover,
+.stx-results-panel__facet-subtoggle:focus {
+  background: transparent;
+  color: var(--stx-color-text);
+}
+
+.stx-results-panel__facet-subtoggle:focus-visible {
+  outline: 2px solid var(--stx-color-focus);
+  outline-offset: 2px;
+}
+
+.stx-results-panel__facet-subtoggle .stx-results-panel__facet-chevron {
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-left: 0;
+}
+
+.stx-results-panel__facet-subtoggle .stx-results-panel__facet-chevron::before {
+  transform: rotate(-45deg);
+}
+
+.stx-results-panel__facet-subtoggle[aria-expanded="true"]
+  .stx-results-panel__facet-chevron::before {
+  transform: rotate(45deg);
+}
+
+/* Keeps leaf rows aligned with siblings that do have a chevron. */
+.stx-results-panel__facet-subtoggle-spacer {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.stx-results-panel__facet-children {
+  margin-left: 0.5rem;
+  padding-left: 1rem;
+  border-left: 1px solid var(--stx-color-border);
+}
+
+.stx-results-panel__container {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Results refresh in place: the panel keeps its size and dims, rather than
+   collapsing to a loader and reflowing the page. */
+.stx-results-panel__container--loading {
+  pointer-events: none;
+}
+
+.stx-results-panel__container--loading
+  > :not(.stx-results-panel__loading-overlay) {
+  opacity: 0.45;
+}
+
+.stx-results-panel__loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+  background: color-mix(in srgb, var(--stx-color-background) 55%, transparent);
+  pointer-events: none;
 }
 
 .stx-results-panel__results-number {
@@ -27,7 +223,8 @@
   font-size: 0.875rem;
 }
 
-.stx-results-panel__container > ul {
+.stx-results-panel__container > ul,
+.stx-results-panel__results-list {
   margin: 0;
   padding: 0;
   list-style: none;

@@ -3,11 +3,12 @@ import {
   fetchSearchResults,
   html,
   dispatchUrlChangeEvent,
+  withNamespaceParam,
 } from "../../helper";
 import defaultConfig from "../../inline-search/default-config";
 import createSuggestions from "../suggestions/suggestions";
 import type { QueryInputConfig } from "../../types/config";
-import type { QueryInput } from "../../types/query-input";
+import type { QueryInput, QueryInputElement } from "../../types/query-input";
 import type { OpenSearchResponse } from "../../types/open-search";
 import "./query-input.css";
 
@@ -15,6 +16,8 @@ const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
   const inputOption: QueryInput = {
     ...defaultConfig.input,
     ...customConfig,
+    // Spreading an explicitly-undefined override would drop the default.
+    queryParam: customConfig.queryParam || defaultConfig.input.queryParam,
     renderers: {
       ...defaultConfig.input.renderers,
       ...customConfig.renderers,
@@ -38,7 +41,7 @@ const createDebouncedSearch = (
 ) => {
   let controller: AbortController | null = null;
 
-  const deboucendSearch = debounce(async (query) => {
+  const deboucendSearch = debounce(async (query: string) => {
     controller?.abort();
 
     controller = new AbortController();
@@ -59,12 +62,11 @@ const createDebouncedSearch = (
   return deboucendSearch;
 };
 
-const updateSearchQuery = (query: string) => {
+const updateSearchQuery = (query: string, queryParam: string) => {
   const url = new URL(window.location.href);
-  const SEARCH_QUERY_PARAM_NAME = "stx-search";
 
-  url.searchParams.delete(SEARCH_QUERY_PARAM_NAME);
-  url.searchParams.set(SEARCH_QUERY_PARAM_NAME, query);
+  url.searchParams.delete(queryParam);
+  url.searchParams.set(queryParam, query);
   window.history.pushState({}, "", url);
   dispatchUrlChangeEvent();
 };
@@ -73,8 +75,16 @@ export function createQueryInput(customConfig: QueryInputConfig) {
   const config = resolveConfig(customConfig);
   const inputTextId = crypto.randomUUID();
   const suggestionWrapperId = crypto.randomUUID();
-  const { labels, renderers } = config;
-  let onSearch: (val: string) => void;
+  const { labels, renderers, queryParam } = config;
+
+  // Every suggestion fetch goes through this URL, so the namespace is applied
+  // once here rather than at each call site.
+  const searchUrl = withNamespaceParam(
+    typeof config.searchApiUrl === "string"
+      ? config.searchApiUrl
+      : config.searchApiUrl(),
+    config.namespace,
+  );
 
   const queryInputEl = html`
     <div class="stx-query-input">
@@ -112,7 +122,7 @@ export function createQueryInput(customConfig: QueryInputConfig) {
         id="${suggestionWrapperId}"
       ></div>
     </div>
-  ` as HTMLDivElement;
+  ` as QueryInputElement;
 
   const inputEl = queryInputEl.querySelector(
     ".stx-query-input__input",
@@ -132,6 +142,90 @@ export function createQueryInput(customConfig: QueryInputConfig) {
 
   let activeIndex = -1;
   let suggestionListLenght = 0;
+  /**
+   * Whether the dropdown currently holds `initialQuery` results, so typing can
+   * drop them without clearing (and flickering) live typeahead results.
+   */
+  let showingInitialSuggestions = false;
+
+  const closeSuggestions = () => {
+    activeIndex = -1;
+    suggestionListLenght = 0;
+    showingInitialSuggestions = false;
+
+    if (suggestionContainer) {
+      suggestionContainer.innerHTML = "";
+    }
+  };
+
+  /**
+   * Submits the query. With `submitInPlace` the active query is written to the
+   * URL so an adjacent results panel can react; otherwise the user is sent to
+   * `searchPageUrl`.
+   */
+  const submitQuery = (query: string) => {
+    if (config.submitInPlace) {
+      updateSearchQuery(query, queryParam);
+      closeSuggestions();
+
+      return;
+    }
+
+    if (config.searchPageUrl) {
+      window.location.href = config.searchPageUrl(query).toString();
+
+      return;
+    }
+
+    updateSearchQuery(query, queryParam);
+  };
+
+  let initialSuggestionsPromise: Promise<OpenSearchResponse | null> | null =
+    null;
+
+  /** Fetches the `initialQuery` results once and caches them. */
+  const prefetchInitialSuggestions = () => {
+    if (!config.initialQuery) {
+      return null;
+    }
+
+    if (!initialSuggestionsPromise) {
+      initialSuggestionsPromise = fetchSearchResults(
+        searchUrl,
+        config.initialQuery,
+      ).catch((error) => {
+        console.error(error);
+        initialSuggestionsPromise = null;
+
+        return null;
+      });
+    }
+
+    return initialSuggestionsPromise;
+  };
+
+  const showInitialSuggestions = async () => {
+    if (!config.initialQuery || !suggestionContainer || inputEl.value) {
+      return;
+    }
+
+    const response = await prefetchInitialSuggestions();
+
+    // The user may have typed while the request was in flight.
+    if (!response || inputEl.value) {
+      return;
+    }
+
+    const suggestionEl = createSuggestions(response, config);
+
+    suggestionListLenght = response.hits.hits?.length || 0;
+    activeIndex = -1;
+    suggestionContainer.innerHTML = "";
+    suggestionContainer.append(suggestionEl.element as Element);
+    showingInitialSuggestions = true;
+  };
+
+  queryInputEl.showInitialSuggestions = showInitialSuggestions;
 
   const updateActiveItem = () => {
     if (!suggestionContainer) {
@@ -162,15 +256,7 @@ export function createQueryInput(customConfig: QueryInputConfig) {
   };
 
   if (inputEl) {
-    let url = "";
-
-    if (typeof config.searchApiUrl === "string") {
-      url = config.searchApiUrl;
-    } else {
-      url = config.searchApiUrl();
-    }
-
-    onSearch = createDebouncedSearch(url, (results) => {
+    const onSearch = createDebouncedSearch(searchUrl, (results) => {
       const suggestionEl = createSuggestions(results, config);
       suggestionListLenght = results.hits.hits?.length || 0;
       activeIndex = -1;
@@ -179,20 +265,54 @@ export function createQueryInput(customConfig: QueryInputConfig) {
         suggestionContainer.innerHTML = "";
         suggestionContainer.append(suggestionEl.element as Element);
       }
+
+      showingInitialSuggestions = false;
     });
 
-    inputEl.addEventListener("input", async (event) => {
+    if (config.submitInPlace) {
+      const urlQuery =
+        new URLSearchParams(window.location.search).get(queryParam) || "";
+
+      if (urlQuery) {
+        inputEl.value = urlQuery;
+        clearButton?.classList.remove("stx-hidden");
+      }
+    }
+
+    prefetchInitialSuggestions();
+
+    // Focus alone is not a reliable trigger: `.focus()` emits no event when the
+    // input is already focused, and a toggle that opens the input lives outside
+    // `.stx-query-input`, so its click closes the dropdown. React to clicks too.
+    inputEl.addEventListener("focus", () => {
+      showInitialSuggestions();
+    });
+
+    inputEl.addEventListener("click", () => {
+      showInitialSuggestions();
+    });
+
+    inputEl.addEventListener("input", (event) => {
       const { value } = event.target as HTMLInputElement;
 
       clearButton.classList.toggle("stx-hidden", !value.length);
 
-      if (value.length >= config.minSearchLength) {
-        onSearch(inputEl.value);
+      // Empty again: fall back to the preconfigured initial-query dropdown.
+      if (!value.length) {
+        closeSuggestions();
+        showInitialSuggestions();
+
+        return;
       }
 
-      if (!value.length && suggestionContainer) {
-        suggestionContainer.innerHTML = "";
-        suggestionListLenght = 0;
+      // Typing drops the initial-query results, and below `minSearchLength`
+      // there is nothing to show until enough characters are typed.
+      if (showingInitialSuggestions || value.length < config.minSearchLength) {
+        closeSuggestions();
+      }
+
+      if (value.length >= config.minSearchLength) {
+        onSearch(value);
       }
     });
 
@@ -208,13 +328,7 @@ export function createQueryInput(customConfig: QueryInputConfig) {
 
           elements[activeIndex]?.click();
         } else {
-          if (config.searchPageUrl) {
-            const link = config.searchPageUrl(inputEl.value);
-
-            window.location.href = link.toString();
-          } else {
-            updateSearchQuery(inputEl.value);
-          }
+          submitQuery(inputEl.value);
         }
       }
 
@@ -239,34 +353,49 @@ export function createQueryInput(customConfig: QueryInputConfig) {
         activeIndex = activeIndex > 0 ? activeIndex - 1 : maxIndex;
         updateActiveItem();
       } else if (key === "Escape") {
-        activeIndex = -1;
-
-        if (suggestionContainer) {
-          suggestionContainer.innerHTML = "";
-        }
+        closeSuggestions();
       }
     });
+
+    // Picking a suggestion submits it as the query rather than opening the hit,
+    // so the behaviour matches Enter: navigate to `searchPageUrl`, or refresh an
+    // adjacent results panel when `submitInPlace` is set.
+    suggestionContainer?.addEventListener("click", (e) => {
+      const item = (e.target as Element).closest(".stx-suggestion__item");
+
+      if (!item) {
+        return;
+      }
+
+      e.preventDefault();
+
+      const query = item.textContent?.trim() || "";
+
+      inputEl.value = query;
+      clearButton?.classList.remove("stx-hidden");
+      submitQuery(query);
+    });
   }
 
-  if (clearButton && inputEl && suggestionContainer) {
+  if (clearButton && inputEl) {
     clearButton.addEventListener("click", () => {
       inputEl.value = "";
-      suggestionContainer.innerHTML = "";
-      suggestionListLenght = 0;
+      closeSuggestions();
       inputEl.focus();
+      showInitialSuggestions();
     });
   }
 
-  if (searchButton && config.searchPageUrl) {
-    const { searchPageUrl } = config;
+  if (searchButton) {
+    // The button is dropped outright - not just hidden - when it would be dead
+    // (nothing to submit to) or when the host provides its own submit control.
+    const hasSubmitTarget = config.submitInPlace || config.searchPageUrl;
 
-    searchButton.addEventListener("click", () => {
-      const link = searchPageUrl(inputEl.value);
-
-      window.location.href = link.toString();
-    });
-  } else {
-    if (searchButton) {
+    if (config.showSearchButton && hasSubmitTarget) {
+      searchButton.addEventListener("click", () => {
+        submitQuery(inputEl.value);
+      });
+    } else {
       searchButton.remove();
     }
   }
@@ -275,11 +404,7 @@ export function createQueryInput(customConfig: QueryInputConfig) {
     const target = e.target as Element;
 
     if (target !== queryInputEl && !target.closest(".stx-query-input")) {
-      activeIndex = -1;
-
-      if (suggestionContainer) {
-        suggestionContainer.innerHTML = "";
-      }
+      closeSuggestions();
     }
   });
 

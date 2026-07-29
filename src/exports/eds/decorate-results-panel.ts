@@ -1,28 +1,20 @@
 import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
-  generatePannelLabels,
+  type EDSInputOptions,
+  type EDSPanelOptions,
   getEDSConfig,
   loadCssFile,
+  readInputOptions,
+  readPanelOptions,
   replaceElWithError,
 } from "../../eds-helper";
 import type { QueryInputRenderers } from "../../types/query-input";
 import { createResultsPanel } from "../search-results-panel";
 
-type EDSResultsPanelConfig = {
-  searchApiUrl: string;
-  searchPageUrl?: string;
-  minSearchLength?: string;
-  inputPlaceholder?: string;
-  inputLabel?: string;
-  clearButtonAria?: string;
-  searchButtonAria?: string;
-  pageSize?: string;
-  dataSources?: string;
-  paginationInfo?: string;
-  totalResults?: string;
-  ariaPaginationGoToPage?: string;
-  ariaPaginationNavigation?: string;
-};
+type EDSResultsPanelConfig = EDSPanelOptions &
+  EDSInputOptions & {
+    searchApiUrl: string;
+  };
 
 type EDSResultsPanelRenderers = Partial<QueryInputRenderers> &
   Partial<ResultsPanelRenderers>;
@@ -45,19 +37,11 @@ export default function decorate(
     return;
   }
 
+  const inputOptions = readInputOptions(config);
   const inputConfig = {
+    // Narrowed to a string by the guard above, which is why it stays here.
     searchApiUrl: config.searchApiUrl,
-    searchPageUrl: config.searchPageUrl
-      ? (query: string) =>
-          `${config.searchPageUrl}?stx-search=${encodeURIComponent(query)}`
-      : undefined,
-    minSearchLength: Number(config.minSearchLength) || 3,
-    labels: {
-      inputPlaceholder: config.inputPlaceholder,
-      inputLabel: config.inputLabel,
-      clearButtonAria: config.clearButtonAria,
-      searchButtonAria: config.searchButtonAria,
-    },
+    ...inputOptions,
     renderers,
   };
 
@@ -67,10 +51,9 @@ export default function decorate(
     ),
   ) as ResultsPanelRenderers;
   const panelConfig = {
-    pageSize: Number(config.pageSize) || 10,
-    dataSources: config.dataSources ? [config.dataSources] : [],
+    ...readPanelOptions(config),
+    queryParam: inputOptions.queryParam,
     renderers: resultsRenderers,
-    labels: generatePannelLabels(config),
   };
 
   const resultPanel = createResultsPanel(inputConfig, panelConfig);

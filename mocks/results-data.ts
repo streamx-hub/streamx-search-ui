@@ -17,7 +17,7 @@ export const getData = (
   title: string,
   count: number,
 ) => {
-  let data = [];
+  const data = [];
 
   for (let i = 0; i < (count || DEFAULT_RESULTS_COUNT); i++) {
     const type = title.toLocaleLowerCase().replaceAll(" ", "-");

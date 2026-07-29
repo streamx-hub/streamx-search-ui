@@ -1,6 +1,7 @@
 :root {
   --stx-color-text: #222;
   --stx-color-muted: #666;
+  --stx-color-text-query-input: #222;
   --stx-color-background: #fff;
   --stx-color-surface: #fff;
   --stx-color-border: #eee;

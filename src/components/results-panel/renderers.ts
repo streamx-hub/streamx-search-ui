@@ -1,4 +1,3 @@
-import globalConfig from "../../config";
 import { html } from "../../helper";
 import type { OpenSearchItem } from "../../types/open-search";
 
@@ -26,16 +25,30 @@ export const renderDefaultLoader = () => {
   ` as HTMLElement;
 };
 
-export const renderNoItem = (item: OpenSearchItem) => {
-  if (globalConfig.debug) {
-    return html`
-      <div class="stx-results-panel__no-item-renderer">
-        No custom renderer for type: ${item._source.type}
-      </div>
-    `;
-  }
+/**
+ * Debug diagnostic shown when a registered renderer throws. Whether it is
+ * rendered at all is decided by the caller (`debugMode`); this only builds the
+ * markup.
+ */
+export const renderNoItem = (item: OpenSearchItem) =>
+  html`
+    <div class="stx-results-panel__no-item-renderer">
+      No custom renderer for type: ${item._source.type}
+    </div>
+  ` as HTMLElement;
 
-  return "";
+/**
+ * Overlay shown while results refresh in place.
+ *
+ * It is absolutely positioned over the results container so the panel keeps its
+ * dimensions during a request instead of collapsing and reflowing the page.
+ */
+export const renderResultsLoadingOverlay = () => {
+  return html`
+    <div class="stx-results-panel__loading-overlay" aria-hidden="true">
+      ${renderDefaultLoader()}
+    </div>
+  ` as HTMLElement;
 };
 
 export const renderResultsPanelError = () => {

@@ -1,32 +1,27 @@
 import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
 import {
-  generatePannelLabels,
+  type EDSInputOptions,
+  type EDSPanelOptions,
   getEDSConfig,
   loadCssFile,
+  mergeEDSConfigs,
+  readInputOptions,
+  readPanelOptions,
   replaceElWithError,
 } from "../../eds-helper";
 import type { QueryInputRenderers } from "../../types/query-input";
 import { createSearchTabs } from "../search-tabs";
 
-type EDSSearchTabsConfig = {
-  searchApiUrl: string;
-  searchPageUrl?: string;
-  minSearchLength?: string;
-  inputPlaceholder?: string;
-  inputLabel?: string;
-  clearButtonAria?: string;
-  searchButtonAria?: string;
-};
+// Panel options authored on the block act as defaults for every tab.
+type EDSSearchTabsConfig = EDSPanelOptions &
+  EDSInputOptions & {
+    searchApiUrl: string;
+  };
 
-type EDSTabConfig = {
+// Every panel option can be overridden per tab.
+type EDSTabConfig = EDSPanelOptions & {
   id: string;
   displayName: string;
-  pageSize?: string;
-  dataSources: string;
-  paginationInfo?: string;
-  totalResults?: string;
-  ariaPaginationGoToPage?: string;
-  ariaPaginationNavigation?: string;
 };
 
 type EDSTabsRenderers = Partial<QueryInputRenderers> &
@@ -51,23 +46,22 @@ export default function decorate(
     return;
   }
 
+  const inputOptions = readInputOptions(config);
   const inputConfig = {
-    searchApiUrl: config!.searchApiUrl,
-    searchPageUrl: (query: string) =>
-      `${config.searchPageUrl ?? ""}?stx-search=${encodeURIComponent(query)}`,
-    minSearchLength: Number(config.minSearchLength) || 3,
-    labels: {
-      inputPlaceholder: config.inputPlaceholder,
-      inputLabel: config.inputLabel,
-      clearButtonAria: config.clearButtonAria,
-      searchButtonAria: config.searchButtonAria,
-    },
+    // Narrowed to a string by the guard above, which is why it stays here.
+    searchApiUrl: config.searchApiUrl,
+    ...inputOptions,
     renderers,
   };
 
   const tabs = [...document.querySelectorAll(tabSelector)] as HTMLElement[];
   const tabsConfigs = tabs.map((tab) => {
     const tabConfig = getEDSConfig<EDSTabConfig>(tab);
+    // Block-level panel options are the defaults; tab rows override key by key.
+    const panelOptions = mergeEDSConfigs<EDSSearchTabsConfig & EDSTabConfig>(
+      config,
+      tabConfig,
+    );
 
     if (!tabConfig.id) {
       replaceElWithError(
@@ -87,7 +81,7 @@ export default function decorate(
       return;
     }
 
-    if (!tabConfig.dataSources) {
+    if (!panelOptions.dataSources) {
       replaceElWithError(
         block,
         "The <em>Search Tab</em> block requires <i>dataSources</i>",
@@ -102,9 +96,8 @@ export default function decorate(
       id: tabConfig.id,
       displayName: tabConfig.displayName,
       results: {
-        pageSize: Number(tabConfig.pageSize) || 10,
-        dataSources: [tabConfig.dataSources],
-        labels: generatePannelLabels(tabConfig),
+        ...readPanelOptions(panelOptions),
+        queryParam: inputOptions.queryParam,
       },
     };
   });
