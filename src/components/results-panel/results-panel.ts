@@ -9,8 +9,7 @@ import globalConfig, { DEFAULT_QUERY_PARAM } from "../../config";
 import {
   buildSearchRequestBody,
   joinFacetPath,
-  DEFAULT_FACET_FIELD_PREFIX,
-  DEFAULT_FACET_FILTER_FIELD,
+  DEFAULT_FACET_FIELDS,
   DEFAULT_FACET_PATH_SEPARATOR,
   DEFAULT_FACET_FIELD_SIZE,
 } from "../../search-request";
@@ -73,10 +72,12 @@ export interface ResultsConfig {
   facetDepthLevel?: number;
   /** Saved query/template id sent as the request body `id`. */
   requestId?: string;
-  /** Field the selected facet values are filtered against. */
-  facetFilterField?: string;
-  /** Field name prefix for the facet levels; the level index is appended. */
-  facetFieldPrefix?: string;
+  /**
+   * Facet roots to request, one aggregation tree each (`["category", "tags"]`).
+   * Level and filter fields are derived: `<root>_level<n>` is aggregated and
+   * selections filter against `<root>_hierarchy`.
+   */
+  facetFields?: string[];
   /** Separator used to build hierarchical facet paths. */
   facetPathSeparator?: string;
   /** Max buckets requested per facet level. */
@@ -133,8 +134,7 @@ const defaultConfig = {
   method: "GET" as SearchRequestMethod,
   queryParam: DEFAULT_QUERY_PARAM,
   facetDepthLevel: 1,
-  facetFilterField: DEFAULT_FACET_FILTER_FIELD,
-  facetFieldPrefix: DEFAULT_FACET_FIELD_PREFIX,
+  facetFields: DEFAULT_FACET_FIELDS,
   facetPathSeparator: DEFAULT_FACET_PATH_SEPARATOR,
   facetFieldSize: DEFAULT_FACET_FIELD_SIZE,
   debugMode: false,
@@ -350,9 +350,8 @@ const buildResultsRequestOptions = (
       size: results.pageSize,
       query,
       filters: serializeFilters(selectedFilters),
-      filterField: results.facetFilterField,
       facetDepthLevel: results.facetDepthLevel,
-      facetFieldPrefix: results.facetFieldPrefix,
+      facetFields: results.facetFields,
       facetFieldSize: results.facetFieldSize,
       namespace: results.namespace,
     }),

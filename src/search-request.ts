@@ -5,56 +5,78 @@ import type {
 } from "./types/open-search";
 
 /**
- * Defaults for the facet field naming convention.
+ * The facet field naming convention.
  *
- * They match the layout StreamX indexes use out of the box, but every one of
- * them is overridable per query so the components stay index-agnostic.
+ * A facet is configured by its **root** name alone (`category`, `tags`, ...).
+ * The surrounding names are fixed by the index layout: each nesting level is
+ * aggregated on `<root>_level<n>`, and selections are filtered against
+ * `<root>_hierarchy`, which stores the full ancestor paths.
  */
-export const DEFAULT_FACET_FIELD_PREFIX = "category_level";
-export const DEFAULT_FACET_FILTER_FIELD = "category_hierarchy";
+export const DEFAULT_FACET_FIELDS = ["category"];
+export const FACET_LEVEL_SUFFIX = "_level";
+export const FACET_HIERARCHY_SUFFIX = "_hierarchy";
 export const DEFAULT_FACET_PATH_SEPARATOR = ">";
 export const DEFAULT_FACET_FIELD_SIZE = 20;
 
+/**
+ * Maps an aggregation field back to the field its selections filter against,
+ * so every facet tree filters on its own hierarchy instead of a shared one.
+ *
+ * @example
+ * facetFilterFieldFor("tags_level0") // "tags_hierarchy"
+ * facetFilterFieldFor("category_level2") // "category_hierarchy"
+ */
+export const facetFilterFieldFor = (treeField: string) => {
+  const root = treeField.replace(new RegExp(`${FACET_LEVEL_SUFFIX}\\d+$`), "");
+
+  return `${root}${FACET_HIERARCHY_SUFFIX}`;
+};
+
 export interface BuildFacetFieldsOptions {
-  /** How many levels deep the facet nests. Defaults to a single flat level. */
+  /** How many levels deep each facet nests. Defaults to a single flat level. */
   depth?: number;
-  /** Field name prefix; the level index is appended to it. */
-  fieldPrefix?: string;
+  /** Facet root names - one aggregation tree is requested per entry. */
+  fields?: string[];
   /** Max buckets requested per level. */
   fieldSize?: number;
 }
 
 /**
- * Builds the facet aggregations requested for a query, `depth` levels deep:
- * `${fieldPrefix}0` nesting down to `${fieldPrefix}${depth - 1}`.
+ * Builds the facet aggregations requested for a query: one tree per configured
+ * root, each nesting `depth` levels from `<root>_level0`.
  *
  * A missing or invalid depth falls back to a single flat level.
  *
  * @example
- * buildFacetFields({ depth: 1 })
+ * buildFacetFields({ fields: ["category"] })
  * // { fields: [{ name: "category_level0", size: 20, last: true }] }
  *
  * @example
- * buildFacetFields({ depth: 2 })
+ * buildFacetFields({ fields: ["category"], depth: 2 })
  * // { fields: [{ name: "category_level0", size: 20,
  * //             children: [{ name: "category_level1", size: 20, last: true }],
  * //             last: true }] }
+ *
+ * @example
+ * buildFacetFields({ fields: ["category", "tags"] })
+ * // { fields: [{ name: "category_level0", ... }, { name: "tags_level0", ... }] }
  */
 export const buildFacetFields = ({
   depth,
-  fieldPrefix = DEFAULT_FACET_FIELD_PREFIX,
+  fields = DEFAULT_FACET_FIELDS,
   fieldSize = DEFAULT_FACET_FIELD_SIZE,
 }: BuildFacetFieldsOptions = {}): { fields: SearchFacetField[] } => {
   const levels = Math.max(1, Math.trunc(Number(depth)) || 1);
+  const roots = fields.length > 0 ? fields : DEFAULT_FACET_FIELDS;
 
-  const buildLevel = (index: number): SearchFacetField => {
+  const buildLevel = (root: string, index: number): SearchFacetField => {
     const field: SearchFacetField = {
-      name: `${fieldPrefix}${index}`,
+      name: `${root}${FACET_LEVEL_SUFFIX}${index}`,
       size: fieldSize,
     };
 
     if (index < levels - 1) {
-      field.children = [buildLevel(index + 1)];
+      field.children = [buildLevel(root, index + 1)];
     }
 
     field.last = true;
@@ -62,7 +84,7 @@ export const buildFacetFields = ({
     return field;
   };
 
-  return { fields: [buildLevel(0)] };
+  return { fields: roots.map((root) => buildLevel(root, 0)) };
 };
 
 /**
@@ -89,10 +111,9 @@ export interface BuildSearchRequestBodyOptions {
    * under - one key per top-level facet, whatever depth the values come from.
    */
   filters?: Record<string, string[]>;
-  /** Field the selected facet values are filtered against. */
-  filterField?: string;
   facetDepthLevel?: number;
-  facetFieldPrefix?: string;
+  /** Facet root names requested as aggregations. */
+  facetFields?: string[];
   facetFieldSize?: number;
   /**
    * Restricts results to one content namespace. Belongs inside `params` - the
@@ -106,7 +127,8 @@ export interface BuildSearchRequestBodyOptions {
  *
  * Selected filters become `params.filter_query.fields`: one entry per facet
  * tree - values within a tree are OR-ed, separate trees are AND-ed - with
- * `last: true` on the final entry.
+ * `last: true` on the final entry. Each entry filters against that tree's own
+ * `<root>_hierarchy` field, so two trees that share a value stay distinct.
  *
  * Values are full hierarchical paths (`"Electronics>Tablet"`), so a nested
  * selection never needs its ancestors sent alongside it. Sending two branches
@@ -119,9 +141,8 @@ export const buildSearchRequestBody = ({
   size = 20,
   query = "",
   filters,
-  filterField = DEFAULT_FACET_FILTER_FIELD,
   facetDepthLevel,
-  facetFieldPrefix,
+  facetFields,
   facetFieldSize,
   namespace,
 }: BuildSearchRequestBodyOptions = {}): SearchRequestBody => {
@@ -131,7 +152,7 @@ export const buildSearchRequestBody = ({
       size,
       facets: buildFacetFields({
         depth: facetDepthLevel,
-        fieldPrefix: facetFieldPrefix,
+        fields: facetFields,
         fieldSize: facetFieldSize,
       }),
     },
@@ -150,13 +171,16 @@ export const buildSearchRequestBody = ({
   }
 
   const filterGroups = filters
-    ? Object.values(filters).filter((values) => values.length > 0)
+    ? Object.entries(filters).filter(([, values]) => values.length > 0)
     : [];
 
   if (filterGroups.length > 0) {
     body.params.filter_query = {
-      fields: filterGroups.map((values, index) => {
-        const entry: SearchFilterField = { name: filterField, values };
+      fields: filterGroups.map(([treeField, values], index) => {
+        const entry: SearchFilterField = {
+          name: facetFilterFieldFor(treeField),
+          values,
+        };
 
         if (index === filterGroups.length - 1) {
           entry.last = true;

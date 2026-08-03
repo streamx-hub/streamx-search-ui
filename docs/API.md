@@ -427,8 +427,7 @@ interface ResultsConfig {
   queryParam?: string;
   facetDepthLevel?: number;
   requestId?: string;
-  facetFilterField?: string;
-  facetFieldPrefix?: string;
+  facetFields?: string[];
   facetPathSeparator?: string;
   facetFieldSize?: number;
   debugMode?: boolean;
@@ -437,23 +436,22 @@ interface ResultsConfig {
 }
 ```
 
-| Property             | Type                       | Required |        Default         | Description                                                                                                                                                                                                                              |
-| -------------------- | -------------------------- | :------: | :--------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dataSources`        | `string[]`                 |    ✅    |           -            | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
-| `pageSize`           | `number`                   |    ❌    |          `20`          | Number of results per page.                                                                                                                                                                                                              |
-| `renderers`          | `ResultsPanelRenderers`    |    ❌    |        Built-in        | Custom result renderers.                                                                                                                                                                                                                 |
-| `labels`             | `ResultsPanelLabelsConfig` |    ❌    |    Built-in labels     | Pagination and results labels.                                                                                                                                                                                                           |
-| `method`             | `"GET" \| "POST"`          |    ❌    |        `"GET"`         | Transport. **Facets and filtering require `"POST"`**, since they travel in the body.                                                                                                                                                     |
-| `queryParam`         | `string`                   |    ❌    |       `"query"`        | URL param carrying the query. Must match the query input's `queryParam`.                                                                                                                                                                 |
-| `facetDepthLevel`    | `number`                   |    ❌    |          `1`           | How deep the facet aggregations nest. `1` requests a single flat level.                                                                                                                                                                  |
-| `requestId`          | `string`                   |    ❌    |           -            | Saved query/template id sent as the request body `id`.                                                                                                                                                                                   |
-| `facetFilterField`   | `string`                   |    ❌    | `"category_hierarchy"` | Field the selected facet values are filtered against.                                                                                                                                                                                    |
-| `facetFieldPrefix`   | `string`                   |    ❌    |   `"category_level"`   | Field name prefix for facet levels; the level index is appended.                                                                                                                                                                         |
-| `facetPathSeparator` | `string`                   |    ❌    |         `">"`          | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).                                                                                                                                                           |
-| `facetFieldSize`     | `number`                   |    ❌    |          `20`          | Max buckets requested per facet level.                                                                                                                                                                                                   |
-| `debugMode`          | `boolean`                  |    ❌    |        `false`         | Renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type, and a notice when a renderer throws). When `false`, those rows are dropped entirely - a console warning is logged either way. |
-| `stateKey`           | `string`                   |    ❌    |           -            | Namespaces the panel's `stx-facets` URL param. Set automatically to the tab id inside search tabs; omit for a standalone panel.                                                                                                          |
-| `namespace`          | `string`                   |    ❌    |           -            | Limits results to one content namespace. Sent as a `namespace` query param on `GET`, and inside `params` in the body on `POST`. Omit to search all of them.                                                                              |
+| Property             | Type                       | Required |     Default     | Description                                                                                                                                                                                                                              |
+| -------------------- | -------------------------- | :------: | :-------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `dataSources`        | `string[]`                 |    ✅    |        -        | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
+| `pageSize`           | `number`                   |    ❌    |      `20`       | Number of results per page.                                                                                                                                                                                                              |
+| `renderers`          | `ResultsPanelRenderers`    |    ❌    |    Built-in     | Custom result renderers.                                                                                                                                                                                                                 |
+| `labels`             | `ResultsPanelLabelsConfig` |    ❌    | Built-in labels | Pagination and results labels.                                                                                                                                                                                                           |
+| `method`             | `"GET" \| "POST"`          |    ❌    |     `"GET"`     | Transport. **Facets and filtering require `"POST"`**, since they travel in the body.                                                                                                                                                     |
+| `queryParam`         | `string`                   |    ❌    |    `"query"`    | URL param carrying the query. Must match the query input's `queryParam`.                                                                                                                                                                 |
+| `facetDepthLevel`    | `number`                   |    ❌    |       `1`       | How deep the facet aggregations nest. `1` requests a single flat level.                                                                                                                                                                  |
+| `requestId`          | `string`                   |    ❌    |        -        | Saved query/template id sent as the request body `id`.                                                                                                                                                                                   |
+| `facetFields`        | `string[]`                 |    ❌    | `["category"]`  | Facet roots to request - one aggregation tree each. `<root>_level<n>` is aggregated and selections filter against `<root>_hierarchy`.                                                                                                    |
+| `facetPathSeparator` | `string`                   |    ❌    |      `">"`      | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).                                                                                                                                                           |
+| `facetFieldSize`     | `number`                   |    ❌    |      `20`       | Max buckets requested per facet level.                                                                                                                                                                                                   |
+| `debugMode`          | `boolean`                  |    ❌    |     `false`     | Renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type, and a notice when a renderer throws). When `false`, those rows are dropped entirely - a console warning is logged either way. |
+| `stateKey`           | `string`                   |    ❌    |        -        | Namespaces the panel's `stx-facets` URL param. Set automatically to the tab id inside search tabs; omit for a standalone panel.                                                                                                          |
+| `namespace`          | `string`                   |    ❌    |        -        | Limits results to one content namespace. Sent as a `namespace` query param on `GET`, and inside `params` in the body on `POST`. Omit to search all of them.                                                                              |
 
 ### Facets
 
@@ -470,10 +468,25 @@ nesting its own field again (which would duplicate the node as its own child)
 or a child level with no buckets (which would render an expander that opens
 onto nothing) - are treated as "no children" and skipped.
 
-Selecting a value filters on `facetFilterField` using the value's **full
-hierarchical path** (`Electronics>Tablet`, joined with `facetPathSeparator`).
+Selecting a value filters on that tree's own `<root>_hierarchy` field using the
+value's **full hierarchical path** (`Electronics>Tablet`, joined with `facetPathSeparator`).
 The path already encodes its ancestors, so only the value the user actually
 ticked is ever sent - the ancestors are never added alongside it.
+
+#### Configuring which facets are requested
+
+`facetFields` lists the facet **roots**; everything else about the field names
+is fixed by the index layout:
+
+| Config                               | Aggregations requested           | Selections filter against              |
+| ------------------------------------ | -------------------------------- | -------------------------------------- |
+| `["category"]` (default)             | `category_level0`                | `category_hierarchy`                   |
+| `["category"]`, `facetDepthLevel: 3` | `category_level0` → `1` → `2`    | `category_hierarchy`                   |
+| `["category", "tags"]`               | `category_level0`, `tags_level0` | `category_hierarchy`, `tags_hierarchy` |
+
+Because each tree filters against its own hierarchy field, a value that appears
+in two trees (a `Podcasts` content type and a `Podcasts` category) stays
+distinct. `facetDepthLevel` applies to every requested root.
 
 #### How selections combine
 

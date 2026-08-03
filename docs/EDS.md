@@ -179,22 +179,21 @@ Each configuration row contains:
 The Search Results Panel block and the Search Tab blocks render the same
 results panel, so they accept the same panel options:
 
-| Option                     | Default              | Description                                                                                                                                                                           |
-| -------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pageSize`                 | `10`                 | Number of results per page.                                                                                                                                                           |
-| `dataSources`              | -                    | Results endpoint the panel POSTs to.                                                                                                                                                  |
-| `requestId`                | -                    | Saved query/template id sent as the request body `id`.                                                                                                                                |
-| `facetDepthLevel`          | `1`                  | Facet nesting depth. `1` is a flat facet; `3` requests `category_level0` → `1` → `2`. Requesting deeper than the index nests is safe - degenerate levels in the response are skipped. |
-| `facetFilterField`         | `category_hierarchy` | Field the selected facet values are filtered against.                                                                                                                                 |
-| `facetFieldPrefix`         | `category_level`     | Field name prefix for the facet levels.                                                                                                                                               |
-| `facetPathSeparator`       | `>`                  | Separator between the levels of a hierarchical facet path.                                                                                                                            |
-| `facetFieldSize`           | `20`                 | Maximum number of values requested per facet field.                                                                                                                                   |
-| `debugMode`                | `false`              | `true` renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type). When unset/`false`, those rows are dropped entirely.               |
-| `namespace`                | -                    | Limits results to one content namespace (e.g. `en`). Omit to search across all of them.                                                                                               |
-| `paginationInfo`           | -                    | Label template, e.g. `Page {{currentPage}} of {{pageNumber}}`.                                                                                                                        |
-| `totalResults`             | -                    | Label template, e.g. `{{totalCount}} results found`.                                                                                                                                  |
-| `ariaPaginationGoToPage`   | -                    | ARIA label template, e.g. `Go to page {{pageNumber}}`.                                                                                                                                |
-| `ariaPaginationNavigation` | -                    | ARIA label for the pagination navigation.                                                                                                                                             |
+| Option                     | Default    | Description                                                                                                                                                                           |
+| -------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pageSize`                 | `10`       | Number of results per page.                                                                                                                                                           |
+| `dataSources`              | -          | Results endpoint the panel POSTs to.                                                                                                                                                  |
+| `requestId`                | -          | Saved query/template id sent as the request body `id`.                                                                                                                                |
+| `facetDepthLevel`          | `1`        | Facet nesting depth. `1` is a flat facet; `3` requests `category_level0` → `1` → `2`. Requesting deeper than the index nests is safe - degenerate levels in the response are skipped. |
+| `facetFields`              | `category` | Comma-separated facet roots, one tree each (`category, tags, content_type`). `<root>_level<n>` is aggregated; selections filter against `<root>_hierarchy`.                           |
+| `facetPathSeparator`       | `>`        | Separator between the levels of a hierarchical facet path.                                                                                                                            |
+| `facetFieldSize`           | `20`       | Maximum number of values requested per facet field.                                                                                                                                   |
+| `debugMode`                | `false`    | `true` renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type). When unset/`false`, those rows are dropped entirely.               |
+| `namespace`                | -          | Limits results to one content namespace (e.g. `en`). Omit to search across all of them.                                                                                               |
+| `paginationInfo`           | -          | Label template, e.g. `Page {{currentPage}} of {{pageNumber}}`.                                                                                                                        |
+| `totalResults`             | -          | Label template, e.g. `{{totalCount}} results found`.                                                                                                                                  |
+| `ariaPaginationGoToPage`   | -          | ARIA label template, e.g. `Go to page {{pageNumber}}`.                                                                                                                                |
+| `ariaPaginationNavigation` | -          | ARIA label for the pagination navigation.                                                                                                                                             |
 
 On a Search Results Panel block, author these options directly on the block.
 
@@ -222,8 +221,7 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 | initialQuery             | popular topics                         |
 | requestId                | eds-pages                              |
 | facetDepthLevel          | 3                                      |
-| facetFilterField         | category_hierarchy                     |
-| facetFieldPrefix         | category_level                         |
+| facetFields              | category, tags                         |
 | inputPlaceholder         | Search                                 |
 | inputLabel               | Search                                 |
 | clearButtonAria          | Clear search                           |

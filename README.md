@@ -16,6 +16,7 @@ The library provides ready-to-use search inputs, modal search, tabbed search pag
 - Search page without tabs
 - Custom labels and renderers
 - Optional analytics callback
+- Multiple facet trees, hierarchical
 - Namespace-scoped search (e.g. per locale)
 - Debug mode for unhandled result types
 - Accessible default markup
@@ -269,6 +270,36 @@ comes back as it was:
 
 All three are restored on load. See [`API.md`](./docs/API.md#url-parameters) for
 the exact format.
+
+## Facets
+
+Facets are configured by their **root** name only - the rest of the field names
+follow the index convention:
+
+```ts
+createResultsPanel(
+  { searchApiUrl: "/api/suggestions" },
+  {
+    dataSources: ["/api/search"],
+    method: "POST",
+    facetFields: ["category", "tags"], // one facet tree per root
+    facetDepthLevel: 3, // applies to every root
+  },
+);
+```
+
+| Root       | Aggregated on                             | Selections filter against |
+| ---------- | ----------------------------------------- | ------------------------- |
+| `category` | `category_level0` → `_level1` → `_level2` | `category_hierarchy`      |
+| `tags`     | `tags_level0` → `_level1` → `_level2`     | `tags_hierarchy`          |
+
+Each tree filters against its own `<root>_hierarchy` field, so the same value
+appearing in two trees stays distinct. Values within one tree are OR-ed, and
+separate trees are AND-ed. In EDS, author it as a comma-separated
+`facetFields` row.
+
+Defaults to `["category"]`. See [`API.md`](./docs/API.md#facets) for the full
+selection semantics.
 
 ## Namespaces
 
