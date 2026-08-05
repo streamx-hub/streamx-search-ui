@@ -29,6 +29,7 @@ import {
   renderResultsPanelError,
 } from "./renderers";
 import "./results-panel.css";
+import { type SortItem, createSortOptions } from "./sort-options";
 
 type CustomRenderer = (...args: unknown[]) => HTMLElement;
 
@@ -41,6 +42,7 @@ export type ResultsPanelLabelsConfig = {
   totalResults?: (totalCount: number) => string;
   ariaPaginationGoToPage?: (pageNumber: number) => string;
   ariaPaginationNavigation?: string;
+  sortBy?: string;
 };
 
 export type ResultsPanelLabels = Required<ResultsPanelLabelsConfig>;
@@ -99,6 +101,7 @@ export interface ResultsConfig {
    * search across all namespaces.
    */
   namespace?: string;
+  sortOptions?: SortItem[];
 }
 
 export type Results = Omit<
@@ -114,6 +117,7 @@ export type Results = Omit<
 /** Per-panel mutable state, kept off the element itself. */
 interface PanelState {
   currentPage: number;
+  sortBy: SortItem | null;
   /**
    * Selected facet values, keyed by the facet **tree** (the top-level
    * aggregation field) they were selected under, so every selection inside one
@@ -145,11 +149,22 @@ const defaultConfig = {
   labels: {
     paginationInfo: (currentPage: number, pageNumber: number) =>
       `Page ${currentPage} of ${pageNumber}`,
-    totalResults: (totalCount: number) => `${totalCount} results found.`,
+    totalResults: (totalCount: number) => `${totalCount} results found`,
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
-    ariaPaginationNavigation: () => "Pagination",
+    ariaPaginationNavigation: "Pagination",
+    sortBy: "Sort by:",
   },
-};
+  sortOptions: [
+      {
+        label: 'Date (Newest)',
+        sortBy: 'date__desc'
+      },
+      {
+        label: 'Date (Oldest)',
+        sortBy: 'date__asc',
+      }
+    ],
+} as const satisfies Omit<ResultsConfig, "dataSources">;
 
 const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
   const defaultLabels = normalizeLabels(defaultConfig.labels);
@@ -359,7 +374,7 @@ const buildResultsRequestOptions = (
   };
 };
 
-const createResultsNumber = (
+const createResultsHeader = (
   data: OpenSearchResponse,
   results: Results,
   currentPage: number,
@@ -367,15 +382,17 @@ const createResultsNumber = (
   const totalNumber = data.hits?.total.value || 0;
   const pageSize = results.pageSize;
   const pagesNumber = Math.ceil(totalNumber / pageSize);
+  const sortOptions = createSortOptions(results.labels.sortBy(), results.sortOptions);
 
   return html`
-    <div class="stx-results-panel__results-number">
+    <div class="stx-results-panel__results-header">
       <span class="stx-results-panel__page-number">
         ${results.labels.paginationInfo(currentPage, pagesNumber)}
       </span>
       <span class="stx-results-panel__total-number">
-        ${results.labels.totalResults(totalNumber)}
+          ${results.labels.totalResults(totalNumber)}
       </span>
+      ${sortOptions}
     </div>
   ` as HTMLDivElement;
 };
@@ -1036,13 +1053,13 @@ const createResultsContainer = (
   currentPage: number,
 ) => {
   const items = createItems(data, results.renderers, results.debugMode);
-  const resultsNumber = createResultsNumber(data, results, currentPage);
+  const resultsHeader = createResultsHeader(data, results, currentPage);
   const pagination = createPagination(data, results, currentPage);
 
   return {
     element: html`
       <div class="stx-results-panel__container">
-        ${resultsNumber}
+        ${resultsHeader}
         <ul class="stx-results-panel__results-list">
           ${items}
         </ul>
@@ -1342,6 +1359,7 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
 
   panelStates.set(resultsPanel, {
     currentPage: 1,
+    sortBy: null,
     // Seeded from the URL so a shared/deep-linked selection is applied to the
     // first request and reflected in the checkboxes once facets render.
     selectedFilters: readFacetsFromUrl(facetsParamName(results)),
