@@ -212,29 +212,29 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 
 ### Search Results Panel
 
-| Search Results Panel     |                                                                                                     |
-|--------------------------|-----------------------------------------------------------------------------------------------------|
-| searchApiUrl             | /api/search                                                                                         |
-| minSearchLength          | 3                                                                                                   |
-| pageSize                 | 10                                                                                                  |
-| dataSources              | /api/results                                                                                        |
-| queryParam               | query                                                                                               |
-| initialQuery             | popular topics                                                                                      |
-| requestId                | eds-pages                                                                                           |
-| facetDepthLevel          | 3                                                                                                   |
-| facetFilterField         | category_hierarchy                                                                                  |
-| facetFieldPrefix         | category_level                                                                                      |
-| inputPlaceholder         | Search                                                                                              |
-| inputLabel               | Search                                                                                              |
-| clearButtonAria          | Clear search                                                                                        |
-| searchButtonAria         | Submit search                                                                                       |
-| paginationInfo           | Page {{currentPage}} of {{pageNumber}}                                                              |
-| totalResults             | {{totalCount}} results found                                                                        |
-| ariaPaginationGoToPage   | Go to page {{pageNumber}}                                                                           |
-| ariaPaginationNavigation | Search results pagination                                                                           |
-| sortBy                   | Sort by:                                                                                            |
-| sortParam                | sort-by                                                                                             |
-| sortOptions              | [{ label: 'Date (Newest)', sortBy: 'date__desc' }, { label: 'Date (Oldest)', sortBy: 'date__asc' }] |
+| Search Results Panel     |                                                                                                                                           |
+|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| searchApiUrl             | /api/search                                                                                                                               |
+| minSearchLength          | 3                                                                                                                                         |
+| pageSize                 | 10                                                                                                                                        |
+| dataSources              | /api/results                                                                                                                              |
+| queryParam               | query                                                                                                                                     |
+| initialQuery             | popular topics                                                                                                                            |
+| requestId                | eds-pages                                                                                                                                 |
+| facetDepthLevel          | 3                                                                                                                                         |
+| facetFilterField         | category_hierarchy                                                                                                                        |
+| facetFieldPrefix         | category_level                                                                                                                            |
+| inputPlaceholder         | Search                                                                                                                                    |
+| inputLabel               | Search                                                                                                                                    |
+| clearButtonAria          | Clear search                                                                                                                              |
+| searchButtonAria         | Submit search                                                                                                                             |
+| paginationInfo           | Page {{currentPage}} of {{pageNumber}}                                                                                                    |
+| totalResults             | {{totalCount}} results found                                                                                                              |
+| ariaPaginationGoToPage   | Go to page {{pageNumber}}                                                                                                                 |
+| ariaPaginationNavigation | Search results pagination                                                                                                                 |
+| sortBy                   | Sort by:                                                                                                                                  |
+| sortParam                | sort-by                                                                                                                                   |
+| sortOptions              | [{ label: 'Relevance', sortBy: null }, { label: 'Date (Newest)', sortBy: 'date__desc' }, { label: 'Date (Oldest)', sortBy: 'date__asc' }] |
 
 The block accepts every [panel option](#panel-options) plus the search-input
 options shared with the Search Tabs block:

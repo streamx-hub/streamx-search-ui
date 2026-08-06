@@ -157,6 +157,10 @@ const defaultConfig = {
   },
   sortOptions: [
       {
+        label: 'Relevance',
+        sortBy: null
+      },
+      {
         label: 'Date (Newest)',
         sortBy: 'date__desc'
       },

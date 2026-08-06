@@ -6,14 +6,16 @@ type SortBy = `${string}__${SortDirection}`;
 
 export interface SortItem {
     label: string;
-    sortBy: SortBy;
+    sortBy: SortBy | null;
 }
 
 const updateSortOption = (sortParam: string, sortOption: string) => {
     const url = new URL(window.location.href);
 
     url.searchParams.delete(sortParam);
-    url.searchParams.set(sortParam, sortOption);
+    if (sortOption) {
+        url.searchParams.set(sortParam, sortOption);
+    }
     window.history.pushState({}, "", url);
     dispatchUrlChangeEvent();
 };
@@ -24,7 +26,7 @@ export const createSortOptions = (sortParam: string, label: string, options: Sor
     const selectId = crypto.randomUUID();
 
     const sortOptionElements: HTMLElement[] = options.map((option: SortItem) => html`
-        <option value="${option.sortBy}">${option.label}</option>
+        <option value="${option.sortBy ?? ''}">${option.label}</option>
     ` as HTMLOptionElement);
 
     const sortOptionsEl = html`
@@ -40,8 +42,6 @@ export const createSortOptions = (sortParam: string, label: string, options: Sor
 
     sortOptionsSelect.addEventListener('change', e => {
         const target = e.target as HTMLSelectElement;
-        if (!target.value) return;
-
         updateSortOption(sortParam, target.value);
     });
 
