@@ -434,26 +434,30 @@ interface ResultsConfig {
   debugMode?: boolean;
   stateKey?: string;
   namespace?: string;
+  sortOptions?: SortItem[];
+  sortParam?: string;
 }
 ```
 
-| Property             | Type                       | Required |        Default         | Description                                                                                                                                                                                                                              |
-| -------------------- | -------------------------- | :------: | :--------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `dataSources`        | `string[]`                 |    ✅    |           -            | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
-| `pageSize`           | `number`                   |    ❌    |          `20`          | Number of results per page.                                                                                                                                                                                                              |
-| `renderers`          | `ResultsPanelRenderers`    |    ❌    |        Built-in        | Custom result renderers.                                                                                                                                                                                                                 |
-| `labels`             | `ResultsPanelLabelsConfig` |    ❌    |    Built-in labels     | Pagination and results labels.                                                                                                                                                                                                           |
-| `method`             | `"GET" \| "POST"`          |    ❌    |        `"GET"`         | Transport. **Facets and filtering require `"POST"`**, since they travel in the body.                                                                                                                                                     |
-| `queryParam`         | `string`                   |    ❌    |       `"query"`        | URL param carrying the query. Must match the query input's `queryParam`.                                                                                                                                                                 |
-| `facetDepthLevel`    | `number`                   |    ❌    |          `1`           | How deep the facet aggregations nest. `1` requests a single flat level.                                                                                                                                                                  |
-| `requestId`          | `string`                   |    ❌    |           -            | Saved query/template id sent as the request body `id`.                                                                                                                                                                                   |
-| `facetFilterField`   | `string`                   |    ❌    | `"category_hierarchy"` | Field the selected facet values are filtered against.                                                                                                                                                                                    |
-| `facetFieldPrefix`   | `string`                   |    ❌    |   `"category_level"`   | Field name prefix for facet levels; the level index is appended.                                                                                                                                                                         |
-| `facetPathSeparator` | `string`                   |    ❌    |         `">"`          | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).                                                                                                                                                           |
-| `facetFieldSize`     | `number`                   |    ❌    |          `20`          | Max buckets requested per facet level.                                                                                                                                                                                                   |
-| `debugMode`          | `boolean`                  |    ❌    |        `false`         | Renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type, and a notice when a renderer throws). When `false`, those rows are dropped entirely - a console warning is logged either way. |
-| `stateKey`           | `string`                   |    ❌    |           -            | Namespaces the panel's `stx-facets` URL param. Set automatically to the tab id inside search tabs; omit for a standalone panel.                                                                                                          |
-| `namespace`          | `string`                   |    ❌    |           -            | Limits results to one content namespace. Sent as a `namespace` query param on `GET`, and inside `params` in the body on `POST`. Omit to search all of them.                                                                              |
+| Property             | Type                       | Required |                                                Default                                                | Description                                                                                                                                                                                                                              |
+|----------------------|----------------------------|:--------:|:-----------------------------------------------------------------------------------------------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `dataSources`        | `string[]`                 |    ✅    |                                                   -                                                   | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
+| `pageSize`           | `number`                   |    ❌    |                                                 `20`                                                  | Number of results per page.                                                                                                                                                                                                              |
+| `renderers`          | `ResultsPanelRenderers`    |    ❌    |                                               Built-in                                                | Custom result renderers.                                                                                                                                                                                                                 |
+| `labels`             | `ResultsPanelLabelsConfig` |    ❌    |                                            Built-in labels                                            | Pagination and results labels.                                                                                                                                                                                                           |
+| `method`             | `"GET" \| "POST"`          |    ❌    |                                                `"GET"`                                                | Transport. **Facets and filtering require `"POST"`**, since they travel in the body.                                                                                                                                                     |
+| `queryParam`         | `string`                   |    ❌    |                                               `"query"`                                               | URL param carrying the query. Must match the query input's `queryParam`.                                                                                                                                                                 |
+| `facetDepthLevel`    | `number`                   |    ❌    |                                                  `1`                                                  | How deep the facet aggregations nest. `1` requests a single flat level.                                                                                                                                                                  |
+| `requestId`          | `string`                   |    ❌    |                                                   -                                                   | Saved query/template id sent as the request body `id`.                                                                                                                                                                                   |
+| `facetFilterField`   | `string`                   |    ❌    |                                        `"category_hierarchy"`                                         | Field the selected facet values are filtered against.                                                                                                                                                                                    |
+| `facetFieldPrefix`   | `string`                   |    ❌    |                                          `"category_level"`                                           | Field name prefix for facet levels; the level index is appended.                                                                                                                                                                         |
+| `facetPathSeparator` | `string`                   |    ❌    |                                                 `">"`                                                 | Separator used to build hierarchical facet values (e.g. `Electronics>Tablet`).                                                                                                                                                           |
+| `facetFieldSize`     | `number`                   |    ❌    |                                                 `20`                                                  | Max buckets requested per facet level.                                                                                                                                                                                                   |
+| `debugMode`          | `boolean`                  |    ❌    |                                                `false`                                                | Renders debug diagnostics in the results list (the "Missing renderer" notice for an unhandled result type, and a notice when a renderer throws). When `false`, those rows are dropped entirely - a console warning is logged either way. |
+| `stateKey`           | `string`                   |    ❌    |                                                   -                                                   | Namespaces the panel's `stx-facets` URL param. Set automatically to the tab id inside search tabs; omit for a standalone panel.                                                                                                          |
+| `namespace`          | `string`                   |    ❌    |                                                   -                                                   | Limits results to one content namespace. Sent as a `namespace` query param on `GET`, and inside `params` in the body on `POST`. Omit to search all of them.                                                                              |
+| `sortOptions`        | `SortItem[]`               |    ❌    | `[{ label: 'Date (Newest)', sortBy: 'date__desc' }, { label: 'Date (Oldest)', sortBy: 'date__asc' }]` | List of available sorting options                                                                                                                                                                                                        |
+| `sortParam`          | `string`                   |    ❌    |                                              `"sort-by"`                                              | URL param carrying sorting option.                                                                                                                                                                                                       |
 
 ### Facets
 
@@ -563,15 +567,17 @@ type ResultsPanelLabelsConfig = {
   totalResults?: (totalCount: number) => string;
   ariaPaginationGoToPage?: (pageNumber: number) => string;
   ariaPaginationNavigation?: string;
+  sortBy?: string;
 };
 ```
 
 | Property                   | Type                                  | Default                                | Description                                 |
-| -------------------------- | ------------------------------------- | -------------------------------------- | ------------------------------------------- |
+|----------------------------|---------------------------------------|----------------------------------------|---------------------------------------------|
 | `paginationInfo`           | `(currentPage, pageNumber) => string` | `Page ${currentPage} of ${pageNumber}` | Pagination text.                            |
 | `totalResults`             | `(totalCount) => string`              | `${totalCount} results found.`         | Total results text and live region message. |
 | `ariaPaginationGoToPage`   | `(pageNumber) => string`              | `Go to page ${pageNumber}`             | Pagination button aria label.               |
 | `ariaPaginationNavigation` | `string`                              | `"Pagination"`                         | Pagination navigation aria label.           |
+| `sortBy`                   | `string`                              | `"Sort by:"`                           | Sort field label.                           |
 
 Example:
 
@@ -580,7 +586,8 @@ labels: {
   paginationInfo: (currentPage, pagesNumber) => `Page ${currentPage}/${pagesNumber}`,
   totalResults: (total) => `${total} results`,
   ariaPaginationGoToPage: (page) => `Open page ${page}`,
-  ariaPaginationNavigation: "Search results pagination"
+  ariaPaginationNavigation: "Search results pagination",
+  sortBy: 'Sort options:'
 }
 ```
 
@@ -727,13 +734,14 @@ interface OpenSearchResponse {
 # URL Parameters
 
 The components persist their state in the URL so a search is shareable and
-survives a reload. All three params are restored on load.
+survives a reload. All four params are restored on load.
 
 | Param        | Written by    | Purpose                                                                                          |
-| ------------ | ------------- | ------------------------------------------------------------------------------------------------ |
+|--------------| ------------- |--------------------------------------------------------------------------------------------------|
 | `query`      | Search input  | Active query. Configurable via `queryParam`; the input writes it and the results panel reads it. |
 | `stx-tab`    | Search tabs   | Active tab id. Present only for a non-default tab, so the first tab keeps the URL clean.         |
 | `stx-facets` | Results panel | Selected facets, as URL-encoded JSON (`{ "<treeField>": ["<path>", ...] }`). Absent when none.   |
+| `sort-by`    | Results panel | Selected sorting field and sort direction.                                                       |
 
 Inside search tabs the facet param is suffixed with the tab id
 (`stx-facets-<tabId>`) via the panel's `stateKey`, so each tab persists its own
@@ -742,7 +750,7 @@ selection in the same URL without colliding.
 Example of a fully deep-linked search:
 
 ```txt
-/search?query=laptop&stx-tab=products&stx-facets-products=%7B%22category_level0%22%3A%5B%22Electronics%3ETablet%22%5D%7D
+/search?query=laptop&sort-by=date__desc&stx-tab=products&stx-facets-products=%7B%22category_level0%22%3A%5B%22Electronics%3ETablet%22%5D%7D
 ```
 
 The query and tab params use `pushState`; facet changes use `replaceState`, so

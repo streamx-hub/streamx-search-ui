@@ -212,36 +212,41 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 
 ### Search Results Panel
 
-| Search Results Panel     |                                        |
-| ------------------------ | -------------------------------------- |
-| searchApiUrl             | /api/search                            |
-| minSearchLength          | 3                                      |
-| pageSize                 | 10                                     |
-| dataSources              | /api/results                           |
-| queryParam               | query                                  |
-| initialQuery             | popular topics                         |
-| requestId                | eds-pages                              |
-| facetDepthLevel          | 3                                      |
-| facetFilterField         | category_hierarchy                     |
-| facetFieldPrefix         | category_level                         |
-| inputPlaceholder         | Search                                 |
-| inputLabel               | Search                                 |
-| clearButtonAria          | Clear search                           |
-| searchButtonAria         | Submit search                          |
-| paginationInfo           | Page {{currentPage}} of {{pageNumber}} |
-| totalResults             | {{totalCount}} results found           |
-| ariaPaginationGoToPage   | Go to page {{pageNumber}}              |
-| ariaPaginationNavigation | Search results pagination              |
+| Search Results Panel     |                                                                                                     |
+|--------------------------|-----------------------------------------------------------------------------------------------------|
+| searchApiUrl             | /api/search                                                                                         |
+| minSearchLength          | 3                                                                                                   |
+| pageSize                 | 10                                                                                                  |
+| dataSources              | /api/results                                                                                        |
+| queryParam               | query                                                                                               |
+| initialQuery             | popular topics                                                                                      |
+| requestId                | eds-pages                                                                                           |
+| facetDepthLevel          | 3                                                                                                   |
+| facetFilterField         | category_hierarchy                                                                                  |
+| facetFieldPrefix         | category_level                                                                                      |
+| inputPlaceholder         | Search                                                                                              |
+| inputLabel               | Search                                                                                              |
+| clearButtonAria          | Clear search                                                                                        |
+| searchButtonAria         | Submit search                                                                                       |
+| paginationInfo           | Page {{currentPage}} of {{pageNumber}}                                                              |
+| totalResults             | {{totalCount}} results found                                                                        |
+| ariaPaginationGoToPage   | Go to page {{pageNumber}}                                                                           |
+| ariaPaginationNavigation | Search results pagination                                                                           |
+| sortBy                   | Sort by:                                                                                            |
+| sortParam                | sort-by                                                                                             |
+| sortOptions              | [{ label: 'Date (Newest)', sortBy: 'date__desc' }, { label: 'Date (Oldest)', sortBy: 'date__asc' }] |
 
 The block accepts every [panel option](#panel-options) plus the search-input
 options shared with the Search Tabs block:
 
-| Option          | Default | Description                                                                                   |
-| --------------- | ------- | --------------------------------------------------------------------------------------------- |
-| `queryParam`    | `query` | URL param holding the query. Use the same value on every block that takes part in the search. |
-| `initialQuery`  | -       | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
-| `searchPageUrl` | -       | Send submissions to a separate search page instead of refreshing the panel below the input.   |
-| `namespace`     | -       | Limits the input's suggestions to one content namespace. Omit to search all of them.          |
+| Option          | Default   | Description                                                                                             |
+|-----------------|-----------|---------------------------------------------------------------------------------------------------------|
+| `queryParam`    | `query`   | URL param holding the query. Use the same value on every block that takes part in the search.           |
+| `initialQuery`  | -         | Pre-fetched query offered in the dropdown while the input is focused and empty.                         |
+| `searchPageUrl` | -         | Send submissions to a separate search page instead of refreshing the panel below the input.             |
+| `namespace`     | -         | Limits the input's suggestions to one content namespace. Omit to search all of them.                    |
+| `sortParam`     | `sort-by` | URL param holding the sorting option. Use the same value on every block that takes part in the sorting. |
+
 
 > **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the
 > example above) and the input refreshes the panel on the same page. Set it and
