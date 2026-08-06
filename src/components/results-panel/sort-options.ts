@@ -1,4 +1,4 @@
-import { html } from "../../helper";
+import { dispatchUrlChangeEvent, html} from "../../helper";
 
 type SortDirection = 'asc' | 'desc';
 // Sorting should contain field name which is used for sorting and the sort direction
@@ -9,8 +9,17 @@ export interface SortItem {
     sortBy: SortBy;
 }
 
-export const createSortOptions = (label: string, options: SortItem[] | null) => {
-    if (!options?.length) return '';
+const updateSortOption = (sortParam: string, sortOption: string) => {
+    const url = new URL(window.location.href);
+
+    url.searchParams.delete(sortParam);
+    url.searchParams.set(sortParam, sortOption);
+    window.history.pushState({}, "", url);
+    dispatchUrlChangeEvent();
+};
+
+export const createSortOptions = (sortParam: string, label: string, options: SortItem[] | null) => {
+    if (!options?.length) return null;
 
     const selectId = crypto.randomUUID();
 
@@ -18,12 +27,23 @@ export const createSortOptions = (label: string, options: SortItem[] | null) => 
         <option value="${option.sortBy}">${option.label}</option>
     ` as HTMLOptionElement);
 
-    return html`
+    const sortOptionsEl = html`
         <div class="stx-results-panel__sort-options-container">
             <label for="${selectId}">${label}</label>
             <select class="stx-results-panel__sort-options" id="${selectId}">
                 ${sortOptionElements}
             </select>
         </div>
-    `;
+    ` as HTMLDivElement;
+
+    const sortOptionsSelect = sortOptionsEl.querySelector('.stx-results-panel__sort-options') as HTMLSelectElement;
+
+    sortOptionsSelect.addEventListener('change', e => {
+        const target = e.target as HTMLSelectElement;
+        if (!target.value) return;
+
+        updateSortOption(sortParam, target.value);
+    });
+
+    return { element: sortOptionsEl, selectElement: sortOptionsSelect };
 };

@@ -5,7 +5,7 @@ import {
   normalizeLabels,
   withNamespaceParam,
 } from "../../helper";
-import globalConfig, { DEFAULT_QUERY_PARAM } from "../../config";
+import globalConfig, { DEFAULT_QUERY_PARAM, DEFAULT_SORT_PARAM } from "../../config";
 import {
   buildSearchRequestBody,
   joinFacetPath,
@@ -102,6 +102,8 @@ export interface ResultsConfig {
    */
   namespace?: string;
   sortOptions?: SortItem[];
+  /** URL param carrying sort option. Must match the sort options element's. */
+  sortParam?: string;
 }
 
 export type Results = Omit<
@@ -117,7 +119,6 @@ export type Results = Omit<
 /** Per-panel mutable state, kept off the element itself. */
 interface PanelState {
   currentPage: number;
-  sortBy: SortItem | null;
   /**
    * Selected facet values, keyed by the facet **tree** (the top-level
    * aggregation field) they were selected under, so every selection inside one
@@ -164,6 +165,7 @@ const defaultConfig = {
         sortBy: 'date__asc',
       }
     ],
+  sortParam: DEFAULT_SORT_PARAM,
 } as const satisfies Omit<ResultsConfig, "dataSources">;
 
 const resolveConfig = (resultsConfig: Results | ResultsConfig): Results => {
@@ -264,6 +266,9 @@ const hideResultsLoading = (resultsContainer: HTMLElement) => {
 
 const getSearchQuery = (queryParam: string) =>
   new URL(window.location.href).searchParams.get(queryParam) || "";
+
+const getSortOption = (sortParam: string) =>
+    new URL(window.location.href).searchParams.get(sortParam) || "";
 
 const buildSearchUrl = (results: Results, pageNumber: number) => {
   const dataUrl = new URL(results.dataSources[0], window.location.href);
@@ -382,7 +387,11 @@ const createResultsHeader = (
   const totalNumber = data.hits?.total.value || 0;
   const pageSize = results.pageSize;
   const pagesNumber = Math.ceil(totalNumber / pageSize);
-  const sortOptions = createSortOptions(results.labels.sortBy(), results.sortOptions);
+  const sortOptions = createSortOptions(
+      results.sortParam,
+      results.labels.sortBy(),
+      results.sortOptions,
+  );
 
   return html`
     <div class="stx-results-panel__results-header">
@@ -392,7 +401,7 @@ const createResultsHeader = (
       <span class="stx-results-panel__total-number">
           ${results.labels.totalResults(totalNumber)}
       </span>
-      ${sortOptions}
+      ${sortOptions?.element}
     </div>
   ` as HTMLDivElement;
 };
@@ -1233,6 +1242,7 @@ const buildResultsForPage = (
   }
 
   const query = getSearchQuery(results.queryParam);
+  const sortBy = getSortOption(results.sortParam);
   const searchUrl = buildSearchUrl(results, pageNumber);
   const requestOptions = buildResultsRequestOptions(
     results,
@@ -1270,6 +1280,7 @@ const buildResultsForPage = (
         searchUrl,
         query,
         controller.signal,
+        sortBy,
         buildResultsRequestOptions(
           { ...results, pageSize: 0 },
           1,
@@ -1280,7 +1291,7 @@ const buildResultsForPage = (
     : Promise.resolve(null);
 
   Promise.all([
-    fetchSearchResults(searchUrl, query, controller.signal, requestOptions),
+    fetchSearchResults(searchUrl, query, controller.signal, sortBy, requestOptions),
     unfilteredFacetsRequest,
   ])
     .then(([responseData, unfilteredData]) => {
@@ -1323,21 +1334,26 @@ const buildResultsForPage = (
     });
 };
 
-const addOnSearchParamChangeAction = (
+const addOnParamChangeAction = (
   resultsPanel: HTMLElement,
   results: Results,
+  paramName: keyof Results,
 ) => {
-  const queryParam = results.queryParam;
-  let prevSearchParam =
-    new URL(window.location.href).searchParams.get(queryParam) || "";
+  const queryStringParam = results[paramName];
+  if (typeof queryStringParam !== "string") {
+    console.error(`Invalid query string param type ${typeof queryStringParam}`);
+    return;
+  }
+  let prevQueryStringParam =
+    new URL(window.location.href).searchParams.get(queryStringParam) || "";
 
   const onUrlChagne = () => {
     const params = new URLSearchParams(window.location.search);
-    const searchQuery = params.get(queryParam) || "";
+    const searchQuery = params.get(queryStringParam) || "";
 
-    if (prevSearchParam !== searchQuery) {
+    if (prevQueryStringParam !== searchQuery) {
       buildResultsForPage(resultsPanel, results, 1, { resetFilters: true });
-      prevSearchParam = searchQuery;
+      prevQueryStringParam = searchQuery;
     }
   };
 
@@ -1359,7 +1375,6 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
 
   panelStates.set(resultsPanel, {
     currentPage: 1,
-    sortBy: null,
     // Seeded from the URL so a shared/deep-linked selection is applied to the
     // first request and reflected in the checkboxes once facets render.
     selectedFilters: readFacetsFromUrl(facetsParamName(results)),
@@ -1370,7 +1385,8 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
 
   try {
     buildResultsForPage(resultsPanel, results, 1);
-    addOnSearchParamChangeAction(resultsPanel, results);
+    addOnParamChangeAction(resultsPanel, results, 'queryParam');
+    addOnParamChangeAction(resultsPanel, results, 'sortParam');
 
     return resultsPanel;
   } catch (error) {
