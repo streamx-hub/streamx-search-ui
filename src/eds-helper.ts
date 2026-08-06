@@ -1,4 +1,4 @@
-import type { ResultsPanelLabels } from "./components/results-panel/results-panel";
+import type { ResultsPanelLabels } from "./components/results-panel/config/results-panel-config";
 import { DEFAULT_QUERY_PARAM } from "./config";
 import { html } from "./helper";
 

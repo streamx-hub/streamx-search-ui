@@ -1,8 +1,6 @@
 import { mountQueryInput } from "../inline-search";
-import {
-  createResultsPanel as createPanel,
-  type ResultsConfig,
-} from "../components/results-panel/results-panel";
+import { createResultsPanel as createPanel } from "../components/results-panel/results-panel";
+import type { ResultsConfig } from "../components/results-panel/config/results-panel-config";
 import type { QueryInputConfig } from "../types/config";
 import { html } from "../helper";
 import "../styles/common.css";

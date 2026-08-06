@@ -1,10 +1,10 @@
 import { html, createLazyComponent } from "../../helper";
 import { ACTIVE_TAB_PARAM } from "../../config";
-import {
-  createResultsPanel,
-  type ResultsConfig,
-  type ResultsPanelRenderers,
-} from "../results-panel/results-panel";
+import { createResultsPanel } from "../results-panel/results-panel";
+import type {
+  ResultsConfig,
+  ResultsPanelRenderers,
+} from "../results-panel/config/results-panel-config.ts";
 import "./tabs.css";
 
 export interface TabConfig {
