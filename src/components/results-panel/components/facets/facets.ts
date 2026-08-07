@@ -5,6 +5,7 @@ import type { Results } from "../../config/results-panel-config";
 import { createFacetGroup } from "./components/facet-group.ts";
 import { refreshFacetStates } from "./utils/refresh-facet-states.ts";
 import { initFacets } from "./utils/init-facets.ts";
+import { getValuesPanelFromFacetGroupToggle } from "./utils/getValuesPanelFromFacetGroupToggle.ts";
 
 /**
  * Builds the facets sidebar, or `null` when the response carries no usable
@@ -19,14 +20,9 @@ export const createFacets = (
 ): HTMLElement | null => {
   const aggregations = data?.aggregations || {};
 
-  const groups = Object.keys(aggregations)
-    .map((field) =>
-      createFacetGroup(
-        field,
-        aggregations[field],
-        panelState,
-        results.facetPathSeparator,
-      ),
+  const groups = Object.entries(aggregations)
+    .map(([field, fieldAgg]) =>
+      createFacetGroup(field, fieldAgg, panelState, results.facetPathSeparator),
     )
     .filter((group): group is HTMLElement => group !== null);
 
@@ -53,10 +49,11 @@ export const updateFacets = (
   results: Results,
   panelState: PanelState,
 ) => {
-  const oldFacets = resultsPanel.querySelector(
+  const oldFacets = resultsPanel.querySelector<HTMLElement>(
     ".stx-results-panel__facets-container",
   );
   const newFacets = createFacets(data, panelState, resultsPanel, results);
+  preserveFacetGroupsExpandedState(newFacets, oldFacets);
 
   if (oldFacets && newFacets) {
     oldFacets.replaceWith(newFacets);
@@ -66,3 +63,32 @@ export const updateFacets = (
     resultsPanel.prepend(newFacets);
   }
 };
+
+function preserveFacetGroupsExpandedState(
+  newFacetsContainer: HTMLElement | null,
+  oldFacetsContainer: HTMLElement | null,
+) {
+  if (!newFacetsContainer || !oldFacetsContainer) return;
+
+  newFacetsContainer
+    .querySelectorAll(".stx-results-panel__facet-toggle")
+    .forEach((element) => {
+      const equivalentOld = oldFacetsContainer.querySelector(
+        `button.stx-results-panel__facet-toggle#${element.id}`,
+      );
+
+      const isExpanded =
+        equivalentOld?.getAttribute("aria-expanded") === "true";
+      element.setAttribute("aria-expanded", `${isExpanded}`);
+
+      const valuesPanel = getValuesPanelFromFacetGroupToggle(
+        element,
+        newFacetsContainer,
+      );
+      if (!(valuesPanel instanceof HTMLElement)) {
+        return;
+      }
+
+      valuesPanel.hidden = !isExpanded;
+    });
+}

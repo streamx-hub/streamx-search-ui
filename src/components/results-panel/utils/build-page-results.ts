@@ -195,10 +195,7 @@ export const buildResultsForPage = (
     .then(([responseData, unfilteredData]) => {
       if (hasContent) {
         updateResultsList(resultsPanel, responseData, results, pageNumber);
-
-        if (resetFilters) {
-          updateFacets(resultsPanel, responseData, results, panelState);
-        }
+        updateFacets(resultsPanel, responseData, results, panelState);
       } else {
         renderFullResults(
           resultsPanel,
