@@ -1,10 +1,6 @@
 import { type PanelState, panelStates } from "../panel-state";
-import {
-  createFacets,
-  facetsParamName,
-  updateFacets,
-  writeFacetsToUrl,
-} from "../components/facets";
+import { createFacets, updateFacets } from "../components/facets/facets.ts";
+import { facetsParamName } from "../components/facets/utils/facet-param-name";
 import { fetchSearchResults } from "../../../helper";
 import type { OpenSearchResponse } from "../../../types/open-search";
 import { createResultsContainer } from "../components/results-container";
@@ -17,6 +13,7 @@ import {
 import { buildResultsRequestOptions } from "./build-results-request-options";
 import { buildSearchUrl } from "./build-search-url";
 import type { Results } from "../config/results-panel-config";
+import { writeFacetsToUrl } from "../components/facets/utils/write-factets-to-url.ts";
 
 const restoreFocusForPage = () => {
   let activePage: string | null = null;

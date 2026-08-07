@@ -1,13 +1,13 @@
 import { onUrlChange, html } from "../../helper";
 import { panelStates } from "./panel-state";
-import { facetsParamName } from "./components/facets";
+import { facetsParamName } from "./components/facets/utils/facet-param-name";
 import { buildResultsForPage } from "./utils/build-page-results";
 import {
   resolveConfig,
   type Results,
   type ResultsConfig,
 } from "./config/results-panel-config";
-import { readFacetsFromUrl } from "./utils/read-facets-from-url";
+import { readFacetsFromUrl } from "./components/facets/utils/read-facets-from-url";
 import "./results-panel.css";
 
 const addOnSearchParamChangeAction = (
