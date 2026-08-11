@@ -69,22 +69,32 @@ export const buildFacetFields = ({
   const levels = Math.max(1, Math.trunc(Number(depth)) || 1);
   const roots = fields.length > 0 ? fields : DEFAULT_FACET_FIELDS;
 
-  const buildLevel = (root: string, index: number): SearchFacetField => {
+  const buildLevel = (
+    root: string,
+    index: number,
+    isLast: boolean,
+  ): SearchFacetField => {
     const field: SearchFacetField = {
       name: `${root}${FACET_LEVEL_SUFFIX}${index}`,
       size: fieldSize,
     };
 
     if (index < levels - 1) {
-      field.children = [buildLevel(root, index + 1)];
+      field.children = [buildLevel(root, index + 1, false)];
     }
 
-    field.last = true;
+    if (isLast) {
+      field.last = true;
+    }
 
     return field;
   };
 
-  return { fields: roots.map((root) => buildLevel(root, 0)) };
+  return {
+    fields: roots.map((root, idx) =>
+      buildLevel(root, 0, idx === roots.length - 1),
+    ),
+  };
 };
 
 /**
