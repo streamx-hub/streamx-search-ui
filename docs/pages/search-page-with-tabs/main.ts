@@ -1,4 +1,7 @@
-import type { ResultsPanelRenderers } from "../../../src/components/results-panel/results-panel";
+import type {
+  ResultsConfig,
+  ResultsPanelRenderers,
+} from "../../../src/components/results-panel/results-panel";
 import type { TabConfig } from "../../../src/components/tabs/tabs";
 import { html } from "../../../src/helper";
 import type { OpenSearchItem } from "../../../src/types/open-search";
@@ -10,7 +13,7 @@ const initSearchPage = async (mountPoint: Element) => {
     loader: () => {
       return html` <span>Loading</span> ` as HTMLSpanElement;
     },
-    "item-products": (item: OpenSearchItem) => {
+    "item-page/eds": (item: OpenSearchItem) => {
       return html`
         <article class="custom-result-item-render">
           <img src="${item._source.image}" alt="" />
@@ -27,54 +30,61 @@ const initSearchPage = async (mountPoint: Element) => {
     },
   };
 
+  const resultsConfig: ResultsConfig = {
+    facetFields: ["category", "technology", "event"],
+    dataSources: ["http://localhost:8082/search/query/body"],
+    method: "POST",
+    requestId: "eds-pages",
+    renderers,
+  };
+
   const tabsConfig: TabConfig[] = [
     {
       id: "faqs",
       displayName: "Faqs",
       results: {
-        dataSources: ["/results-data-tab-1.json"],
-        renderers,
+        ...resultsConfig,
       },
     },
     {
       id: "info",
       displayName: "Firm info",
       results: {
-        dataSources: ["/results-data-tab-2.json"],
+        ...resultsConfig,
       },
     },
     {
       id: "services",
       displayName: "Services & Solutions",
       results: {
-        dataSources: ["/results-data-tab-3.json"],
+        ...resultsConfig,
       },
     },
     {
       id: "insights",
       displayName: "Insights & Resources",
       results: {
-        dataSources: ["/results-data-tab-4.json"],
+        ...resultsConfig,
       },
     },
     {
       id: "econ",
       displayName: "Econ blog",
       results: {
-        dataSources: ["/results-data-tab-5.json"],
+        ...resultsConfig,
       },
     },
     {
       id: "tech",
       displayName: "Tech blog",
       results: {
-        dataSources: ["/results-data-tab-6.json"],
+        ...resultsConfig,
       },
     },
   ];
 
   const searchInputConfig = {
-    searchApiUrl: "/search-data.json",
+    searchApiUrl: "http://localhost:8082/search/pages",
   };
   const searchTabs = createSearchTabs(searchInputConfig, tabsConfig, renderers);
 
@@ -89,7 +99,7 @@ if (appEl) {
   throw new Error("The #app element is not available!");
 }
 
-// adding code sippet to the doc
+// adding code snippet to the doc
 const examples = {
   default: `
   const tabsConfig = {...}

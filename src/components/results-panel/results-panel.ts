@@ -29,7 +29,12 @@ import {
 } from "./renderers";
 import "./results-panel.css";
 
-type CustomRenderer = (...args: unknown[]) => HTMLElement;
+/**
+ * Deliberate `any` to as we anyway cannot guarantee safety there,
+ * and we want to avoid forced type-cast in every field of `ResultsPanelRenderers`
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CustomRenderer = (...args: any[]) => HTMLElement;
 
 export type ResultsPanelRenderers = {
   [rendererName: string]: CustomRenderer;

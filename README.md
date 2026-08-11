@@ -34,6 +34,15 @@ The following documents provide additional information about the library:
 
 ---
 
+## Local Development
+
+To develop locally, fetch search data using one of two methods:
+
+1. **Local mesh with OpenSearch (Recommended)** - Run the local mesh from the [streamx-eds-template repository](https://github.com/streamx-hub/streamx-eds-template). This repository includes sample events you can publish to populate search results. For setup instructions, see the repository's README.
+2. **Mock Data Sources (Legacy)**: Use the pre-defined mock datasets located in the [/mocks](./mocks) directory as your data sources for local development.
+
+---
+
 ## Installation
 
 Use the files generated in the `dist` directory.
