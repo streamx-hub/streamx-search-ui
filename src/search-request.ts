@@ -80,7 +80,7 @@ export const buildFacetFields = ({
     };
 
     if (index < levels - 1) {
-      field.children = [buildLevel(root, index + 1, false)];
+      field.children = [buildLevel(root, index + 1, true)];
     }
 
     if (isLast) {
