@@ -1,5 +1,5 @@
-import { html } from "../../helper";
-import type { OpenSearchItem } from "../../types/open-search";
+import { html } from "../../../helper";
+import type { OpenSearchItem } from "../../../types/open-search";
 
 export const renderDefaultLoader = () => {
   return html`

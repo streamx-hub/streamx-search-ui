@@ -1,4 +1,4 @@
-import type { ResultsPanelRenderers } from "../../components/results-panel/results-panel";
+import type { ResultsPanelRenderers } from "../../components/results-panel/config/results-panel-config";
 import {
   type EDSInputOptions,
   type EDSPanelOptions,

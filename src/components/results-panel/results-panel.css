@@ -12,6 +12,7 @@
 
 .stx-results-panel__facets-container {
   flex: 0 0 220px;
+  align-self: flex-start;
 }
 
 /* --------------------------------------------------------------- facets --
@@ -208,11 +209,11 @@
   inset: 0;
   z-index: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
   min-height: 120px;
   background: color-mix(in srgb, var(--stx-color-background) 55%, transparent);
   pointer-events: none;
+  padding-top: 2rem;
 }
 
 .stx-results-panel__results-header {
