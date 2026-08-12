@@ -39,6 +39,9 @@ const restoreFocusForPage = () => {
 const getSearchQuery = (queryParam: string) =>
   new URL(window.location.href).searchParams.get(queryParam) || "";
 
+const getSortOption = (sortParam: string) =>
+  new URL(window.location.href).searchParams.get(sortParam) || "";
+
 /** `createPagination` yields an empty string when there is only one page. */
 type PaginationElement = Element | HTMLCollection | string | null;
 
@@ -131,6 +134,7 @@ export const buildResultsForPage = (
   }
 
   const query = getSearchQuery(results.queryParam);
+  const sortBy = getSortOption(results.sortParam);
   const searchUrl = buildSearchUrl(results, pageNumber);
   const requestOptions = buildResultsRequestOptions(
     results,
@@ -147,7 +151,13 @@ export const buildResultsForPage = (
 
   panelState.request = controller;
 
-  fetchSearchResults(searchUrl, query, controller.signal, requestOptions)
+  fetchSearchResults(
+    searchUrl,
+    query,
+    controller.signal,
+    sortBy,
+    requestOptions,
+  )
     .then((responseData) => {
       if (hasContent) {
         updateResultsList(resultsPanel, responseData, results, pageNumber);

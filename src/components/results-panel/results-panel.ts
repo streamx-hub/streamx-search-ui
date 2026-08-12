@@ -61,8 +61,8 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
 
   try {
     buildResultsForPage(resultsPanel, results, 1);
-    addOnParamChangeAction(resultsPanel, results, 'queryParam');
-    addOnParamChangeAction(resultsPanel, results, 'sortParam');
+    addOnParamChangeAction(resultsPanel, results, "queryParam");
+    addOnParamChangeAction(resultsPanel, results, "sortParam");
 
     return resultsPanel;
   } catch (error) {

@@ -8,11 +8,11 @@ export interface OpenSearchItemSourcePayload {
    * `item._source.payload.fields.date`), and `unknown` would force a cast at every
    * such call site for no safety the index can actually guarantee.
    */
-  fields: {
+  fields?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
   };
-  facets: {
+  facets?: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any;
   };

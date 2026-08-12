@@ -1,5 +1,5 @@
 import type { SearchRequestMethod } from "../../../types/open-search";
-import { DEFAULT_QUERY_PARAM } from "../../../config";
+import { DEFAULT_QUERY_PARAM, DEFAULT_SORT_PARAM } from "../../../config";
 import {
   DEFAULT_FACET_FIELDS,
   DEFAULT_FACET_FIELD_SIZE,
@@ -10,6 +10,7 @@ import {
   renderResultsPanelError,
 } from "../components/renderers";
 import { normalizeLabels } from "../../../helper";
+import type { SortItem } from "../sort-options";
 
 /**
  * Deliberate `any` to as we anyway cannot guarantee safety there,
@@ -27,6 +28,7 @@ export type ResultsPanelLabelsConfig = {
   totalResults?: (totalCount: number) => string;
   ariaPaginationGoToPage?: (pageNumber: number) => string;
   ariaPaginationNavigation?: string;
+  sortBy?: string;
 };
 
 export type ResultsPanelLabels = Required<ResultsPanelLabelsConfig>;
@@ -87,6 +89,9 @@ export interface ResultsConfig {
    * search across all namespaces.
    */
   namespace?: string;
+  sortOptions?: SortItem[];
+  /** URL param carrying sort option. Must match the sort options element's. */
+  sortParam?: string;
 }
 
 export type Results = Omit<
@@ -115,10 +120,26 @@ const defaultConfig = {
   labels: {
     paginationInfo: (currentPage: number, pageNumber: number) =>
       `Page ${currentPage} of ${pageNumber}`,
-    totalResults: (totalCount: number) => `${totalCount} results found.`,
+    totalResults: (totalCount: number) => `${totalCount} results found`,
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
     ariaPaginationNavigation: "Pagination",
+    sortBy: "Sort by:",
   },
+  sortOptions: [
+    {
+      label: "Relevance",
+      sortBy: null,
+    },
+    {
+      label: "Date (Newest)",
+      sortBy: "date__desc",
+    },
+    {
+      label: "Date (Oldest)",
+      sortBy: "date__asc",
+    },
+  ],
+  sortParam: DEFAULT_SORT_PARAM,
 } as const satisfies Omit<ResultsConfig, "dataSources">;
 
 export const resolveConfig = (
