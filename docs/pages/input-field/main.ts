@@ -7,7 +7,7 @@ import { addNavigation, renderCodeBlocks } from "../../js/helper";
 const examples = {
   default: `mountSearchModal({
   searchOpenElementSelector: "#search-button-default",
-  input: { searchApiUrl: "/search-data.json" },
+  input: { searchApiUrl: "http://localhost:8082/search/pages" },
 });`,
 
   analytics: `mountSearchModal({
@@ -24,14 +24,14 @@ const examples = {
     }
   },
 
-  input: { searchApiUrl: "/search-data.json" },
+  input: { searchApiUrl: "http://localhost:8082/search/pages" },
 });`,
 
   placeholder: `mountSearchModal({
   searchOpenElementSelector: "#custom-search-input-placeholder",
 
   input: {
-    searchApiUrl: "/search-data.json",
+    searchApiUrl: "http://localhost:8082/search/pages",
     labels: {
       inputPlaceholder: "Ask us a question",
     },
@@ -42,7 +42,7 @@ const examples = {
   searchOpenElementSelector: "#search-custom-character-limit",
 
   input: {
-    searchApiUr: "/search-data.json"l,
+    searchApiUr: "http://localhost:8082/search/pages"l,
     minSearchLength: 5,
   },
 });`,
@@ -52,14 +52,14 @@ const examples = {
   searchCloseElementSelector: "#search-close-button",
   useNonModal: true,
 
-  input: { searchApiUrl: "/search-data.json" },
+  input: { searchApiUrl: "http://localhost:8082/search/pages" },
 });`,
 
   itemRenderer: `mountSearchModal({
   searchOpenElementSelector: "#search-custom-item-renderer",
 
   input: {
-    searchApiUrl: "/search-data.json",
+    searchApiUrl: "http://localhost:8082/search/pages",
 
     renderers: {
       suggestionItem(data) {
@@ -76,7 +76,7 @@ const examples = {
   searchOpenElementSelector: "#search-no-group-render",
 
   input: {
-    searchApiUrl: "/search-data.json",
+    searchApiUrl: "http://localhost:8082/search/pages",
 
     renderers: {
       groupItem(group) {
@@ -94,7 +94,7 @@ const examples = {
   searchOpenElementSelector: "#custom-clear-icon",
 
   input: {
-    searchApiUrl: "/search-data.json",
+    searchApiUrl: "http://localhost:8082/search/pages",
 
     renderers: {
       clearIcon: () => \`
@@ -110,7 +110,7 @@ const examples = {
   searchOpenElementSelector: "#with-search-icon",
 
   input: {
-    searchApiUrl: "/search-data.json",
+    searchApiUrl: "http://localhost:8082/search/pages",
     searchPageUrl(query) {
       return \`/query?query=\${query}\`;
     },
@@ -121,7 +121,7 @@ const examples = {
 
 if (navSearch) {
   createSearchInput({
-    searchApiUrl: "/search-data.json"
+    searchApiUrl: "http://localhost:8082/search/pages"
   }, navSearch);
 }
   `,
@@ -130,7 +130,7 @@ if (navSearch) {
 renderCodeBlocks(examples);
 addNavigation(document.body);
 
-const searchApiUrl = "/search-data.json";
+const searchApiUrl = "http://localhost:8082/search/pages";
 
 // default inline search
 mountSearchModal({

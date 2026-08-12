@@ -3,7 +3,7 @@ import { createQueryInput } from "../components/query-input/query-input";
 import { html } from "../helper";
 import type { QueryInputConfig } from "../types/config";
 import createTabs, { type TabConfig } from "../components/tabs/tabs";
-import type { ResultsPanelRenderers } from "../components/results-panel/results-panel";
+import type { ResultsPanelRenderers } from "../components/results-panel/config/results-panel-config";
 
 const mountQueryInput = (
   customConfig: QueryInputConfig,

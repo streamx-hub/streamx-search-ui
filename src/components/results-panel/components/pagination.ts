@@ -1,6 +1,6 @@
-import { html } from "../../helper";
-import type { OpenSearchResponse } from "../../types/open-search";
-import type { Results } from "./results-panel";
+import { html } from "../../../helper";
+import type { OpenSearchResponse } from "../../../types/open-search";
+import type { Results } from "../config/results-panel-config";
 
 const createPagination = (
   data: OpenSearchResponse,

@@ -1,4 +1,4 @@
-import type { ResultsPanelLabels } from "./components/results-panel/results-panel";
+import type { ResultsPanelLabels } from "./components/results-panel/config/results-panel-config";
 import { DEFAULT_QUERY_PARAM } from "./config";
 import { html } from "./helper";
 
@@ -87,10 +87,12 @@ export type EDSPanelOptions = EDSPannelLabels & {
   requestId?: string;
   /** How deep the facet aggregations nest. Defaults to a single flat level. */
   facetDepthLevel?: string;
-  /** Field the selected facet values are filtered against. */
-  facetFilterField?: string;
-  /** Field name prefix for the facet levels. */
-  facetFieldPrefix?: string;
+  /**
+   * Comma-separated facet roots to request, one tree each - e.g.
+   * `category, tags, content_type`. Level and filter field names are derived
+   * from each root, so no other facet field option is needed.
+   */
+  facetFields?: string;
   /** Separator between the levels of a hierarchical facet path. */
   facetPathSeparator?: string;
   /** Maximum number of values requested per facet field. */
@@ -170,6 +172,20 @@ export const generatePannelLabels = (config: EDSPannelLabels) => {
   return lables;
 };
 
+/**
+ * Parses the authored `facetFields` row - a comma-separated list of facet roots
+ * - into the array the panel expects. Blank entries are dropped, and an empty
+ * row falls back to the component default.
+ */
+const parseFacetFields = (value: string | undefined) => {
+  const roots = (value ?? "")
+    .split(",")
+    .map((root) => root.trim())
+    .filter(Boolean);
+
+  return roots.length > 0 ? roots : undefined;
+};
+
 /** Maps authored EDS rows to a results-panel config. Single source of truth. */
 export const readPanelOptions = (config: Partial<EDSPanelOptions>) => ({
   pageSize: Number(config.pageSize) || 10,
@@ -178,8 +194,7 @@ export const readPanelOptions = (config: Partial<EDSPanelOptions>) => ({
   method: "POST" as const,
   requestId: config.requestId || undefined,
   facetDepthLevel: Number(config.facetDepthLevel) || undefined,
-  facetFilterField: config.facetFilterField || undefined,
-  facetFieldPrefix: config.facetFieldPrefix || undefined,
+  facetFields: parseFacetFields(config.facetFields),
   facetPathSeparator: config.facetPathSeparator || undefined,
   facetFieldSize: Number(config.facetFieldSize) || undefined,
   debugMode:
