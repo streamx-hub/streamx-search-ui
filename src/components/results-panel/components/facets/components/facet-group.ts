@@ -31,15 +31,18 @@ export const createFacetGroup = (
     treeField: field,
   };
 
-  const group = html`
+  return html`
     <div class="stx-results-panel__facet">
       <button
         type="button"
         class="stx-results-panel__facet-toggle"
         aria-expanded="false"
         aria-controls="${valuesId}"
+        id="facet-toggle-${field}"
       >
-        <span class="stx-results-panel__facet-name"></span>
+        <span class="stx-results-panel__facet-name"
+          >${humanizeFacetName(field)}</span
+        >
         <span
           class="stx-results-panel__facet-chevron"
           aria-hidden="true"
@@ -50,12 +53,4 @@ export const createFacetGroup = (
       </div>
     </div>
   ` as HTMLElement;
-
-  const nameEl = group.querySelector(".stx-results-panel__facet-name");
-
-  if (nameEl) {
-    nameEl.textContent = humanizeFacetName(field);
-  }
-
-  return group;
 };

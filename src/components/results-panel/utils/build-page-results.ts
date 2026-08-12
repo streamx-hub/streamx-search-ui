@@ -66,24 +66,13 @@ const renderFullResults = (
   results: Results,
   currentPage: number,
   panelState: PanelState,
-  /**
-   * Response the facet tree is built from. Defaults to the results response,
-   * but a deep-linked load passes the *unfiltered* one so the tree still shows
-   * the siblings the active filter excludes.
-   */
-  facetsData: OpenSearchResponse = data,
 ) => {
   const { element: resultsContainer, pagination } = createResultsContainer(
     data,
     results,
     currentPage,
   );
-  const facetsContainer = createFacets(
-    facetsData,
-    panelState,
-    resultsPanel,
-    results,
-  );
+  const facetsContainer = createFacets(data, panelState, resultsPanel, results);
 
   resultsPanel.innerHTML = "";
   resultsPanel.append(
@@ -158,47 +147,11 @@ export const buildResultsForPage = (
 
   panelState.request = controller;
 
-  /**
-   * Facets are built once per query and then left alone, so in-session they
-   * always describe the unfiltered result set. A deep-linked load has no such
-   * unfiltered response - its very first request already carries the restored
-   * filters, whose aggregations only cover the selection, which would drop
-   * every unselected sibling from the tree (and leave no way to widen the
-   * search). So fetch the aggregations separately, unfiltered.
-   *
-   * It runs in parallel with the results request (not after it), asks for no
-   * hits (`pageSize: 0`), and only ever happens on a filtered first paint.
-   */
-  const needsUnfilteredFacets =
-    !hasContent &&
-    results.method === "POST" &&
-    panelState.selectedFilters.size > 0;
-
-  const unfilteredFacetsRequest = needsUnfilteredFacets
-    ? fetchSearchResults(
-        searchUrl,
-        query,
-        controller.signal,
-        buildResultsRequestOptions(
-          { ...results, pageSize: 0 },
-          1,
-          new Map(),
-          query,
-        ),
-      ).catch(() => null)
-    : Promise.resolve(null);
-
-  Promise.all([
-    fetchSearchResults(searchUrl, query, controller.signal, requestOptions),
-    unfilteredFacetsRequest,
-  ])
-    .then(([responseData, unfilteredData]) => {
+  fetchSearchResults(searchUrl, query, controller.signal, requestOptions)
+    .then((responseData) => {
       if (hasContent) {
         updateResultsList(resultsPanel, responseData, results, pageNumber);
-
-        if (resetFilters) {
-          updateFacets(resultsPanel, responseData, results, panelState);
-        }
+        updateFacets(resultsPanel, responseData, results, panelState);
       } else {
         renderFullResults(
           resultsPanel,
@@ -206,8 +159,6 @@ export const buildResultsForPage = (
           results,
           pageNumber,
           panelState,
-          // Falls back to the results response if the extra call failed.
-          unfilteredData ?? responseData,
         );
       }
 

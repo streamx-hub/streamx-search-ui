@@ -12,6 +12,7 @@ import { refreshFacetStates } from "./refresh-facet-states.ts";
 import { writeFacetsToUrl } from "./write-factets-to-url.ts";
 import { facetsParamName } from "./facet-param-name.ts";
 import { buildResultsForPage } from "../../../utils/build-page-results.ts";
+import { getValuesPanelFromFacetGroupToggle } from "./getValuesPanelFromFacetGroupToggle.ts";
 
 export const initFacets = (
   facetsContainer: HTMLElement,
@@ -24,10 +25,10 @@ export const initFacets = (
       ".stx-results-panel__facet-toggle, .stx-results-panel__facet-subtoggle",
     )
     .forEach((toggle) => {
-      const targetId = toggle.getAttribute("aria-controls");
-      const valuesPanel = targetId
-        ? facetsContainer.querySelector(`#${CSS.escape(targetId)}`)
-        : toggle.nextElementSibling;
+      const valuesPanel = getValuesPanelFromFacetGroupToggle(
+        toggle,
+        facetsContainer,
+      );
 
       if (!(valuesPanel instanceof HTMLElement)) {
         return;
