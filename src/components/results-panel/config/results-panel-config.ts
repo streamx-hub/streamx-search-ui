@@ -1,9 +1,8 @@
 import type { SearchRequestMethod } from "../../../types/open-search";
 import { DEFAULT_QUERY_PARAM } from "../../../config";
 import {
-  DEFAULT_FACET_FIELD_PREFIX,
+  DEFAULT_FACET_FIELDS,
   DEFAULT_FACET_FIELD_SIZE,
-  DEFAULT_FACET_FILTER_FIELD,
   DEFAULT_FACET_PATH_SEPARATOR,
 } from "../../../search-request";
 import {
@@ -12,7 +11,12 @@ import {
 } from "../components/renderers";
 import { normalizeLabels } from "../../../helper";
 
-type CustomRenderer = (...args: unknown[]) => HTMLElement;
+/**
+ * Deliberate `any` to as we anyway cannot guarantee safety there,
+ * and we want to avoid forced type-cast in every field of `ResultsPanelRenderers`
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CustomRenderer = (...args: any[]) => HTMLElement;
 
 export type ResultsPanelRenderers = {
   [rendererName: string]: CustomRenderer;
@@ -55,10 +59,12 @@ export interface ResultsConfig {
   facetDepthLevel?: number;
   /** Saved query/template id sent as the request body `id`. */
   requestId?: string;
-  /** Field the selected facet values are filtered against. */
-  facetFilterField?: string;
-  /** Field name prefix for the facet levels; the level index is appended. */
-  facetFieldPrefix?: string;
+  /**
+   * Facet roots to request, one aggregation tree each (`["category", "tags"]`).
+   * Level and filter fields are derived: `<root>_level<n>` is aggregated and
+   * selections filter against `<root>_hierarchy`.
+   */
+  facetFields?: string[];
   /** Separator used to build hierarchical facet paths. */
   facetPathSeparator?: string;
   /** Max buckets requested per facet level. */
@@ -98,8 +104,7 @@ const defaultConfig = {
   method: "GET" as SearchRequestMethod,
   queryParam: DEFAULT_QUERY_PARAM,
   facetDepthLevel: 1,
-  facetFilterField: DEFAULT_FACET_FILTER_FIELD,
-  facetFieldPrefix: DEFAULT_FACET_FIELD_PREFIX,
+  facetFields: DEFAULT_FACET_FIELDS,
   facetPathSeparator: DEFAULT_FACET_PATH_SEPARATOR,
   facetFieldSize: DEFAULT_FACET_FIELD_SIZE,
   debugMode: false,
@@ -112,9 +117,9 @@ const defaultConfig = {
       `Page ${currentPage} of ${pageNumber}`,
     totalResults: (totalCount: number) => `${totalCount} results found.`,
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
-    ariaPaginationNavigation: () => "Pagination",
+    ariaPaginationNavigation: "Pagination",
   },
-};
+} as const satisfies Omit<ResultsConfig, "dataSources">;
 
 export const resolveConfig = (
   resultsConfig: Results | ResultsConfig,

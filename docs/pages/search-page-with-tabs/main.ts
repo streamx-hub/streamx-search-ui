@@ -1,7 +1,7 @@
 import type {
   ResultsConfig,
   ResultsPanelRenderers,
-} from "../../../src/components/results-panel/results-panel";
+} from "../../../src/components/results-panel/config/results-panel-config";
 import type { TabConfig } from "../../../src/components/tabs/tabs";
 import { html } from "../../../src/helper";
 import type { OpenSearchItem } from "../../../src/types/open-search";
@@ -32,6 +32,7 @@ const initSearchPage = async (mountPoint: Element) => {
 
   const resultsConfig: ResultsConfig = {
     facetFields: ["category", "technology", "event"],
+    facetDepthLevel: 2,
     dataSources: ["http://localhost:8082/search/query/body"],
     method: "POST",
     requestId: "eds-pages",
