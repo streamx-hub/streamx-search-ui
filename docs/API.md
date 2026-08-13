@@ -439,7 +439,7 @@ interface ResultsConfig {
 ```
 
 | Property             | Type                       | Required |                                                                   Default                                                                   | Description                                                                                                                                                                                                                              |
-|----------------------|----------------------------|:--------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------- | -------------------------- | :------: | :-----------------------------------------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `dataSources`        | `string[]`                 |    ✅    |                                                                      -                                                                      | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
 | `pageSize`           | `number`                   |    ❌    |                                                                    `20`                                                                     | Number of results per page.                                                                                                                                                                                                              |
 | `renderers`          | `ResultsPanelRenderers`    |    ❌    |                                                                  Built-in                                                                   | Custom result renderers.                                                                                                                                                                                                                 |
@@ -585,7 +585,7 @@ type ResultsPanelLabelsConfig = {
 ```
 
 | Property                   | Type                                  | Default                                | Description                                 |
-|----------------------------|---------------------------------------|----------------------------------------|---------------------------------------------|
+| -------------------------- | ------------------------------------- | -------------------------------------- | ------------------------------------------- |
 | `paginationInfo`           | `(currentPage, pageNumber) => string` | `Page ${currentPage} of ${pageNumber}` | Pagination text.                            |
 | `totalResults`             | `(totalCount) => string`              | `${totalCount} results found.`         | Total results text and live region message. |
 | `ariaPaginationGoToPage`   | `(pageNumber) => string`              | `Go to page ${pageNumber}`             | Pagination button aria label.               |
@@ -750,7 +750,7 @@ The components persist their state in the URL so a search is shareable and
 survives a reload. All four params are restored on load.
 
 | Param        | Written by    | Purpose                                                                                          |
-|--------------| ------------- |--------------------------------------------------------------------------------------------------|
+| ------------ | ------------- | ------------------------------------------------------------------------------------------------ |
 | `query`      | Search input  | Active query. Configurable via `queryParam`; the input writes it and the results panel reads it. |
 | `stx-tab`    | Search tabs   | Active tab id. Present only for a non-default tab, so the first tab keeps the URL clean.         |
 | `stx-facets` | Results panel | Selected facets, as URL-encoded JSON (`{ "<treeField>": ["<path>", ...] }`). Absent when none.   |
