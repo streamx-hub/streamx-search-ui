@@ -211,14 +211,12 @@ export function debounce<T extends (...args: never[]) => void>(
  * everything travels in the body.
  * @param query Search phrase. Only used by the `GET` transport.
  * @param signal Abort signal, so in-flight requests can be superseded.
- * @param sortBy Sort field and direction. Only used by the `GET` transport.
  * @param requestOptions Transport selection and the `POST` body.
  */
 export const fetchSearchResults = async (
   url: string,
   query: string,
   signal?: AbortSignal,
-  sortBy?: string,
   requestOptions: SearchRequestOptions = {},
 ) => {
   let response: Response;
@@ -236,10 +234,6 @@ export const fetchSearchResults = async (
   } else {
     const searchURL = new URL(url, window.location.origin);
     searchURL.searchParams.set("query", query);
-
-    if (sortBy) {
-      searchURL.searchParams.set("sortBy", sortBy);
-    }
 
     response = await fetch(searchURL.toString(), { signal });
   }

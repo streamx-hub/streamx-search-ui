@@ -88,6 +88,9 @@ export interface SearchFilterField {
   last?: boolean;
 }
 
+export type OpenSearchSortOrderField = `${string}_sort_order`;
+export type OpenSearchSortOrder = "asc" | "desc";
+
 /** Body sent to the search endpoint when using the POST transport. */
 export interface SearchRequestBody {
   id?: string;
@@ -103,6 +106,8 @@ export interface SearchRequestBody {
     filter_query?: {
       fields: SearchFilterField[];
     };
+    /* sort could be done for different field names, not just one specific */
+    [key: OpenSearchSortOrderField]: OpenSearchSortOrder;
   };
 }
 

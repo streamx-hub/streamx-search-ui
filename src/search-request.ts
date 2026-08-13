@@ -1,8 +1,11 @@
 import type {
+  OpenSearchSortOrder,
+  OpenSearchSortOrderField,
   SearchFacetField,
   SearchFilterField,
   SearchRequestBody,
 } from "./types/open-search";
+import { SORT_BY_SEPARATOR } from "./components/results-panel/sort-options.ts";
 
 /**
  * The facet field naming convention.
@@ -130,6 +133,32 @@ export interface BuildSearchRequestBodyOptions {
    * endpoint returns HTTP 500 for a namespace at the body root.
    */
   namespace?: string;
+  /**
+   * Sort field name and direction. Format: <sort-field-name>__<sort_direction>
+   */
+  sortBy?: string;
+}
+
+function extractSortInfo(sortBy: string): {
+  sortField: OpenSearchSortOrderField;
+  sortDirection: OpenSearchSortOrder;
+} {
+  const [sortFieldName, sortDirection] = sortBy.split(SORT_BY_SEPARATOR);
+  const sortField: OpenSearchSortOrderField = `${sortFieldName}_sort_order`;
+
+  if (sortDirection !== "asc" && sortDirection !== "desc") {
+    console.warn("Invalid sort direction, fallbacks to desc");
+
+    return {
+      sortField,
+      sortDirection: "desc",
+    };
+  }
+
+  return {
+    sortField,
+    sortDirection,
+  };
 }
 
 /**
@@ -155,6 +184,7 @@ export const buildSearchRequestBody = ({
   facetFields,
   facetFieldSize,
   namespace,
+  sortBy,
 }: BuildSearchRequestBodyOptions = {}): SearchRequestBody => {
   const body: SearchRequestBody = {
     params: {
@@ -178,6 +208,11 @@ export const buildSearchRequestBody = ({
 
   if (namespace) {
     body.params.namespace = namespace;
+  }
+
+  if (sortBy) {
+    const { sortField, sortDirection } = extractSortInfo(sortBy);
+    body.params[sortField] = sortDirection;
   }
 
   const filterGroups = filters

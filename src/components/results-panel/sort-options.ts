@@ -1,11 +1,13 @@
 import { dispatchUrlChangeEvent, html } from "../../helper";
 
+export const SORT_BY_SEPARATOR = "__";
+
 /** Turns sort field name into a heading, e.g. `publication_date` → `Publication Date`. */
 const humanizeSortFieldLabel = (field: string) =>
   field.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()) ||
   field;
 
-const updateSortOption = (sortParam: string, sortOption: string) => {
+const writeSortOptionToUrl = (sortParam: string, sortOption: string) => {
   const url = new URL(window.location.href);
 
   url.searchParams.delete(sortParam);
@@ -32,12 +34,16 @@ export const createSortOptions = (
 
     sortOptionElements.push(
       html`
-        <option value="${field}__asc">${fieldLabel} (Asc)</option>
+        <option value="${field}${SORT_BY_SEPARATOR}asc">
+          ${fieldLabel} (Asc)
+        </option>
       ` as HTMLOptionElement,
     );
     sortOptionElements.push(
       html`
-        <option value="${field}__desc">${fieldLabel} (Desc)</option>
+        <option value="${field}${SORT_BY_SEPARATOR}desc">
+          ${fieldLabel} (Desc)
+        </option>
       ` as HTMLOptionElement,
     );
   });
@@ -58,8 +64,19 @@ export const createSortOptions = (
 
   sortOptionsSelect.addEventListener("change", (e) => {
     const target = e.target as HTMLSelectElement;
-    updateSortOption(sortParam, target.value);
+    writeSortOptionToUrl(sortParam, target.value);
   });
 
   return { element: sortOptionsEl, selectElement: sortOptionsSelect };
 };
+
+export function updateSelectedSortOption(
+  resultsPanel: HTMLElement,
+  selectedSortOption: string,
+) {
+  const sortOptionsSelect = resultsPanel.querySelector(
+    ".stx-results-panel__sort-options",
+  ) as HTMLSelectElement;
+
+  sortOptionsSelect.value = selectedSortOption;
+}

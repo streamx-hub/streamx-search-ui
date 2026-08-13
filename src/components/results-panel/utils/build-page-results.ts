@@ -14,6 +14,7 @@ import { buildResultsRequestOptions } from "./build-results-request-options";
 import { buildSearchUrl } from "./build-search-url";
 import type { Results } from "../config/results-panel-config";
 import { writeFacetsToUrl } from "../components/facets/utils/write-factets-to-url.ts";
+import { updateSelectedSortOption } from "../sort-options.ts";
 
 const restoreFocusForPage = () => {
   let activePage: string | null = null;
@@ -141,6 +142,7 @@ export const buildResultsForPage = (
     pageNumber,
     panelState.selectedFilters,
     query,
+    sortBy,
   );
 
   // A newer request supersedes the one in flight, so a slow page-2 response can
@@ -151,13 +153,7 @@ export const buildResultsForPage = (
 
   panelState.request = controller;
 
-  fetchSearchResults(
-    searchUrl,
-    query,
-    controller.signal,
-    sortBy,
-    requestOptions,
-  )
+  fetchSearchResults(searchUrl, query, controller.signal, requestOptions)
     .then((responseData) => {
       if (hasContent) {
         updateResultsList(resultsPanel, responseData, results, pageNumber);
@@ -172,6 +168,7 @@ export const buildResultsForPage = (
         );
       }
 
+      updateSelectedSortOption(resultsPanel, sortBy);
       restorePageFocus();
     })
     .catch((error) => {
