@@ -18,6 +18,27 @@ const writeSortOptionToUrl = (sortParam: string, sortOption: string) => {
   dispatchUrlChangeEvent();
 };
 
+/**
+ * We cannot easily pass full labels to EDS blocks (as we are passing just field names)
+ * so we need to estbalish typical direction labels manually
+ */
+function getSortDirectionLabels(sortFieldName: string): {
+  ascLabel: string;
+  descLabel: string;
+} {
+  if (sortFieldName.includes("date")) {
+    return {
+      descLabel: "(Newest)",
+      ascLabel: "(Oldest)",
+    };
+  }
+
+  return {
+    ascLabel: "(Ascending)",
+    descLabel: "(Descending)",
+  };
+}
+
 export const createSortOptions = (
   sortParam: string,
   label: string,
@@ -31,18 +52,19 @@ export const createSortOptions = (
   const sortOptionElements: HTMLElement[] = [];
   sortFields.forEach((field) => {
     const fieldLabel = humanizeSortFieldLabel(field);
+    const { ascLabel, descLabel } = getSortDirectionLabels(field);
 
     sortOptionElements.push(
       html`
         <option value="${field}${SORT_BY_SEPARATOR}asc">
-          ${fieldLabel} (Asc)
+          ${fieldLabel} ${ascLabel}
         </option>
       ` as HTMLOptionElement,
     );
     sortOptionElements.push(
       html`
         <option value="${field}${SORT_BY_SEPARATOR}desc">
-          ${fieldLabel} (Desc)
+          ${fieldLabel} ${descLabel}
         </option>
       ` as HTMLOptionElement,
     );
