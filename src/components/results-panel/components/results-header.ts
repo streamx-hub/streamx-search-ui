@@ -14,7 +14,8 @@ export const createResultsHeader = (
   const sortOptions = createSortOptions(
     results.sortParam,
     results.labels.sortBy(),
-    results.sortOptions,
+    results.sortFields,
+    results.labels.defaultSortOption(),
   );
 
   return html`

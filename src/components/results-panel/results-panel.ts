@@ -14,6 +14,7 @@ const addOnParamChangeAction = (
   resultsPanel: HTMLElement,
   results: Results,
   paramName: keyof Results,
+  keepFilters?: boolean,
 ) => {
   const queryStringParam = results[paramName];
   if (typeof queryStringParam !== "string") {
@@ -28,7 +29,9 @@ const addOnParamChangeAction = (
     const searchQuery = params.get(queryStringParam) || "";
 
     if (prevQueryStringParam !== searchQuery) {
-      buildResultsForPage(resultsPanel, results, 1, { resetFilters: true });
+      buildResultsForPage(resultsPanel, results, 1, {
+        resetFilters: !keepFilters,
+      });
       prevQueryStringParam = searchQuery;
     }
   };
@@ -62,7 +65,7 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
   try {
     buildResultsForPage(resultsPanel, results, 1);
     addOnParamChangeAction(resultsPanel, results, "queryParam");
-    addOnParamChangeAction(resultsPanel, results, "sortParam");
+    addOnParamChangeAction(resultsPanel, results, "sortParam", true);
 
     return resultsPanel;
   } catch (error) {

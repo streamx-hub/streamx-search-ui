@@ -1,6 +1,10 @@
-import type { ResultsPanelLabels } from "./components/results-panel/config/results-panel-config";
-import { DEFAULT_QUERY_PARAM } from "./config";
+import type {
+  ResultsConfig,
+  ResultsPanelLabels,
+} from "./components/results-panel/config/results-panel-config";
+import { DEFAULT_QUERY_PARAM, DEFAULT_SORT_PARAM } from "./config";
 import { html } from "./helper";
+import type { QueryInputConfig } from "./types/config.ts";
 
 export const loadCssFile = (cssFile: string) => {
   const styleEl = document.createElement("link");
@@ -10,7 +14,7 @@ export const loadCssFile = (cssFile: string) => {
   document.head.append(styleEl);
 };
 
-export const renderEDSLableTemplate = (
+export const renderEDSLabelTemplate = (
   template: string | undefined,
   values: Record<string, string | number>,
 ) => {
@@ -69,18 +73,20 @@ export const replaceElWithError = (root: HTMLElement, error: string) => {
   root.append(errorEl);
 };
 
-export type EDSPannelLabels = {
+export type EDSPanelLabels = {
   paginationInfo?: string;
   totalResults?: string;
   ariaPaginationGoToPage?: string;
   ariaPaginationNavigation?: string;
+  sortBy?: string;
+  defaultSortOption?: string;
 };
 
 /**
  * Results-panel options authorable as EDS block rows. Shared by the Results
  * Panel and Search Tabs decorators so their option sets cannot drift apart.
  */
-export type EDSPanelOptions = EDSPannelLabels & {
+export type EDSPanelOptions = EDSPanelLabels & {
   pageSize?: string;
   dataSources?: string;
   /** Saved query/template id sent as the request body `id`. */
@@ -101,6 +107,13 @@ export type EDSPanelOptions = EDSPannelLabels & {
   debugMode?: string;
   /** Restricts results to one content namespace. Omit to search all of them. */
   namespace?: string;
+  /** URL param carrying the sort option */
+  sortParam?: string;
+  /**
+   * Comma-separated sort fields which will be available to sort both in ascending and descending direction - e.g.
+   * `publication_date, title`.
+   */
+  sortFields?: string;
 };
 
 /**
@@ -140,36 +153,46 @@ export const mergeEDSConfigs = <
   ) as Partial<TConfig>),
 });
 
-export const generatePannelLabels = (config: EDSPannelLabels) => {
-  const lables: Partial<ResultsPanelLabels> = {};
+export const generatePanelLabels = (
+  config: EDSPanelLabels,
+): Partial<ResultsPanelLabels> => {
+  const labels: Partial<ResultsPanelLabels> = {};
 
   if (config.paginationInfo) {
-    lables.paginationInfo = (currentPage: number, pageNumber: number) =>
-      renderEDSLableTemplate(config.paginationInfo, {
+    labels.paginationInfo = (currentPage: number, pageNumber: number) =>
+      renderEDSLabelTemplate(config.paginationInfo, {
         currentPage,
         pageNumber,
       });
   }
 
   if (config.totalResults) {
-    lables.totalResults = (totalCount: number) =>
-      renderEDSLableTemplate(config.totalResults, {
+    labels.totalResults = (totalCount: number) =>
+      renderEDSLabelTemplate(config.totalResults, {
         totalCount,
       });
   }
 
   if (config.ariaPaginationGoToPage) {
-    lables.ariaPaginationGoToPage = (pageNumber: number) =>
-      renderEDSLableTemplate(config.ariaPaginationGoToPage, {
+    labels.ariaPaginationGoToPage = (pageNumber: number) =>
+      renderEDSLabelTemplate(config.ariaPaginationGoToPage, {
         pageNumber,
       });
   }
 
   if (config.ariaPaginationNavigation) {
-    lables.ariaPaginationNavigation = config.ariaPaginationNavigation;
+    labels.ariaPaginationNavigation = config.ariaPaginationNavigation;
   }
 
-  return lables;
+  if (config.sortBy) {
+    labels.sortBy = config.sortBy;
+  }
+
+  if (config.defaultSortOption) {
+    labels.defaultSortOption = config.defaultSortOption;
+  }
+
+  return labels;
 };
 
 /**
@@ -187,7 +210,9 @@ const parseFacetFields = (value: string | undefined) => {
 };
 
 /** Maps authored EDS rows to a results-panel config. Single source of truth. */
-export const readPanelOptions = (config: Partial<EDSPanelOptions>) => ({
+export const readPanelOptions = (
+  config: Partial<EDSPanelOptions>,
+): ResultsConfig => ({
   pageSize: Number(config.pageSize) || 10,
   dataSources: config.dataSources ? [config.dataSources] : [],
   // Facets and filtering travel in the request body, so results use POST.
@@ -202,7 +227,9 @@ export const readPanelOptions = (config: Partial<EDSPanelOptions>) => ({
       ? undefined
       : config.debugMode.trim().toLowerCase() === "true",
   namespace: config.namespace || undefined,
-  labels: generatePannelLabels(config),
+  labels: generatePanelLabels(config),
+  sortParam: config.sortParam || DEFAULT_SORT_PARAM,
+  sortFields: parseFacetFields(config.sortFields),
 });
 
 /**
@@ -212,7 +239,9 @@ export const readPanelOptions = (config: Partial<EDSPanelOptions>) => ({
  * `searchApiUrl` is deliberately left to the caller: the decorators validate it
  * first, and that check is what narrows it to a non-empty string.
  */
-export const readInputOptions = (config: Partial<EDSInputOptions>) => {
+export const readInputOptions = (
+  config: Partial<EDSInputOptions>,
+): Omit<QueryInputConfig, "searchApiUrl"> => {
   // The input writes this param and the panel(s) read it, so both get the same.
   const queryParam = config.queryParam || DEFAULT_QUERY_PARAM;
   const searchPageUrl = config.searchPageUrl;

@@ -180,7 +180,7 @@ The Search Results Panel block and the Search Tab blocks render the same
 results panel, so they accept the same panel options:
 
 | Option                     | Default    | Description                                                                                                                                                                           |
-| -------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|----------------------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `pageSize`                 | `10`       | Number of results per page.                                                                                                                                                           |
 | `dataSources`              | -          | Results endpoint the panel POSTs to.                                                                                                                                                  |
 | `requestId`                | -          | Saved query/template id sent as the request body `id`.                                                                                                                                |
@@ -194,6 +194,10 @@ results panel, so they accept the same panel options:
 | `totalResults`             | -          | Label template, e.g. `{{totalCount}} results found`.                                                                                                                                  |
 | `ariaPaginationGoToPage`   | -          | ARIA label template, e.g. `Go to page {{pageNumber}}`.                                                                                                                                |
 | `ariaPaginationNavigation` | -          | ARIA label for the pagination navigation.                                                                                                                                             |
+| `sortBy`                   | -          | Label for the sort options select.                                                                                                                                                    |
+| `defaultSortOption`        | -          | Label for the default sort option label.                                                                                                                                              |
+| `sortParam`                | -          | URL param carrying the sort option.                                                                                                                                                   |
+| `sortOptions`              | -          | Comma-separated sort fields which will be available to sort both in ascending and descending direction - e.g. `publication_date, title`                                               |
 
 On a Search Results Panel block, author these options directly on the block.
 
@@ -211,40 +215,39 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 
 ### Search Results Panel
 
-| Search Results Panel     |                                                                                                                                           |
-|--------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| searchApiUrl             | /api/search                                                                                                                               |
-| minSearchLength          | 3                                                                                                                                         |
-| pageSize                 | 10                                                                                                                                        |
-| dataSources              | /api/results                                                                                                                              |
-| queryParam               | query                                                                                                                                     |
-| initialQuery             | popular topics                                                                                                                            |
-| requestId                | eds-pages                                                                                                                                 |
-| facetDepthLevel          | 3                                                                                                                                         |
-| facetFields              | category, tags                                                                                                                            |
-| inputPlaceholder         | Search                                                                                                                                    |
-| inputLabel               | Search                                                                                                                                    |
-| clearButtonAria          | Clear search                                                                                                                              |
-| searchButtonAria         | Submit search                                                                                                                             |
-| paginationInfo           | Page {{currentPage}} of {{pageNumber}}                                                                                                    |
-| totalResults             | {{totalCount}} results found                                                                                                              |
-| ariaPaginationGoToPage   | Go to page {{pageNumber}}                                                                                                                 |
-| ariaPaginationNavigation | Search results pagination                                                                                                                 |
-| sortBy                   | Sort by:                                                                                                                                  |
-| sortParam                | sort-by                                                                                                                                   |
-| sortOptions              | [{ label: 'Relevance', sortBy: null }, { label: 'Date (Newest)', sortBy: 'date__desc' }, { label: 'Date (Oldest)', sortBy: 'date__asc' }] |
+| Search Results Panel     |                                        |
+|--------------------------|----------------------------------------|
+| searchApiUrl             | /api/search                            |
+| minSearchLength          | 3                                      |
+| pageSize                 | 10                                     |
+| dataSources              | /api/results                           |
+| queryParam               | query                                  |
+| initialQuery             | popular topics                         |
+| requestId                | eds-pages                              |
+| facetDepthLevel          | 3                                      |
+| facetFields              | category, tags                         |
+| inputPlaceholder         | Search                                 |
+| inputLabel               | Search                                 |
+| clearButtonAria          | Clear search                           |
+| searchButtonAria         | Submit search                          |
+| paginationInfo           | Page {{currentPage}} of {{pageNumber}} |
+| totalResults             | {{totalCount}} results found           |
+| ariaPaginationGoToPage   | Go to page {{pageNumber}}              |
+| ariaPaginationNavigation | Search results pagination              |
+| sortBy                   | Sort by:                               |
+| defaultSortOption        | Relevance                              |
+| sortParam                | sort-by                                |
+| sortOptions              | date                                   |
 
 The block accepts every [panel option](#panel-options) plus the search-input
 options shared with the Search Tabs block:
 
 | Option          | Default   | Description                                                                                             |
-|-----------------|-----------|---------------------------------------------------------------------------------------------------------|
+| --------------- | --------- | ------------------------------------------------------------------------------------------------------- |
 | `queryParam`    | `query`   | URL param holding the query. Use the same value on every block that takes part in the search.           |
 | `initialQuery`  | -         | Pre-fetched query offered in the dropdown while the input is focused and empty.                         |
 | `searchPageUrl` | -         | Send submissions to a separate search page instead of refreshing the panel below the input.             |
 | `namespace`     | -         | Limits the input's suggestions to one content namespace. Omit to search all of them.                    |
-| `sortParam`     | `sort-by` | URL param holding the sorting option. Use the same value on every block that takes part in the sorting. |
-
 
 > **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the
 > example above) and the input refreshes the panel on the same page. Set it and
@@ -284,11 +287,12 @@ Each tab is configured using a separate Search Tab block.
 Nothing to author - the blocks keep the whole search state in the URL, so a
 reader can copy the address bar and the recipient sees the same search:
 
-| Param        | Holds                                                               |
-| ------------ | ------------------------------------------------------------------- |
-| `query`      | the query, which also refills the input (rename via `queryParam`)   |
-| `stx-tab`    | the active tab (Search Tabs only; absent on the first tab)          |
-| `stx-facets` | the ticked facets; inside tabs it is per tab (`stx-facets-<tabId>`) |
+| Param        | Holds                                                                    |
+|--------------|--------------------------------------------------------------------------|
+| `query`      | the query, which also refills the input (rename via `queryParam`)        |
+| `sort-by`    | field name which is used to sort in conjunction with with sort direction |
+| `stx-tab`    | the active tab (Search Tabs only; absent on the first tab)               |
+| `stx-facets` | the ticked facets; inside tabs it is per tab (`stx-facets-<tabId>`)      |
 
 Changing the query clears the facets. See
 [URL Parameters](API.md#url-parameters) for the exact format.

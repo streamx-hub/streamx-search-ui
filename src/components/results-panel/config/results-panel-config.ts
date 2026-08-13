@@ -10,7 +10,6 @@ import {
   renderResultsPanelError,
 } from "../components/renderers";
 import { normalizeLabels } from "../../../helper";
-import type { SortItem } from "../sort-options";
 
 /**
  * Deliberate `any` to as we anyway cannot guarantee safety there,
@@ -29,6 +28,8 @@ export type ResultsPanelLabelsConfig = {
   ariaPaginationGoToPage?: (pageNumber: number) => string;
   ariaPaginationNavigation?: string;
   sortBy?: string;
+  /* Selecting default sort option will result in removing sort URL param  */
+  defaultSortOption?: string;
 };
 
 export type ResultsPanelLabels = Required<ResultsPanelLabelsConfig>;
@@ -89,7 +90,10 @@ export interface ResultsConfig {
    * search across all namespaces.
    */
   namespace?: string;
-  sortOptions?: SortItem[];
+  /**
+   * Sort field names which will be available to sort both in ascending and descending direction.
+   */
+  sortFields?: string[];
   /** URL param carrying sort option. Must match the sort options element's. */
   sortParam?: string;
 }
@@ -124,21 +128,9 @@ const defaultConfig = {
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
     ariaPaginationNavigation: "Pagination",
     sortBy: "Sort by:",
+    defaultSortOption: "Relevance",
   },
-  sortOptions: [
-    {
-      label: "Relevance",
-      sortBy: null,
-    },
-    {
-      label: "Date (Newest)",
-      sortBy: "date__desc",
-    },
-    {
-      label: "Date (Oldest)",
-      sortBy: "date__asc",
-    },
-  ],
+  sortFields: ["date"],
   sortParam: DEFAULT_SORT_PARAM,
 } as const satisfies Omit<ResultsConfig, "dataSources">;
 

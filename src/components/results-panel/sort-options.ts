@@ -1,49 +1,65 @@
-import { dispatchUrlChangeEvent, html} from "../../helper";
+import { dispatchUrlChangeEvent, html } from "../../helper";
 
-type SortDirection = 'asc' | 'desc';
-// Sorting should contain field name which is used for sorting and the sort direction
-type SortBy = `${string}__${SortDirection}`;
-
-export interface SortItem {
-    label: string;
-    sortBy: SortBy | null;
-}
+/** Turns sort field name into a heading, e.g. `publication_date` → `Publication Date`. */
+const humanizeSortFieldLabel = (field: string) =>
+  field.replace(/[_-]+/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()) ||
+  field;
 
 const updateSortOption = (sortParam: string, sortOption: string) => {
-    const url = new URL(window.location.href);
+  const url = new URL(window.location.href);
 
-    url.searchParams.delete(sortParam);
-    if (sortOption) {
-        url.searchParams.set(sortParam, sortOption);
-    }
-    window.history.pushState({}, "", url);
-    dispatchUrlChangeEvent();
+  url.searchParams.delete(sortParam);
+  if (sortOption) {
+    url.searchParams.set(sortParam, sortOption);
+  }
+  window.history.pushState({}, "", url);
+  dispatchUrlChangeEvent();
 };
 
-export const createSortOptions = (sortParam: string, label: string, options: SortItem[] | null) => {
-    if (!options?.length) return null;
+export const createSortOptions = (
+  sortParam: string,
+  label: string,
+  sortFields: string[] | null,
+  defaultSortOptionLabel: string,
+) => {
+  if (!sortFields?.length) return null;
 
-    const selectId = crypto.randomUUID();
+  const selectId = crypto.randomUUID();
 
-    const sortOptionElements: HTMLElement[] = options.map((option: SortItem) => html`
-        <option value="${option.sortBy ?? ''}">${option.label}</option>
-    ` as HTMLOptionElement);
+  const sortOptionElements: HTMLElement[] = [];
+  sortFields.forEach((field) => {
+    const fieldLabel = humanizeSortFieldLabel(field);
 
-    const sortOptionsEl = html`
-        <div class="stx-results-panel__sort-options-container">
-            <label for="${selectId}">${label}</label>
-            <select class="stx-results-panel__sort-options" id="${selectId}">
-                ${sortOptionElements}
-            </select>
-        </div>
-    ` as HTMLDivElement;
+    sortOptionElements.push(
+      html`
+        <option value="${field}__asc">${fieldLabel} (Asc)</option>
+      ` as HTMLOptionElement,
+    );
+    sortOptionElements.push(
+      html`
+        <option value="${field}__desc">${fieldLabel} (Desc)</option>
+      ` as HTMLOptionElement,
+    );
+  });
 
-    const sortOptionsSelect = sortOptionsEl.querySelector('.stx-results-panel__sort-options') as HTMLSelectElement;
+  const sortOptionsEl = html`
+    <div class="stx-results-panel__sort-options-container">
+      <label for="${selectId}">${label}</label>
+      <select class="stx-results-panel__sort-options" id="${selectId}">
+        <option value="">${defaultSortOptionLabel}</option>
+        ${sortOptionElements}
+      </select>
+    </div>
+  ` as HTMLDivElement;
 
-    sortOptionsSelect.addEventListener('change', e => {
-        const target = e.target as HTMLSelectElement;
-        updateSortOption(sortParam, target.value);
-    });
+  const sortOptionsSelect = sortOptionsEl.querySelector(
+    ".stx-results-panel__sort-options",
+  ) as HTMLSelectElement;
 
-    return { element: sortOptionsEl, selectElement: sortOptionsSelect };
+  sortOptionsSelect.addEventListener("change", (e) => {
+    const target = e.target as HTMLSelectElement;
+    updateSortOption(sortParam, target.value);
+  });
+
+  return { element: sortOptionsEl, selectElement: sortOptionsSelect };
 };
