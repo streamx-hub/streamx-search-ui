@@ -10,21 +10,29 @@ import {
 import { readFacetsFromUrl } from "./components/facets/utils/read-facets-from-url";
 import "./results-panel.css";
 
-const addOnSearchParamChangeAction = (
+const addOnParamChangeAction = (
   resultsPanel: HTMLElement,
   results: Results,
+  paramName: keyof Results,
+  keepFilters?: boolean,
 ) => {
-  const queryParam = results.queryParam;
-  let prevSearchParam =
-    new URL(window.location.href).searchParams.get(queryParam) || "";
+  const queryStringParam = results[paramName];
+  if (typeof queryStringParam !== "string") {
+    console.error(`Invalid query string param type ${typeof queryStringParam}`);
+    return;
+  }
+  let prevQueryStringParam =
+    new URL(window.location.href).searchParams.get(queryStringParam) || "";
 
   const handleUrlChange = () => {
     const params = new URLSearchParams(window.location.search);
-    const searchQuery = params.get(queryParam) || "";
+    const searchQuery = params.get(queryStringParam) || "";
 
-    if (prevSearchParam !== searchQuery) {
-      buildResultsForPage(resultsPanel, results, 1, { resetFilters: true });
-      prevSearchParam = searchQuery;
+    if (prevQueryStringParam !== searchQuery) {
+      buildResultsForPage(resultsPanel, results, 1, {
+        resetFilters: !keepFilters,
+      });
+      prevQueryStringParam = searchQuery;
     }
   };
 
@@ -56,7 +64,8 @@ export const createResultsPanel = (resultsConfig: ResultsConfig | Results) => {
 
   try {
     buildResultsForPage(resultsPanel, results, 1);
-    addOnSearchParamChangeAction(resultsPanel, results);
+    addOnParamChangeAction(resultsPanel, results, "queryParam");
+    addOnParamChangeAction(resultsPanel, results, "sortParam", true);
 
     return resultsPanel;
   } catch (error) {

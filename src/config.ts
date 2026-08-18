@@ -18,4 +18,12 @@ export const DEFAULT_QUERY_PARAM = "query";
  */
 export const ACTIVE_TAB_PARAM = "stx-tab";
 
+/**
+ * Default URL param carrying sort field and direction.
+ *
+ * It is set by sort options select.
+ * It is written only while a non-default sort is selected.
+ */
+export const DEFAULT_SORT_PARAM = "sort-by";
+
 export default config;

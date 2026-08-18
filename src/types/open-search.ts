@@ -1,3 +1,23 @@
+export interface OpenSearchItemSourcePayload {
+  title: string | null;
+  /**
+   * Shapes of fields and facets are defined by the index rather than
+   * by this library.
+   *
+   * Deliberately `any`: consumers read it directly in their renderers (e.g.
+   * `item._source.payload.fields.date`), and `unknown` would force a cast at every
+   * such call site for no safety the index can actually guarantee.
+   */
+  fields?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
+  facets?: {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any;
+  };
+}
+
 export interface OpenSearchItem {
   _id: string;
   _score: number | null;
@@ -8,16 +28,7 @@ export interface OpenSearchItem {
      * (e.g. `en:/en/blog/post`), so it is needed to resolve a usable URL.
      */
     namespace?: string | null;
-    /**
-     * Indexed document payload, whose shape is defined by the index rather than
-     * by this library.
-     *
-     * Deliberately `any`: consumers read it directly in their renderers (e.g.
-     * `item._source.payload.title`), and `unknown` would force a cast at every
-     * such call site for no safety the index can actually guarantee.
-     */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any;
+    payload: OpenSearchItemSourcePayload;
   };
   highlight?: Record<string, string[]>;
 }
@@ -43,10 +54,12 @@ export interface OpenSearchAggregation {
 }
 
 export interface OpenSearchResponse {
+  took?: number;
   timed_out: boolean;
   hits: {
     total: {
       value: number;
+      relation?: string;
     };
     hits?: OpenSearchItem[];
   };
@@ -75,6 +88,9 @@ export interface SearchFilterField {
   last?: boolean;
 }
 
+export type OpenSearchSortOrderField = `${string}_sort_order`;
+export type OpenSearchSortOrder = "asc" | "desc";
+
 /** Body sent to the search endpoint when using the POST transport. */
 export interface SearchRequestBody {
   id?: string;
@@ -90,6 +106,8 @@ export interface SearchRequestBody {
     filter_query?: {
       fields: SearchFilterField[];
     };
+    /* sort could be done for different field names, not just one specific */
+    [key: OpenSearchSortOrderField]: OpenSearchSortOrder;
   };
 }
 

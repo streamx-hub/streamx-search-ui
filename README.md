@@ -273,11 +273,12 @@ Search state is persisted in the URL so a search can be shared or reloaded and
 comes back as it was:
 
 - `query` - the active query (fills the input and runs the search)
+- `sort` - sort field and direction (runs on selectin sorting option)
 - `stx-tab` - the active tab (search tabs only)
 - `stx-facets` - the selected facets (URL-encoded JSON; inside tabs it is
   suffixed with the tab id, e.g. `stx-facets-products`)
 
-All three are restored on load. See [`API.md`](./docs/API.md#url-parameters) for
+All four are restored on load. See [`API.md`](./docs/API.md#url-parameters) for
 the exact format.
 
 ## Facets

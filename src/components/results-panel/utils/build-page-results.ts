@@ -14,6 +14,7 @@ import { buildResultsRequestOptions } from "./build-results-request-options";
 import { buildSearchUrl } from "./build-search-url";
 import type { Results } from "../config/results-panel-config";
 import { writeFacetsToUrl } from "../components/facets/utils/write-factets-to-url.ts";
+import { updateSelectedSortOption } from "../sort-options.ts";
 
 const restoreFocusForPage = () => {
   let activePage: string | null = null;
@@ -38,6 +39,9 @@ const restoreFocusForPage = () => {
 
 const getSearchQuery = (queryParam: string) =>
   new URL(window.location.href).searchParams.get(queryParam) || "";
+
+const getSortOption = (sortParam: string) =>
+  new URL(window.location.href).searchParams.get(sortParam) || "";
 
 /** `createPagination` yields an empty string when there is only one page. */
 type PaginationElement = Element | HTMLCollection | string | null;
@@ -131,12 +135,14 @@ export const buildResultsForPage = (
   }
 
   const query = getSearchQuery(results.queryParam);
+  const sortBy = getSortOption(results.sortParam);
   const searchUrl = buildSearchUrl(results, pageNumber);
   const requestOptions = buildResultsRequestOptions(
     results,
     pageNumber,
     panelState.selectedFilters,
     query,
+    sortBy,
   );
 
   // A newer request supersedes the one in flight, so a slow page-2 response can
@@ -162,6 +168,7 @@ export const buildResultsForPage = (
         );
       }
 
+      updateSelectedSortOption(resultsPanel, sortBy);
       restorePageFocus();
     })
     .catch((error) => {

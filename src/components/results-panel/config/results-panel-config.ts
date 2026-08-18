@@ -1,5 +1,5 @@
 import type { SearchRequestMethod } from "../../../types/open-search";
-import { DEFAULT_QUERY_PARAM } from "../../../config";
+import { DEFAULT_QUERY_PARAM, DEFAULT_SORT_PARAM } from "../../../config";
 import {
   DEFAULT_FACET_FIELDS,
   DEFAULT_FACET_FIELD_SIZE,
@@ -27,6 +27,9 @@ export type ResultsPanelLabelsConfig = {
   totalResults?: (totalCount: number) => string;
   ariaPaginationGoToPage?: (pageNumber: number) => string;
   ariaPaginationNavigation?: string;
+  sortBy?: string;
+  /* Selecting default sort option will result in removing sort URL param  */
+  defaultSortOption?: string;
 };
 
 export type ResultsPanelLabels = Required<ResultsPanelLabelsConfig>;
@@ -87,6 +90,12 @@ export interface ResultsConfig {
    * search across all namespaces.
    */
   namespace?: string;
+  /**
+   * Sort field names which will be available to sort both in ascending and descending direction.
+   */
+  sortFields?: string[];
+  /** URL param carrying sort option. Must match the sort options element's. */
+  sortParam?: string;
 }
 
 export type Results = Omit<
@@ -115,10 +124,14 @@ const defaultConfig = {
   labels: {
     paginationInfo: (currentPage: number, pageNumber: number) =>
       `Page ${currentPage} of ${pageNumber}`,
-    totalResults: (totalCount: number) => `${totalCount} results found.`,
+    totalResults: (totalCount: number) => `${totalCount} results found`,
     ariaPaginationGoToPage: (pageNumber: number) => `Go to page ${pageNumber}`,
     ariaPaginationNavigation: "Pagination",
+    sortBy: "Sort by:",
+    defaultSortOption: "Relevance",
   },
+  sortFields: ["date"],
+  sortParam: DEFAULT_SORT_PARAM,
 } as const satisfies Omit<ResultsConfig, "dataSources">;
 
 export const resolveConfig = (

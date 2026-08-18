@@ -8,6 +8,7 @@ export const buildResultsRequestOptions = (
   pageNumber: number,
   selectedFilters: Map<string, Set<string>>,
   query: string,
+  sortBy: string,
 ): SearchRequestOptions => {
   if (results.method !== "POST") {
     return {};
@@ -25,6 +26,7 @@ export const buildResultsRequestOptions = (
       facetFields: results.facetFields,
       facetFieldSize: results.facetFieldSize,
       namespace: results.namespace,
+      sortBy,
     }),
   };
 };
