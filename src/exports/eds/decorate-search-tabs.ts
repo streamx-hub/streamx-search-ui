@@ -4,6 +4,7 @@ import {
   type EDSPanelOptions,
   getEDSConfig,
   loadCssFile,
+  resolveStylesheetHref,
   mergeEDSConfigs,
   readInputOptions,
   readPanelOptions,
@@ -32,7 +33,7 @@ export default function decorate(
   tabSelector: string,
   renderers?: EDSTabsRenderers,
 ) {
-  loadCssFile("/scripts/search/streamx-search.css");
+  loadCssFile(resolveStylesheetHref(import.meta.url));
   const config = getEDSConfig<EDSSearchTabsConfig>(block);
 
   block.innerHTML = "";

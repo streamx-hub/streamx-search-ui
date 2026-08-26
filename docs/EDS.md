@@ -8,11 +8,11 @@ Each helper receives the block element and initializes the corresponding StreamX
 
 ## Available decorators
 
-| Decorator                   | Purpose                                               |
-| --------------------------- | ----------------------------------------------------- |
-| `decorate-results-panel.js` | Decorates a block as a StreamX Search Results Panel.  |
-| `decorate-search-tabs.js`   | Decorates a block as a StreamX Search Page with tabs. |
-| `decorate-search-tab.js`    | Decorates a block as a StreamX Search Page with tab.  |
+| Decorator                     | Purpose                                               |
+| ----------------------------- | ----------------------------------------------------- |
+| `eds/search-results-panel.js` | Decorates a block as a StreamX Search Results Panel.  |
+| `eds/search-tabs.js`          | Decorates a block as a StreamX Search Page with tabs. |
+| `eds/search-tab.js`           | Decorates a block as a StreamX Search Page with tab.  |
 
 > **Note**
 >
@@ -25,7 +25,7 @@ Each helper receives the block element and initializes the corresponding StreamX
 #### blocks/search-results-panel/search-results-panel.js
 
 ```js
-import decorateResultsPanel from "@streamx-ui/eds/decorate-results-panel.js";
+import decorateResultsPanel from "../../scripts/search/eds/search-results-panel.js";
 
 export default function decorate(block) {
   decorateResultsPanel(block);
@@ -37,7 +37,7 @@ export default function decorate(block) {
 #### blocks/search-tabs/search-tabs.js
 
 ```js
-import decorateSearchTabs from "@streamx-ui/search/eds/streamx-search-tabs.js";
+import decorateSearchTabs from "../../scripts/search/eds/search-tabs.js";
 
 export default function decorate(block) {
   decorateSearchTabs(block, ".search-tab-selector");
@@ -47,7 +47,7 @@ export default function decorate(block) {
 #### blocks/search-tab/search-tab.js
 
 ```js
-import decorateSearchTab from "@streamx-ui/search/eds/streamx-search-tab.js";
+import decorateSearchTab from "../../scripts/search/eds/search-tab.js";
 
 export default function decorate(block) {
   decorateSearchTab(block);
@@ -65,7 +65,7 @@ Custom renderers are passed from the EDS block file, not from the block content.
 #### `blocks/stx-results-panel/stx-results-panel.js`
 
 ```js
-import decorateResultsPanel from "../../scripts/search/eds/decorate-results-panel.js";
+import decorateResultsPanel from "../../scripts/search/eds/search-results-panel.js";
 
 const renderers = {
   loader: () => document.createElement("span"),
@@ -86,7 +86,7 @@ export default function decorate(block) {
 #### `blocks/stx-tabs/stx-tabs.js`
 
 ```js
-import decorateSearchTabs from "../../scripts/search/eds/decorate-search-tabs.js";
+import decorateSearchTabs from "../../scripts/search/eds/search-tabs.js";
 
 const renderers = {
   searchIcon: () => "Search",
@@ -130,7 +130,7 @@ Simply import the component from the standard StreamX entry point and mount it i
 #### `blocks/search-query/search-query.js`
 
 ```js
-import { createSearchInput } from "../../scripts/search/search-inline.js";
+import { createSearchInput } from "../../scripts/search/streamx-search-inline.js";
 
 export default function decorate(block) {
   const search = createSearchInput({
@@ -144,26 +144,120 @@ export default function decorate(block) {
 
 Custom renderers can be passed directly to `createSearchInput()` in the same way as described in the API documentation.
 
-### Using with a bundler
+## Getting the library into an EDS project
+
+EDS has no package manager at runtime: the browser loads files straight from
+your repository. So the library is installed with npm at development time and
+its built files are **copied into the repo and committed**. That is what gives
+you versioning: the installed version is recorded in `package.json`, and an
+upgrade is a version bump plus a re-copy.
+
+### Install and vendor
+
+```bash
+npm i -D @streamx-hub/search
+```
+
+Add a sync script to the project:
 
 ```js
-import decorateResultsPanel from "streamx-search/eds/search-results-panel";
+// scripts/sync-search.mjs
+import { cpSync, statSync } from "node:fs";
+
+cpSync("node_modules/@streamx-hub/search/dist", "scripts/search", {
+  recursive: true,
+  filter: (src) => statSync(src).isDirectory() || /\.(js|css)$/.test(src),
+});
 ```
 
-### Using directly in Adobe Edge Delivery Services
+```jsonc
+// package.json
+{
+  "scripts": {
+    "sync:search": "node scripts/sync-search.mjs",
+  },
+}
+```
 
-Copy the generated files to your EDS project, for example:
+```bash
+npm run sync:search
+```
+
+Then commit `scripts/search/`. The filter matters: the published package also
+carries TypeScript declarations and source maps, which a browser never reads.
+Copying everything would put roughly four times as many files in your repo and
+into every upgrade diff.
+
+The copy preserves the layout, which the stylesheet resolution depends on:
+
+```txt
+scripts/search/
+  streamx-search.css
+  eds/
+    search-results-panel.js
+    search-tabs.js
+    search-tab.js
+  ...shared chunks
+```
+
+### Upgrading
+
+```bash
+npm i -D @streamx-hub/search@1.1.0 && npm run sync:search
+```
+
+Commit the diff. Because the files are committed, an upgrade is reviewable: you
+can see exactly what changed before it reaches production.
+
+### Importing in a block
+
+Import by relative path from the vendored folder:
 
 ```js
-scripts / search / streamx - search.css;
-eds / search - results - panel.js;
+import decorateResultsPanel from "../../scripts/search/eds/search-results-panel.js";
 ```
 
-Then import them by relative path:
+The stylesheet loads itself. Each decorator resolves `streamx-search.css`
+relative to its own module URL, so it works from any folder you vendor into,
+and repeated blocks on one page share a single `<link>`.
 
+### No bundler required
+
+Some EDS guidance recommends bundling npm packages with Rollup, because
+browsers cannot resolve bare module specifiers like `@apollo/client`. That does
+not apply here: this library has **zero runtime dependencies** and every import
+inside `dist/` is already relative, so a browser loads the files as they are.
+
+```js
+// what the built files actually import
+import { ... } from "./common-Bvn1AOYS.js";
+import { ... } from "../eds-helper-SazSuWtK.js";
 ```
-  import decorateResultsPanel from '../../scripts/search/eds/search-results-panel.js';
+
+### Loading from a CDN instead
+
+Supported, but not recommended for EDS, and worth understanding before you
+choose it:
+
+```js
+import decorateResultsPanel from "https://cdn.jsdelivr.net/npm/@streamx-hub/search@1.0.0/dist/eds/search-results-panel.js";
 ```
+
+The stylesheet resolves against the CDN automatically, so this needs no extra
+configuration.
+
+The cost is a second origin. Adobe's performance guidance is explicit that
+"loading from or connecting to a second origin before the `LCP` occurred is
+strongly discouraged as establishing a second connection (TLS, DNS, etc.) adds
+a significant delay to the `LCP`", and that a 100 mobile Lighthouse score
+requires "a single host with a network payload that's not exceeding 100kb".
+
+A results panel is usually the main content of its page, so it is the LCP
+element and a second origin is paid on the critical path. A search modal opened
+by a click loads after LCP, where the cost is largely hidden.
+
+Use jsDelivr, which serves the package files as published. Avoid re-bundling
+CDNs such as esm.sh, which rewrite the module graph this library relies on.
 
 ## Creating blocks in an EDS document
 
@@ -180,7 +274,7 @@ The Search Results Panel block and the Search Tab blocks render the same
 results panel, so they accept the same panel options:
 
 | Option                     | Default    | Description                                                                                                                                                                           |
-|----------------------------|------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `pageSize`                 | `10`       | Number of results per page.                                                                                                                                                           |
 | `dataSources`              | -          | Results endpoint the panel POSTs to.                                                                                                                                                  |
 | `requestId`                | -          | Saved query/template id sent as the request body `id`.                                                                                                                                |
@@ -216,7 +310,7 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 ### Search Results Panel
 
 | Search Results Panel     |                                        |
-|--------------------------|----------------------------------------|
+| ------------------------ | -------------------------------------- |
 | searchApiUrl             | /api/search                            |
 | minSearchLength          | 3                                      |
 | pageSize                 | 10                                     |
@@ -242,12 +336,12 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 The block accepts every [panel option](#panel-options) plus the search-input
 options shared with the Search Tabs block:
 
-| Option          | Default   | Description                                                                                             |
-| --------------- | --------- | ------------------------------------------------------------------------------------------------------- |
-| `queryParam`    | `query`   | URL param holding the query. Use the same value on every block that takes part in the search.           |
-| `initialQuery`  | -         | Pre-fetched query offered in the dropdown while the input is focused and empty.                         |
-| `searchPageUrl` | -         | Send submissions to a separate search page instead of refreshing the panel below the input.             |
-| `namespace`     | -         | Limits the input's suggestions to one content namespace. Omit to search all of them.                    |
+| Option          | Default | Description                                                                                   |
+| --------------- | ------- | --------------------------------------------------------------------------------------------- |
+| `queryParam`    | `query` | URL param holding the query. Use the same value on every block that takes part in the search. |
+| `initialQuery`  | -       | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
+| `searchPageUrl` | -       | Send submissions to a separate search page instead of refreshing the panel below the input.   |
+| `namespace`     | -       | Limits the input's suggestions to one content namespace. Omit to search all of them.          |
 
 > **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the
 > example above) and the input refreshes the panel on the same page. Set it and
@@ -288,7 +382,7 @@ Nothing to author - the blocks keep the whole search state in the URL, so a
 reader can copy the address bar and the recipient sees the same search:
 
 | Param        | Holds                                                                    |
-|--------------|--------------------------------------------------------------------------|
+| ------------ | ------------------------------------------------------------------------ |
 | `query`      | the query, which also refills the input (rename via `queryParam`)        |
 | `sort-by`    | field name which is used to sort in conjunction with with sort direction |
 | `stx-tab`    | the active tab (Search Tabs only; absent on the first tab)               |

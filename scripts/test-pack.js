@@ -196,6 +196,57 @@ step("every exports target exists", () => {
   process.stdout.write(`(${targets.length} targets) `);
 });
 
+step("documented import paths resolve", () => {
+  const installed = join(
+    fixture,
+    "app",
+    "node_modules",
+    "@streamx-hub",
+    "search",
+  );
+  const pkg = JSON.parse(readFileSync(join(installed, "package.json"), "utf8"));
+
+  // "." maps to the bare package name; "./x" to "<name>/x".
+  const valid = new Set(
+    Object.keys(pkg.exports).map((key) =>
+      key === "." ? pkg.name : pkg.name + key.slice(1),
+    ),
+  );
+
+  const docs = [
+    "README.md",
+    "docs/API.md",
+    "docs/EDS.md",
+    "docs/CUSTOMIZATION.md",
+  ];
+  const invalid = [];
+
+  for (const doc of docs) {
+    const path = join(installed, doc);
+
+    if (!existsSync(path)) {
+      continue;
+    }
+
+    const text = readFileSync(path, "utf8");
+
+    for (const [, specifier] of text.matchAll(
+      /["'](@streamx-hub\/search[^"']*)["']/g,
+    )) {
+      if (!valid.has(specifier)) {
+        invalid.push(`  ${doc}: ${specifier}`);
+      }
+    }
+  }
+
+  if (invalid.length) {
+    throw new Error(
+      "documentation imports paths that are not in the exports map:\n" +
+        [...new Set(invalid)].join("\n"),
+    );
+  }
+});
+
 step("bundler build", () => {
   writeFileSync(
     join(fixture, "app", "src", "entry.js"),
