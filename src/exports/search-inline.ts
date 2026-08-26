@@ -102,3 +102,5 @@ export function createSearchInput(
 }
 
 export { getHitUrl } from "../renderers/renderers";
+
+export type * from "../types/public";

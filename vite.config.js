@@ -9,6 +9,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: {
+        index: resolve(import.meta.dirname, "src/exports/index.ts"),
         "streamx-search-inline": resolve(
           import.meta.dirname,
           "src/exports/search-inline.ts",
@@ -36,6 +37,10 @@ export default defineConfig({
       },
       name: "streamx-search",
       formats: ["es"],
+      // Pinned, because Vite otherwise derives it from the package name - so
+      // scoping the package to `@streamx-hub/search` silently renamed the
+      // stylesheet to `search.css` and broke the `./streamx-search.css` export.
+      cssFileName: "streamx-search",
     },
   },
   plugins: [
@@ -46,7 +51,12 @@ export default defineConfig({
       },
     },
     dts({
-      entryRoot: "src/exports",
+      // Rooted at `src`, not `src/exports`, so the declaration tree keeps the
+      // same shape as the source. Rooting it at the entries instead hoisted
+      // them to `dist/` while their shared imports landed under `dist/src/**`,
+      // leaving every relative specifier - and so every `types` path in
+      // `exports` - unresolvable for a consumer.
+      entryRoot: "src",
       outDir: "dist",
     }),
   ],
