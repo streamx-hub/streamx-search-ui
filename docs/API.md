@@ -23,7 +23,7 @@ Import from:
 import {
   createSearchInput,
   mountSearchModal,
-} from "./dist/streamx-search-inline.js";
+} from "@streamx-hub/search/search-inline";
 ```
 
 ---
@@ -280,7 +280,7 @@ renderers: {
 Import from:
 
 ```ts
-import { createSearchTabs } from "./dist/streamx-search-tabs.js";
+import { createSearchTabs } from "@streamx-hub/search/search-tabs";
 ```
 
 ---
@@ -373,7 +373,7 @@ Example:
 Import from:
 
 ```ts
-import { createResultsPanel } from "./dist/streamx-search-results-panel.js";
+import { createResultsPanel } from "@streamx-hub/search/search-results-panel";
 ```
 
 ---
@@ -439,7 +439,7 @@ interface ResultsConfig {
 ```
 
 | Property             | Type                       | Required |     Default     | Description                                                                                                                                                                                                                              |
-|----------------------|----------------------------|:--------:|:---------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -------------------- | -------------------------- | :------: | :-------------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `dataSources`        | `string[]`                 |    ✅    |        -        | Search result endpoints. Current implementation uses the first item.                                                                                                                                                                     |
 | `pageSize`           | `number`                   |    ❌    |      `20`       | Number of results per page.                                                                                                                                                                                                              |
 | `renderers`          | `ResultsPanelRenderers`    |    ❌    |    Built-in     | Custom result renderers.                                                                                                                                                                                                                 |
@@ -586,7 +586,7 @@ type ResultsPanelLabelsConfig = {
 ```
 
 | Property                   | Type                                  | Default                                | Description                                 |
-|----------------------------|---------------------------------------|----------------------------------------|---------------------------------------------|
+| -------------------------- | ------------------------------------- | -------------------------------------- | ------------------------------------------- |
 | `paginationInfo`           | `(currentPage, pageNumber) => string` | `Page ${currentPage} of ${pageNumber}` | Pagination text.                            |
 | `totalResults`             | `(totalCount) => string`              | `${totalCount} results found.`         | Total results text and live region message. |
 | `ariaPaginationGoToPage`   | `(pageNumber) => string`              | `Go to page ${pageNumber}`             | Pagination button aria label.               |

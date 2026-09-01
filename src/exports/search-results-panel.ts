@@ -19,3 +19,5 @@ const createResultsPanel = (
 
 export { createResultsPanel };
 export { getHitUrl } from "../renderers/renderers";
+
+export type * from "../types/public";

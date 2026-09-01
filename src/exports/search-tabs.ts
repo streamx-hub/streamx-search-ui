@@ -26,3 +26,5 @@ const createSearchTabs = (
 
 export { createSearchTabs };
 export { getHitUrl } from "../renderers/renderers";
+
+export type * from "../types/public";

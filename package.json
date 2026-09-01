@@ -1,41 +1,81 @@
 {
-  "name": "streamx-search",
-  "version": "0.1.0",
-  "description": "Framework-independent search UI components",
-  "private": false,
-  "type": "module",
+  "name": "@streamx-hub/search",
+  "version": "1.0.0",
+  "description": "Framework-independent search UI components: autocomplete input, search modal, faceted results panel and tabbed search pages.",
+  "keywords": [
+    "search",
+    "search-ui",
+    "autocomplete",
+    "typeahead",
+    "facets",
+    "faceted-search",
+    "opensearch",
+    "elasticsearch",
+    "framework-agnostic",
+    "vanilla-js",
+    "web-components",
+    "eds",
+    "edge-delivery-services",
+    "streamx"
+  ],
+  "homepage": "https://github.com/streamx-hub/streamx-search-ui#readme",
+  "bugs": {
+    "url": "https://github.com/streamx-hub/streamx-search-ui/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/streamx-hub/streamx-search-ui.git"
+  },
   "license": "MIT",
+  "author": "StreamX",
+  "type": "module",
+  "sideEffects": [
+    "*.css"
+  ],
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "files": [
     "dist",
     "README.md",
-    "docs"
+    "LICENSE",
+    "docs/*.md"
   ],
   "exports": {
+    ".": {
+      "types": "./dist/exports/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./search-inline": {
-      "types": "./dist/search-inline.d.ts",
+      "types": "./dist/exports/search-inline.d.ts",
       "import": "./dist/streamx-search-inline.js"
     },
     "./search-results-panel": {
-      "types": "./dist/search-results-panel.d.ts",
+      "types": "./dist/exports/search-results-panel.d.ts",
       "import": "./dist/streamx-search-results-panel.js"
     },
     "./search-tabs": {
-      "types": "./dist/search-tabs.d.ts",
+      "types": "./dist/exports/search-tabs.d.ts",
       "import": "./dist/streamx-search-tabs.js"
     },
     "./eds/search-results-panel": {
-      "types": "./dist/eds/decorate-results-panel.d.ts",
+      "types": "./dist/exports/eds/decorate-results-panel.d.ts",
       "import": "./dist/eds/search-results-panel.js"
     },
     "./eds/search-tabs": {
-      "types": "./dist/eds/decorate-search-tabs.d.ts",
+      "types": "./dist/exports/eds/decorate-search-tabs.d.ts",
       "import": "./dist/eds/search-tabs.js"
     },
     "./eds/search-tab": {
-      "types": "./dist/eds/decorate-search-tab.d.ts",
+      "types": "./dist/exports/eds/decorate-search-tab.d.ts",
       "import": "./dist/eds/search-tab.js"
     },
-    "./streamx-search.css": "./dist/streamx-search.css"
+    "./streamx-search.css": "./dist/streamx-search.css",
+    "./package.json": "./package.json"
   },
   "scripts": {
     "dev": "vite",
@@ -48,7 +88,8 @@
     "prepare": "husky",
     "lint-staged": "lint-staged",
     "prepublishOnly": "npm run build",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test:pack": "node scripts/test-pack.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

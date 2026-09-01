@@ -4,6 +4,7 @@ import {
   type EDSPanelOptions,
   getEDSConfig,
   loadCssFile,
+  resolveStylesheetHref,
   readInputOptions,
   readPanelOptions,
   replaceElWithError,
@@ -23,7 +24,7 @@ export default function decorate(
   block: HTMLElement,
   renderers?: EDSResultsPanelRenderers,
 ) {
-  loadCssFile("/scripts/search/streamx-search.css");
+  loadCssFile(resolveStylesheetHref(import.meta.url));
   const config = getEDSConfig<EDSResultsPanelConfig>(block);
 
   block.innerHTML = "";

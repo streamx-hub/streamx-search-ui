@@ -45,31 +45,70 @@ To develop locally, fetch search data using one of two methods:
 
 ## Installation
 
-Use the files generated in the `dist` directory.
-
-```html
-<link rel="stylesheet" href="./dist/streamx-search-inline.css" />
-<script type="module" src="./dist/streamx-search-inline.js"></script>
+```bash
+npm install @streamx-hub/search
 ```
-
-If you use a bundler, import the selected entry and its CSS in your application code.
 
 ```ts
-import { mountSearchModal } from "./dist/streamx-search-inline.js";
-import "./dist/streamx-search-inline.css";
+import { createSearchInput } from "@streamx-hub/search";
+import "@streamx-hub/search/streamx-search.css";
 ```
 
-> Exact output filenames can depend on your build configuration. Use the matching JS and CSS file generated for the selected entry.
+> **The stylesheet is a separate import.** The JavaScript does not pull it in,
+> so a build that imports only the JS renders every component unstyled, with no
+> error and no warning. Import it once, anywhere in your app.
 
----
+### Import paths
 
-## Distribution Files
+Importing from the package root gives you everything:
 
-| Entry                | JS file                           | Use when                                                  |
-| -------------------- | --------------------------------- | --------------------------------------------------------- |
-| Inline Search        | `streamx-search-inline.js`        | You need a standalone autocomplete input or modal search. |
-| Search Tabs          | `streamx-search-tabs.js`          | You need a full search page with multiple result tabs.    |
-| Search Results Panel | `streamx-search-results-panel.js` | You need one search input with one result panel.          |
+```ts
+import {
+  createSearchInput,
+  mountSearchModal,
+  createResultsPanel,
+  createSearchTabs,
+  getHitUrl,
+} from "@streamx-hub/search";
+```
+
+Per-component entries pull in less code, so prefer them when you only need one:
+
+| Entry                                      | Exports                                 | Use when                                        |
+| ------------------------------------------ | --------------------------------------- | ----------------------------------------------- |
+| `@streamx-hub/search`                      | everything                              | Convenience, or you use more than one component |
+| `@streamx-hub/search/search-inline`        | `createSearchInput`, `mountSearchModal` | A standalone autocomplete input or modal search |
+| `@streamx-hub/search/search-results-panel` | `createResultsPanel`                    | One search input with one result panel          |
+| `@streamx-hub/search/search-tabs`          | `createSearchTabs`                      | A search page with multiple result tabs         |
+| `@streamx-hub/search/streamx-search.css`   | the stylesheet                          | Always                                          |
+
+Every entry also re-exports the public types, so a config type can be imported
+from the same path as the factory that takes it:
+
+```ts
+import { createResultsPanel } from "@streamx-hub/search/search-results-panel";
+import type { ResultsConfig } from "@streamx-hub/search/search-results-panel";
+```
+
+### Without a bundler
+
+The package is plain ES modules with zero runtime dependencies, so a browser can
+load it directly:
+
+```html
+<link
+  rel="stylesheet"
+  href="/node_modules/@streamx-hub/search/dist/streamx-search.css"
+/>
+<script type="module">
+  import { createSearchInput } from "/node_modules/@streamx-hub/search/dist/streamx-search-inline.js";
+
+  createSearchInput(
+    { searchApiUrl: "/api/search" },
+    document.querySelector("#search"),
+  );
+</script>
+```
 
 ---
 
@@ -83,47 +122,6 @@ See `docs/EDS.md` for details.
 
 ---
 
-## Which files should I import?
-
-### Inline Search
-
-Use for header search, navigation search, autocomplete input or modal search.
-
-```html
-<script type="module">
-  import {
-    createSearchInput,
-    mountSearchModal,
-  } from "./dist/streamx-search-inline.js";
-</script>
-```
-
----
-
-### Search Page with Tabs
-
-Use when results should be split into multiple tabs, for example Products, Articles and Pages.
-
-```html
-<script type="module">
-  import { createSearchTabs } from "./dist/streamx-search-tabs.js";
-</script>
-```
-
----
-
-### Search Page without Tabs
-
-Use when results should be shown in a single panel.
-
-```html
-<script type="module">
-  import { createResultsPanel } from "./dist/streamx-search-results-panel.js";
-</script>
-```
-
----
-
 ## Quick Start
 
 ### Inline Search Input
@@ -132,7 +130,7 @@ Use when results should be shown in a single panel.
 <div id="search"></div>
 
 <script type="module">
-  import { createSearchInput } from "./dist/streamx-search-inline.js";
+  import { createSearchInput } from "@streamx-hub/search/search-inline";
 
   createSearchInput(
     {
@@ -151,7 +149,7 @@ Use when results should be shown in a single panel.
 <button id="open-search">Search</button>
 
 <script type="module">
-  import { mountSearchModal } from "./dist/streamx-search-inline.js";
+  import { mountSearchModal } from "@streamx-hub/search/search-inline";
 
   mountSearchModal({
     searchOpenElementSelector: "#open-search",
@@ -170,7 +168,7 @@ Use when results should be shown in a single panel.
 <div id="app"></div>
 
 <script type="module">
-  import { createSearchTabs } from "./dist/streamx-search-tabs.js";
+  import { createSearchTabs } from "@streamx-hub/search/search-tabs";
 
   const searchPage = createSearchTabs(
     {
@@ -208,7 +206,7 @@ Use when results should be shown in a single panel.
 <div id="app"></div>
 
 <script type="module">
-  import { createResultsPanel } from "./dist/streamx-search-results-panel.js";
+  import { createResultsPanel } from "@streamx-hub/search/search-results-panel";
 
   const searchPage = createResultsPanel(
     {

@@ -6,7 +6,32 @@ import { DEFAULT_QUERY_PARAM, DEFAULT_SORT_PARAM } from "./config";
 import { html } from "./helper";
 import type { QueryInputConfig } from "./types/config.ts";
 
+/**
+ * Resolves the library stylesheet from the location of the calling module.
+ *
+ * The decorators ship one directory below the stylesheet (`eds/*.js` next to
+ * `streamx-search.css`), so the same relative hop is correct wherever the
+ * built files were put - vendored into `scripts/search/`, served from another
+ * folder, or fetched from a CDN. Hardcoding an absolute path instead tied the
+ * decorators to one deployment layout and broke silently in every other.
+ *
+ * Pass `import.meta.url` from the decorator module.
+ */
+export const resolveStylesheetHref = (moduleUrl: string) =>
+  new URL("../streamx-search.css", moduleUrl).href;
+
 export const loadCssFile = (cssFile: string) => {
+  // A page can hold several decorated blocks, and each one loading its own
+  // stylesheet would append a duplicate <link> per block. `link.href` is the
+  // resolved absolute URL, which is what `resolveStylesheetHref` returns too.
+  const alreadyLoaded = [
+    ...document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'),
+  ].some((link) => link.href === cssFile);
+
+  if (alreadyLoaded) {
+    return;
+  }
+
   const styleEl = document.createElement("link");
 
   styleEl.setAttribute("href", cssFile);
