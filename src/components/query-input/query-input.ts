@@ -11,6 +11,7 @@ import type { QueryInputConfig } from "../../types/config";
 import type { QueryInput, QueryInputElement } from "../../types/query-input";
 import type { OpenSearchResponse } from "../../types/open-search";
 import "./query-input.css";
+import { randomUUID } from "../../utils/randomUUID";
 
 const resolveConfig = (customConfig: QueryInputConfig): QueryInput => {
   const inputOption: QueryInput = {
@@ -73,8 +74,8 @@ const updateSearchQuery = (query: string, queryParam: string) => {
 
 export function createQueryInput(customConfig: QueryInputConfig) {
   const config = resolveConfig(customConfig);
-  const inputTextId = crypto.randomUUID();
-  const suggestionWrapperId = crypto.randomUUID();
+  const inputTextId = randomUUID();
+  const suggestionWrapperId = randomUUID();
   const { labels, renderers, queryParam } = config;
 
   // Every suggestion fetch goes through this URL, so the namespace is applied
