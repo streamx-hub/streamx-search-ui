@@ -1,4 +1,5 @@
 import { dispatchUrlChangeEvent, html } from "../../helper";
+import { randomUUID } from "../../utils/randomUUID";
 
 export const SORT_BY_SEPARATOR = "__";
 
@@ -47,7 +48,7 @@ export const createSortOptions = (
 ) => {
   if (!sortFields?.length) return null;
 
-  const selectId = crypto.randomUUID();
+  const selectId = randomUUID();
 
   const sortOptionElements: HTMLElement[] = [];
   sortFields.forEach((field) => {

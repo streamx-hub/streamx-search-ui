@@ -1,5 +1,6 @@
 import { html, parseHighlight } from "../helper";
 import type { OpenSearchItem } from "../types/open-search";
+import { randomUUID } from "../utils/randomUUID";
 
 /**
  * Resolves the destination URL of a hit from its `_id`.
@@ -28,7 +29,7 @@ export function getHitUrl(item: OpenSearchItem) {
 }
 
 export function suggestionItem(item: OpenSearchItem): Element | undefined {
-  const id = crypto.randomUUID();
+  const id = randomUUID();
   const data = [];
 
   if (item.highlight?.["payload.title"]) {
