@@ -51,6 +51,11 @@ export type QueryInput = {
   submitInPlace?: boolean;
   /** Renders the built-in search (submit) button. */
   showSearchButton: boolean;
+  /**
+   * Lets a suggestion item act as a plain navigation link instead of
+   * submitting its text as the query.
+   */
+  suggestionsAsLinks?: boolean;
   labels: QueryInputLabels;
   renderers: QueryInputRenderers;
 };

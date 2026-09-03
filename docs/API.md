@@ -134,24 +134,26 @@ interface QueryInputConfig {
   submitInPlace?: boolean;
   showSearchButton?: boolean;
   namespace?: string;
+  suggestionsAsLinks?: boolean;
   labels?: Partial<QueryInputLabels>;
   renderers?: Partial<QueryInputRenderers>;
 }
 ```
 
-| Property           | Type                           | Required |      Default       | Description                                                                                                    |
-| ------------------ | ------------------------------ | :------: | :----------------: | -------------------------------------------------------------------------------------------------------------- |
-| `searchApiUrl`     | `string \| (() => string)`     |    ✅    |         -          | Suggestions/search endpoint URL.                                                                               |
-| `searchPageUrl`    | `(val: string) => string`      |    ❌    |         -          | Builds the target search page URL.                                                                             |
-| `minSearchLength`  | `number`                       |    ❌    |        `3`         | Minimum query length before search.                                                                            |
-| `groupByCategory`  | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category.                                                                      |
-| `queryParam`       | `string`                       |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`.                                |
-| `initialQuery`     | `string`                       |    ❌    |         -          | Query pre-fetched on render and offered while the input is focused and empty.                                  |
-| `submitInPlace`    | `boolean`                      |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.                                  |
-| `showSearchButton` | `boolean`                      |    ❌    |       `true`       | Renders the built-in search (submit) button. Set `false` when the host markup provides its own submit control. |
-| `namespace`        | `string`                       |    ❌    |         -          | Limits suggestions to one content namespace, sent as a `namespace` query param. Omit to search all of them.    |
-| `labels`           | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                                                                                        |
-| `renderers`        | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                                                                                     |
+| Property             | Type                           | Required |      Default       | Description                                                                                                    |
+|----------------------|--------------------------------|:--------:|:------------------:|----------------------------------------------------------------------------------------------------------------|
+| `searchApiUrl`       | `string \| (() => string)`     |    ✅    |         -          | Suggestions/search endpoint URL.                                                                               |
+| `searchPageUrl`      | `(val: string) => string`      |    ❌    |         -          | Builds the target search page URL.                                                                             |
+| `minSearchLength`    | `number`                       |    ❌    |        `3`         | Minimum query length before search.                                                                            |
+| `groupByCategory`    | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category.                                                                      |
+| `queryParam`         | `string`                       |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`.                                |
+| `initialQuery`       | `string`                       |    ❌    |         -          | Query pre-fetched on render and offered while the input is focused and empty.                                  |
+| `submitInPlace`      | `boolean`                      |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.                                  |
+| `showSearchButton`   | `boolean`                      |    ❌    |       `true`       | Renders the built-in search (submit) button. Set `false` when the host markup provides its own submit control. |
+| `namespace`          | `string`                       |    ❌    |         -          | Limits suggestions to one content namespace, sent as a `namespace` query param. Omit to search all of them.    |
+| `suggestionsAsLinks` | `boolean`                      |    ❌    |      `false`       | Lets a suggestion item act as a plain navigation link instead of submitting its text as the query.             |
+| `labels`             | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                                                                                        |
+| `renderers`          | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                                                                                     |
 
 ### Submitting
 
@@ -167,6 +169,13 @@ all submit the current query. Where it goes depends on the configuration:
 `submitInPlace` is checked first, so setting it alongside a `searchPageUrl`
 makes the latter dead configuration. The EDS decorators derive it for you: they
 set `submitInPlace` only when the block has no `searchPageUrl`.
+
+With `suggestionsAsLinks: true`, picking a suggestion is excluded from this:
+the click is left alone instead of being submitted, so the suggestion item
+behaves like a plain navigation link (e.g. `<a href="...">`) to wherever its
+own markup points. Pressing <kbd>Enter</kbd> or clicking the search button
+still submits the typed query as usual - the flag only changes what happens
+when a suggestion is clicked, not the input's own submit path.
 
 ### The search button
 

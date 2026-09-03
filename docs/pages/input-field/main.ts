@@ -117,6 +117,15 @@ const examples = {
   },
 });`,
 
+  suggestionsAsLinks: `mountSearchModal({
+  searchOpenElementSelector: "#suggestions-as-links",
+
+  input: {
+    searchApiUrl: "http://localhost:8082/search/pages",
+    suggestionsAsLinks: true,
+  },
+});`,
+
   "existing-input": `const navSearch = document.querySelector("#exising-search");
 
 if (navSearch) {
@@ -244,6 +253,15 @@ mountSearchModal({
   input: {
     searchApiUrl,
     searchPageUrl: (query) => `/query?query=${query}`,
+  },
+});
+
+// suggestions act as plain navigation links instead of submitting the query
+mountSearchModal({
+  searchOpenElementSelector: "#suggestions-as-links",
+  input: {
+    searchApiUrl,
+    suggestionsAsLinks: true,
   },
 });
 
