@@ -372,7 +372,9 @@ export function createQueryInput(customConfig: QueryInputConfig) {
 
       e.preventDefault();
 
-      const query = item.textContent?.trim() || "";
+      const query = config.suggestionItemSubmitValue
+        ? config.suggestionItemSubmitValue(e.target as Element)
+        : item.textContent?.trim() || "";
 
       inputEl.value = query;
       clearButton?.classList.remove("stx-hidden");

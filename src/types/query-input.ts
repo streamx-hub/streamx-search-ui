@@ -56,6 +56,13 @@ export type QueryInput = {
    * submitting its text as the query.
    */
   suggestionsAsLinks?: boolean;
+  /**
+   * Computes the query submitted when a suggestion item is picked, in place
+   * of the default (the item's trimmed text content). No effect when
+   * `suggestionsAsLinks` is set, since suggestions then act as links instead
+   * of submitting a query.
+   */
+  suggestionItemSubmitValue?: (suggestionItem: Element) => string;
   labels: QueryInputLabels;
   renderers: QueryInputRenderers;
 };

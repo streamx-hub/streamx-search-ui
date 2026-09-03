@@ -126,6 +126,19 @@ const examples = {
   },
 });`,
 
+  suggestionItemSubmitValue: `mountSearchModal({
+  searchOpenElementSelector: "#suggestion-item-submit-value",
+
+  input: {
+    searchApiUrl: "http://localhost:8082/search/pages",
+    suggestionItemSubmitValue(suggestionItem) {
+      // Submit the hit's URL instead of its (highlighted) label text.
+      const item = suggestionItem.closest(".stx-suggestion__item");
+      return item?.getAttribute("href") || "";
+    },
+  },
+});`,
+
   "existing-input": `const navSearch = document.querySelector("#exising-search");
 
 if (navSearch) {
@@ -262,6 +275,18 @@ mountSearchModal({
   input: {
     searchApiUrl,
     suggestionsAsLinks: true,
+  },
+});
+
+// picking a suggestion submits its URL instead of its label text
+mountSearchModal({
+  searchOpenElementSelector: "#suggestion-item-submit-value",
+  input: {
+    searchApiUrl,
+    suggestionItemSubmitValue(suggestionItem) {
+      const item = suggestionItem.closest(".stx-suggestion__item");
+      return item?.getAttribute("href") || "";
+    },
   },
 });
 
