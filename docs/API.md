@@ -135,25 +135,27 @@ interface QueryInputConfig {
   showSearchButton?: boolean;
   namespace?: string;
   suggestionsAsLinks?: boolean;
+  suggestionItemSubmitValue?: (suggestionItem: Element) => string;
   labels?: Partial<QueryInputLabels>;
   renderers?: Partial<QueryInputRenderers>;
 }
 ```
 
-| Property             | Type                           | Required |      Default       | Description                                                                                                    |
-|----------------------|--------------------------------|:--------:|:------------------:|----------------------------------------------------------------------------------------------------------------|
-| `searchApiUrl`       | `string \| (() => string)`     |    ✅    |         -          | Suggestions/search endpoint URL.                                                                               |
-| `searchPageUrl`      | `(val: string) => string`      |    ❌    |         -          | Builds the target search page URL.                                                                             |
-| `minSearchLength`    | `number`                       |    ❌    |        `3`         | Minimum query length before search.                                                                            |
-| `groupByCategory`    | `boolean`                      |    ❌    |       `true`       | Groups suggestions by item type/category.                                                                      |
-| `queryParam`         | `string`                       |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`.                                |
-| `initialQuery`       | `string`                       |    ❌    |         -          | Query pre-fetched on render and offered while the input is focused and empty.                                  |
-| `submitInPlace`      | `boolean`                      |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.                                  |
-| `showSearchButton`   | `boolean`                      |    ❌    |       `true`       | Renders the built-in search (submit) button. Set `false` when the host markup provides its own submit control. |
-| `namespace`          | `string`                       |    ❌    |         -          | Limits suggestions to one content namespace, sent as a `namespace` query param. Omit to search all of them.    |
-| `suggestionsAsLinks` | `boolean`                      |    ❌    |      `false`       | Lets a suggestion item act as a plain navigation link instead of submitting its text as the query.             |
-| `labels`             | `Partial<QueryInputLabels>`    |    ❌    |  Built-in labels   | Overrides input labels.                                                                                        |
-| `renderers`          | `Partial<QueryInputRenderers>` |    ❌    | Built-in renderers | Overrides input renderers.                                                                                     |
+| Property                    | Type                                  | Required |      Default       | Description                                                                                                                                                |
+|-----------------------------|---------------------------------------|:--------:|:------------------:|------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `searchApiUrl`              | `string \| (() => string)`            |    ✅    |         -          | Suggestions/search endpoint URL.                                                                                                                           |
+| `searchPageUrl`             | `(val: string) => string`             |    ❌    |         -          | Builds the target search page URL.                                                                                                                         |
+| `minSearchLength`           | `number`                              |    ❌    |        `3`         | Minimum query length before search.                                                                                                                        |
+| `groupByCategory`           | `boolean`                             |    ❌    |       `true`       | Groups suggestions by item type/category.                                                                                                                  |
+| `queryParam`                | `string`                              |    ❌    |     `"query"`      | URL param the query is written to. Must match the results panel's `queryParam`.                                                                            |
+| `initialQuery`              | `string`                              |    ❌    |         -          | Query pre-fetched on render and offered while the input is focused and empty.                                                                              |
+| `submitInPlace`             | `boolean`                             |    ❌    |      `false`       | Submit by writing `queryParam` to the current URL instead of navigating away.                                                                              |
+| `showSearchButton`          | `boolean`                             |    ❌    |       `true`       | Renders the built-in search (submit) button. Set `false` when the host markup provides its own submit control.                                             |
+| `namespace`                 | `string`                              |    ❌    |         -          | Limits suggestions to one content namespace, sent as a `namespace` query param. Omit to search all of them.                                                |
+| `suggestionsAsLinks`        | `boolean`                             |    ❌    |      `false`       | Lets a suggestion item act as a plain navigation link instead of submitting its text as the query.                                                         |
+| `suggestionItemSubmitValue` | `(suggestionItem: Element) => string` |    ❌    |         -          | Computes the submitted query from a clicked suggestion item, in place of its trimmed text content. Only takes effect when `suggestionsAsLinks` is not set. |
+| `labels`                    | `Partial<QueryInputLabels>`           |    ❌    |  Built-in labels   | Overrides input labels.                                                                                                                                    |
+| `renderers`                 | `Partial<QueryInputRenderers>`        |    ❌    | Built-in renderers | Overrides input renderers.                                                                                                                                 |
 
 ### Submitting
 
@@ -176,6 +178,12 @@ behaves like a plain navigation link (e.g. `<a href="...">`) to wherever its
 own markup points. Pressing <kbd>Enter</kbd> or clicking the search button
 still submits the typed query as usual - the flag only changes what happens
 when a suggestion is clicked, not the input's own submit path.
+
+By default, picking a suggestion submits its trimmed text content as the
+query. Set `suggestionItemSubmitValue` to derive a different value instead -
+for example pulling a canonical query string out of the item's data instead
+of its rendered label. It only takes effect when `suggestionsAsLinks` is not
+set, since a suggestion click doesn't submit a query at all in that mode.
 
 ### The search button
 

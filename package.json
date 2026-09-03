@@ -1,6 +1,6 @@
 {
   "name": "@streamx-hub/search",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Framework-independent search UI components: autocomplete input, search modal, faceted results panel and tabbed search pages.",
   "keywords": [
     "search",
