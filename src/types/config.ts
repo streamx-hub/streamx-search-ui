@@ -52,6 +52,11 @@ export interface QueryInputConfig {
    * button is never rendered rather than hidden with CSS.
    */
   showSearchButton?: boolean;
+  /**
+   * Lets a suggestion item act as a plain navigation link instead of
+   * submitting its text as the query.
+   */
+  suggestionsAsLinks?: boolean;
   labels?: Partial<QueryInputLabels>;
   renderers?: Partial<QueryInputRenderers>;
 }

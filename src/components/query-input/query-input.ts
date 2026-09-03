@@ -358,10 +358,12 @@ export function createQueryInput(customConfig: QueryInputConfig) {
       }
     });
 
-    // Picking a suggestion submits it as the query rather than opening the hit,
+    // Picking a suggestion submits it as the query rather than opening the hit (unless `suggestionsAsLinks` flag is set),
     // so the behaviour matches Enter: navigate to `searchPageUrl`, or refresh an
     // adjacent results panel when `submitInPlace` is set.
     suggestionContainer?.addEventListener("click", (e) => {
+      if (config.suggestionsAsLinks) return;
+
       const item = (e.target as Element).closest(".stx-suggestion__item");
 
       if (!item) {
