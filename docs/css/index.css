@@ -154,7 +154,7 @@ section h2 {
   color: var(--text-secondary);
 }
 
-button {
+.examples button {
   cursor: pointer;
   padding: 0.8rem 1.2rem;
   font: inherit;
@@ -165,12 +165,12 @@ button {
   transition: 0.2s;
 }
 
-button:hover {
+.examples button:hover {
   transform: translateY(-1px);
   opacity: 0.95;
 }
 
-button:active {
+.examples button:active {
   transform: translateY(0);
 }
 
