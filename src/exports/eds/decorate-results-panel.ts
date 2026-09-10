@@ -20,9 +20,14 @@ type EDSResultsPanelConfig = EDSPanelOptions &
 type EDSResultsPanelRenderers = Partial<QueryInputRenderers> &
   Partial<ResultsPanelRenderers>;
 
+interface EDSResultsPanelCallbacks {
+  suggestionItemSubmitValue?: (suggestionItem: Element) => string;
+}
+
 export default function decorate(
   block: HTMLElement,
   renderers?: EDSResultsPanelRenderers,
+  callbacks?: EDSResultsPanelCallbacks,
 ) {
   loadCssFile(resolveStylesheetHref(import.meta.url));
   const config = getEDSConfig<EDSResultsPanelConfig>(block);
@@ -44,6 +49,7 @@ export default function decorate(
     searchApiUrl: config.searchApiUrl,
     ...inputOptions,
     renderers,
+    ...callbacks,
   };
 
   const resultsRenderers = Object.fromEntries(
