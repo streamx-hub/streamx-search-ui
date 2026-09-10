@@ -159,6 +159,12 @@ export type EDSInputOptions = {
   initialQuery?: string;
   /** Restricts suggestions to one content namespace. Omit to search all. */
   namespace?: string;
+  /** Groups suggestions by item type/category if text is set as `"true"`. */
+  groupByCategory?: string;
+  /** Renders the built-in search (submit) button. Set text to `"false"` when the host markup provides its own submit control. */
+  showSearchButton?: string;
+  /** Lets a suggestion item act as a plain navigation link instead of submitting its text as the query when text is set to `"true"`. */
+  suggestionsAsLinks?: string;
 };
 
 /**
@@ -234,6 +240,10 @@ const parseFacetFields = (value: string | undefined) => {
   return roots.length > 0 ? roots : undefined;
 };
 
+function parseBooleanField(value: string | undefined) {
+  return value?.trim().toLowerCase() === "true";
+}
+
 /** Maps authored EDS rows to a results-panel config. Single source of truth. */
 export const readPanelOptions = (
   config: Partial<EDSPanelOptions>,
@@ -250,7 +260,7 @@ export const readPanelOptions = (
   debugMode:
     config.debugMode === undefined
       ? undefined
-      : config.debugMode.trim().toLowerCase() === "true",
+      : parseBooleanField(config.debugMode),
   namespace: config.namespace || undefined,
   labels: generatePanelLabels(config),
   sortParam: config.sortParam || DEFAULT_SORT_PARAM,
@@ -289,5 +299,14 @@ export const readInputOptions = (
       clearButtonAria: config.clearButtonAria,
       searchButtonAria: config.searchButtonAria,
     },
+    groupByCategory: config.groupByCategory
+      ? parseBooleanField(config.groupByCategory)
+      : undefined,
+    showSearchButton: config.showSearchButton
+      ? parseBooleanField(config.showSearchButton)
+      : undefined,
+    suggestionsAsLinks: config.suggestionsAsLinks
+      ? parseBooleanField(config.suggestionsAsLinks)
+      : undefined,
   };
 };

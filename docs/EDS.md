@@ -336,12 +336,15 @@ pointing every tab at the same endpoint defeats the purpose of tabs.
 The block accepts every [panel option](#panel-options) plus the search-input
 options shared with the Search Tabs block:
 
-| Option          | Default | Description                                                                                   |
-| --------------- | ------- | --------------------------------------------------------------------------------------------- |
-| `queryParam`    | `query` | URL param holding the query. Use the same value on every block that takes part in the search. |
-| `initialQuery`  | -       | Pre-fetched query offered in the dropdown while the input is focused and empty.               |
-| `searchPageUrl` | -       | Send submissions to a separate search page instead of refreshing the panel below the input.   |
-| `namespace`     | -       | Limits the input's suggestions to one content namespace. Omit to search all of them.          |
+| Option               | Default | Description                                                                                               |
+| -------------------- | ------- | --------------------------------------------------------------------------------------------------------- |
+| `queryParam`         | `query` | URL param holding the query. Use the same value on every block that takes part in the search.             |
+| `initialQuery`       | -       | Pre-fetched query offered in the dropdown while the input is focused and empty.                           |
+| `searchPageUrl`      | -       | Send submissions to a separate search page instead of refreshing the panel below the input.               |
+| `namespace`          | -       | Limits the input's suggestions to one content namespace. Omit to search all of them.                      |
+| `groupByCategory`    | `true`  | `false` disables grouping suggestions by item type/category.                                              |
+| `showSearchButton`   | `true`  | `false` hides the built-in search (submit) button, for host markup that provides its own submit control.  |
+| `suggestionsAsLinks` | `false` | `true` lets a suggestion item act as a plain navigation link instead of submitting its text as the query. |
 
 > **`searchPageUrl` changes where submitting goes.** Leave it unset (as in the
 > example above) and the input refreshes the panel on the same page. Set it and
