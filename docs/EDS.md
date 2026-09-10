@@ -121,6 +121,32 @@ Renderers should return an `HTMLElement`.
 
 Renderer configuration is intentionally done in JavaScript, because EDS block content can only provide text values. For labels, use template variables in the block content. For custom markup, use renderers in the block JavaScript file.
 
+## Custom callbacks
+
+The Results Panel decorator also accepts a third argument, `callbacks`, for
+function-valued options that (like renderers) can't be expressed as EDS block
+content text.
+
+#### `blocks/stx-results-panel/stx-results-panel.js`
+
+```js
+import decorateResultsPanel from "../../scripts/search/eds/search-results-panel.js";
+
+const callbacks = {
+  suggestionItemSubmitValue: (suggestionItem) => suggestionItem.dataset.query,
+};
+
+export default function decorate(block) {
+  decorateResultsPanel(block, undefined, callbacks);
+}
+```
+
+### Available callbacks
+
+| Callback                    | Type                                  | Description                                                                                                                          |
+|-----------------------------|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| `suggestionItemSubmitValue` | `(suggestionItem: Element) => string` | Computes the submitted query from a clicked suggestion item, in place of its trimmed text content. See [API.md](API.md) for details. |
+
 ## Standalone Search Query
 
 Unlike the results panel and search tabs, the search query component does not require an EDS decorator.
