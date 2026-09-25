@@ -21,10 +21,7 @@ A working reference is [`streamx-lab/streamx-eds-search-demo-source`](https://gi
 | StreamX **suggestions endpoint** (GET, reads `?query=`) | Used by the nav input and the results page input |
 | StreamX **results endpoint** (POST, OpenSearch-shaped response) | Used by the results panel |
 
-In the tables below, replace:
-
-- `https://YOUR-STREAMX-HOST/search/pages` with your suggestions endpoint
-- `https://YOUR-STREAMX-HOST/YOUR-RESULTS-ENDPOINT` with your results endpoint
+The configuration tables below use the StreamX endpoint paths `/search/pages` (suggestions) and `/search/query/body` (results) on the same origin as the site.
 
 ---
 
@@ -169,7 +166,7 @@ Keep this layout. The results panel decorator loads `../streamx-search.css` rela
 
 ```bash
 git add package.json package-lock.json scripts/sync-search.mjs scripts/search blocks/search-config
-git commit -m "chore: vendor @streamx-hub/search"
+git commit -m "vendor @streamx-hub/search"
 ```
 
 ---
@@ -298,7 +295,7 @@ export default async function loadNavSearch(mount, config) {
     minSearchLength: Number(config.minSearchLength) || 3,
     namespace: config.namespace || undefined,
     showSearchButton: false,
-    suggestionsAsLinks: true,
+    suggestionsAsLinks: config.suggestionsAsLinks === 'true',
     labels: {
       inputPlaceholder: config.inputPlaceholder || undefined,
       inputLabel: config.inputLabel || undefined,
@@ -314,7 +311,7 @@ What it does:
 - Receives the mount point and the Search Config from the header. If `searchApiUrl` is missing, it logs one error and stops.
 - On the results page itself (`searchPageUrl`), it removes the mount: that page already has an input from the Search Results Panel.
 - Loads the stylesheet, because `createSearchInput` does not load it on its own.
-- Creates the input with `suggestionsAsLinks: true` (a suggestion opens its page) and `showSearchButton: false` (Enter submits to `searchPageUrl`).
+- Creates the input with `showSearchButton: false` (Enter submits to `searchPageUrl`). With `suggestionsAsLinks` set to `true`, a suggestion opens its page instead of submitting its text as a query.
 
 `minSearchLength` falls back to 3, the same default as the Search Results Panel, so both inputs start suggesting at the same length.
 
@@ -491,7 +488,7 @@ The renderer key must match the result's `_source.type` from your index, prefixe
 
 ```bash
 git add blocks/header blocks/search-results-panel scripts/lazy.js styles/styles.css
-git commit -m "feat: StreamX search in the nav and search results page"
+git commit -m "StreamX search in the nav and search results page"
 git push
 ```
 
@@ -501,21 +498,17 @@ git push
 
 1. Open `https://da.live/#/<org>/<repo>` and open the `nav` document.
 2. Go to the **third section** (the tools section, after the second section break). If it does not already contain the search icon, type `:search:` on its own line. This marks where the input goes.
-3. Directly below it, in the same section, insert a table with **two columns**. The first row holds only the block name; merge it across both columns:
+3. Directly below it, in the same section, add this table. Copy the table into the document, then merge the two cells of the first row:
 
 | Search Config | |
 | --- | --- |
-| searchApiUrl | https://YOUR-STREAMX-HOST/search/pages |
+| searchApiUrl | /search/pages |
 | searchPageUrl | /search-results |
-| queryParam | query |
-| minSearchLength | 3 |
-| inputPlaceholder | Search |
-| inputLabel | Search |
-| clearButtonAria | Clear search |
+| suggestionsAsLinks | true |
 
-   Required: `searchApiUrl`. Without `searchPageUrl`, pressing Enter in the nav input only adds `?query=…` to the current URL and stays on the page; suggestions still work.
+   This is the minimal configuration. Required: `searchApiUrl`. Without `searchPageUrl`, pressing Enter in the nav input only adds `?query=…` to the current URL and stays on the page. Without `suggestionsAsLinks`, clicking a suggestion submits its text as a query.
 
-   Optional: `namespace`, to limit suggestions to one content namespace (e.g. `en`).
+   Optional rows: `queryParam` (default `query`), `minSearchLength` (default 3), `namespace`, `inputPlaceholder`, `inputLabel`, `clearButtonAria`.
 
 4. **Preview**, then **Publish**.
 
@@ -525,27 +518,19 @@ git push
 
 1. Create a new **document** in the root folder named `search-results`. Its URL becomes `/search-results`, which must match `searchPageUrl` in the Search Config.
 2. Optionally add a heading, e.g. `Search`.
-3. Insert a table with **two columns**, first row merged, holding the block name:
+3. Add this table. Copy the table into the document, then merge the two cells of the first row:
 
 | Search Results Panel | |
 | --- | --- |
-| searchApiUrl | https://YOUR-STREAMX-HOST/search/pages |
-| dataSources | https://YOUR-STREAMX-HOST/YOUR-RESULTS-ENDPOINT |
-| queryParam | query |
-| pageSize | 10 |
-| minSearchLength | 3 |
-| inputPlaceholder | Search |
-| inputLabel | Search |
-| clearButtonAria | Clear search |
-| searchButtonAria | Submit search |
-| totalResults | {{totalCount}} results found |
-| paginationInfo | Page {{currentPage}} of {{pageNumber}} |
-| ariaPaginationGoToPage | Go to page {{pageNumber}} |
-| ariaPaginationNavigation | Search results pagination |
+| searchApiUrl | /search/pages |
+| submitInPlace | true |
+| dataSources | /search/query/body |
+| requestId | eds-pages |
+| facetFields | architecture, audience, automation, benefit, business, capability, category, content, data, feature, operations, scalability, technology, topic, use-case |
 
-   Required: `searchApiUrl` (the block renders a red error without it) and `dataSources`.
+   This is the minimal configuration. Required: `searchApiUrl` (the block renders a red error without it) and `dataSources`. `requestId` is sent as the request body `id`; `facetFields` lists the facet trees shown next to the results.
 
-   `queryParam` and `minSearchLength` must have the same values as in the Search Config. A different `queryParam` opens the results page with an empty query.
+   If you set `queryParam` or `minSearchLength`, use the same values as in the Search Config. A different `queryParam` opens the results page with an empty query.
 
    Do **not** add a `searchPageUrl` row on this page. Leaving it unset makes the panel's own input refresh the results in place.
 
