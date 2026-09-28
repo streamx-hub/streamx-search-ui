@@ -273,12 +273,6 @@ export default async function loadNavSearch(mount, config) {
     return;
   }
 
-  // The results page renders its own input, so the nav input is not needed there.
-  if (config.searchPageUrl && window.location.pathname === config.searchPageUrl) {
-    mount.remove();
-    return;
-  }
-
   // createSearchInput does not load the stylesheet itself.
   loadCSS(`${window.hlx.codeBasePath}/scripts/search/streamx-search.css`);
 
