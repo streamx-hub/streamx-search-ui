@@ -372,7 +372,7 @@ function highlightedText(className, content) {
 let suggestionCount = 0;
 
 function suggestionItem(item) {
-  const { title } = item._source.payload ?? {};
+  const title = item.highlight?.['payload.title'] || item._source.payload || '';
   const link = el('a', 'stx-suggestion__item search-suggestion');
 
   suggestionCount += 1;
@@ -381,10 +381,7 @@ function suggestionItem(item) {
   link.id = `search-suggestion-${suggestionCount}`;
   link.href = getHitUrl(item);
 
-  link.append(
-    el('span', 'search-suggestion-title', title ?? ''),
-    highlightedText('search-suggestion-content', item.highlight?.['payload.content']),
-  );
+  link.append(highlightedText('search-suggestion-title', title));
 
   return link;
 }
