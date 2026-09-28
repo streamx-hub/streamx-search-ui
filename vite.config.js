@@ -6,7 +6,12 @@ import dts from "vite-plugin-dts";
 export default defineConfig({
   build: {
     minify: false,
-    sourcemap: true,
+    sourcemap: "hidden",
+    rolldownOptions: {
+      output: {
+        banner: "/* eslint-disable */",
+      },
+    },
     lib: {
       entry: {
         index: resolve(import.meta.dirname, "src/exports/index.ts"),
