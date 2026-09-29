@@ -13,13 +13,13 @@ A working reference is [`streamx-lab/streamx-eds-search-demo-source`](https://gi
 
 ## Prerequisites
 
-| What | Why |
-| --- | --- |
-| Repository created from `aem-boilerplate`, connected to da.live | Base project |
-| Node.js **>= 20.19** | Required by `@streamx-hub/search` |
-| AEM CLI (`npm i -g @adobe/aem-cli`) | Local preview with `aem up` |
-| StreamX **suggestions endpoint** (GET, reads `?query=`) | Used by the nav input and the results page input |
-| StreamX **results endpoint** (POST, OpenSearch-shaped response) | Used by the results panel |
+| What                                                            | Why                                              |
+| --------------------------------------------------------------- | ------------------------------------------------ |
+| Repository created from `aem-boilerplate`, connected to da.live | Base project                                     |
+| Node.js **>= 20.19**                                            | Required by `@streamx-hub/search`                |
+| AEM CLI (`npm i -g @adobe/aem-cli`)                             | Local preview with `aem up`                      |
+| StreamX **suggestions endpoint** (GET, reads `?query=`)         | Used by the nav input and the results page input |
+| StreamX **results endpoint** (POST, OpenSearch-shaped response) | Used by the results panel                        |
 
 The configuration tables below use the StreamX endpoint paths `/search/pages` (suggestions) and `/search/query/body` (results) on the same origin as the site.
 
@@ -43,21 +43,26 @@ Create `scripts/sync-search.mjs`:
 
 ```js
 import {
-  copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync,
-} from 'node:fs';
-import { dirname, join, normalize } from 'node:path';
+  copyFileSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { dirname, join, normalize } from "node:path";
 
-const source = 'node_modules/@streamx-hub/search/dist';
-const target = 'scripts/search';
+const source = "node_modules/@streamx-hub/search/dist";
+const target = "scripts/search";
 
 // Entry points this project imports. Everything else is found by following imports.
 const entries = [
-  'streamx-search-inline.js', // header: createSearchInput
-  'eds/search-results-panel.js', // blocks/search-results-panel
+  "streamx-search-inline.js", // header: createSearchInput
+  "eds/search-results-panel.js", // blocks/search-results-panel
 ];
 
 // Loaded at runtime via URL, not via import, so it is listed explicitly.
-const assets = ['streamx-search.css'];
+const assets = ["streamx-search.css"];
 
 const importPattern = /(?:from|import)\s*\(?\s*["'](\.{1,2}\/[^"']+)["']/g;
 
@@ -66,7 +71,7 @@ function collect(file, found) {
 
   found.add(file);
 
-  const code = readFileSync(join(source, file), 'utf8');
+  const code = readFileSync(join(source, file), "utf8");
 
   [...code.matchAll(importPattern)].forEach(([, spec]) => {
     collect(normalize(join(dirname(file), spec)), found);
@@ -92,11 +97,11 @@ rmSync(target, { recursive: true, force: true });
 // the block, but EDS still requests a script and a stylesheet for it.
 // Created only when missing, so edits to them are never overwritten.
 const placeholders = {
-  'blocks/search-config/search-config.js': `// Search Config is read and removed by blocks/header/header.js.
+  "blocks/search-config/search-config.js": `// Search Config is read and removed by blocks/header/header.js.
 // This empty decorator only exists so EDS finds a file for the block.
 export default function decorate() {}
 `,
-  'blocks/search-config/search-config.css': `/* Search Config renders nothing. This file only exists so EDS finds a stylesheet for the block. */
+  "blocks/search-config/search-config.css": `/* Search Config renders nothing. This file only exists so EDS finds a stylesheet for the block. */
 `,
 };
 
@@ -108,7 +113,6 @@ Object.entries(placeholders).forEach(([file, content]) => {
 
   console.log(`created ${file}`);
 });
-
 ```
 
 The script copies only what this project loads: the two entry points, the chunks they import (found by following `import` statements, since chunk names are hashed and change between versions) and the stylesheet. Not copied: the search tabs files (`streamx-search-tabs.js`, `search-tabs-<hash>.js`, `eds/search-tabs.js`, `eds/search-tab.js`), the non-EDS `streamx-search-results-panel.js` and the package `index.js`, which pulls in everything.
@@ -196,8 +200,8 @@ Paste this directly above the `/** loads and decorates the header, mainly the na
 function parseSearchConfig(block) {
   const config = {};
 
-  block.querySelectorAll(':scope > div').forEach((row) => {
-    const [keyEl, valueEl] = row.querySelectorAll(':scope > div');
+  block.querySelectorAll(":scope > div").forEach((row) => {
+    const [keyEl, valueEl] = row.querySelectorAll(":scope > div");
     const key = keyEl?.textContent?.trim();
     const value = valueEl?.textContent?.trim();
 
@@ -213,25 +217,25 @@ function parseSearchConfig(block) {
  * @param {Element} nav The nav element
  */
 function decorateSearch(nav) {
-  const configBlock = nav.querySelector('.search-config');
+  const configBlock = nav.querySelector(".search-config");
   if (!configBlock) return;
 
   const config = parseSearchConfig(configBlock);
 
   // The config table is not content, so it is removed from the nav.
-  (configBlock.closest('.search-config-wrapper') || configBlock).remove();
+  (configBlock.closest(".search-config-wrapper") || configBlock).remove();
 
-  const searchIcon = nav.querySelector('.nav-tools .icon-search');
+  const searchIcon = nav.querySelector(".nav-tools .icon-search");
   if (!searchIcon) return;
 
-  const mount = document.createElement('div');
-  mount.className = 'nav-search';
-  (searchIcon.closest('p') || searchIcon).replaceWith(mount);
+  const mount = document.createElement("div");
+  mount.className = "nav-search";
+  (searchIcon.closest("p") || searchIcon).replaceWith(mount);
 
-  import('../../scripts/lazy.js')
-    .then(({ default: loadNavSearch }) => loadNavSearch(mount, config));
+  import("../../scripts/lazy.js").then(({ default: loadNavSearch }) =>
+    loadNavSearch(mount, config),
+  );
 }
-
 ```
 
 ### Call it inside `decorate`
@@ -239,19 +243,17 @@ function decorateSearch(nav) {
 In `decorate(block)`, find:
 
 ```js
-  const navWrapper = document.createElement('div');
-  navWrapper.className = 'nav-wrapper';
-
+const navWrapper = document.createElement("div");
+navWrapper.className = "nav-wrapper";
 ```
 
 and insert the call directly above it:
 
 ```js
-  decorateSearch(nav);
+decorateSearch(nav);
 
-  const navWrapper = document.createElement('div');
-  navWrapper.className = 'nav-wrapper';
-
+const navWrapper = document.createElement("div");
+navWrapper.className = "nav-wrapper";
 ```
 
 The call must come after the `nav-brand / nav-sections / nav-tools` classes are assigned, so `.nav-tools` can be found.
@@ -259,7 +261,7 @@ The call must come after the `nav-brand / nav-sections / nav-tools` classes are 
 ### Create `scripts/lazy.js`
 
 ```js
-import { loadCSS } from './aem.js';
+import { loadCSS } from "./aem.js";
 
 /**
  * Creates the StreamX search input in the nav mount point prepared by the header.
@@ -276,28 +278,32 @@ export default async function loadNavSearch(mount, config) {
   // createSearchInput does not load the stylesheet itself.
   loadCSS(`${window.hlx.codeBasePath}/scripts/search/streamx-search.css`);
 
-  const { createSearchInput } = await import('./search/streamx-search-inline.js');
+  const { createSearchInput } =
+    await import("./search/streamx-search-inline.js");
 
-  const queryParam = config.queryParam || 'query';
+  const queryParam = config.queryParam || "query";
 
-  createSearchInput({
-    searchApiUrl: config.searchApiUrl,
-    searchPageUrl: config.searchPageUrl
-      ? (query) => `${config.searchPageUrl}?${queryParam}=${encodeURIComponent(query)}`
-      : undefined,
-    queryParam,
-    minSearchLength: Number(config.minSearchLength) || 3,
-    namespace: config.namespace || undefined,
-    showSearchButton: false,
-    suggestionsAsLinks: config.suggestionsAsLinks === 'true',
-    labels: {
-      inputPlaceholder: config.inputPlaceholder || undefined,
-      inputLabel: config.inputLabel || undefined,
-      clearButtonAria: config.clearButtonAria || undefined,
+  createSearchInput(
+    {
+      searchApiUrl: config.searchApiUrl,
+      searchPageUrl: config.searchPageUrl
+        ? (query) =>
+            `${config.searchPageUrl}?${queryParam}=${encodeURIComponent(query)}`
+        : undefined,
+      queryParam,
+      minSearchLength: Number(config.minSearchLength) || 3,
+      namespace: config.namespace || undefined,
+      showSearchButton: false,
+      suggestionsAsLinks: config.suggestionsAsLinks === "true",
+      labels: {
+        inputPlaceholder: config.inputPlaceholder || undefined,
+        inputLabel: config.inputLabel || undefined,
+        clearButtonAria: config.clearButtonAria || undefined,
+      },
     },
-  }, mount);
+    mount,
+  );
 }
-
 ```
 
 What it does:
@@ -314,8 +320,8 @@ What it does:
 The library puts the search input on `z-index: 1000` by default. To lower it, add this inside the existing `:root { ... }` rule:
 
 ```css
-  /* stacking of the StreamX search input */
-  --stx-z-query-input: 1;
+/* stacking of the StreamX search input */
+--stx-z-query-input: 1;
 ```
 
 ---
@@ -328,8 +334,8 @@ Create the block folder `blocks/search-results-panel/`. The folder and file name
 
 ```js
 /* eslint-disable no-underscore-dangle */
-import decorateResultsPanel from '../../scripts/search/eds/search-results-panel.js';
-import { getHitUrl } from '../../scripts/search/streamx-search-inline.js';
+import decorateResultsPanel from "../../scripts/search/eds/search-results-panel.js";
+import { getHitUrl } from "../../scripts/search/streamx-search-inline.js";
 
 /**
  * Creates an element and sets its text. Text is never parsed as HTML,
@@ -348,16 +354,18 @@ function el(tag, className, text) {
  * Highlighted snippets contain <em> tags around matches. Keep those, drop everything else.
  */
 function highlightedText(className, content) {
-  const raw = (Array.isArray(content) ? content.join(' ') : content ?? '')
-    .replace(/\s+/g, ' ')
+  const raw = (Array.isArray(content) ? content.join(" ") : (content ?? ""))
+    .replace(/\s+/g, " ")
     .trim();
 
-  const span = el('span', className);
+  const span = el("span", className);
 
   raw.split(/(<em>.*?<\/em>)/g).forEach((part) => {
     const match = part.match(/^<em>(.*?)<\/em>$/);
 
-    span.append(match ? el('em', null, match[1]) : document.createTextNode(part));
+    span.append(
+      match ? el("em", null, match[1]) : document.createTextNode(part),
+    );
   });
 
   return span;
@@ -366,8 +374,8 @@ function highlightedText(className, content) {
 let suggestionCount = 0;
 
 function suggestionItem(item) {
-  const title = item.highlight?.['payload.title'] || item._source.payload || '';
-  const link = el('a', 'stx-suggestion__item search-suggestion');
+  const title = item.highlight?.["payload.title"] || item._source.payload || "";
+  const link = el("a", "stx-suggestion__item search-suggestion");
 
   suggestionCount += 1;
 
@@ -375,7 +383,7 @@ function suggestionItem(item) {
   link.id = `search-suggestion-${suggestionCount}`;
   link.href = getHitUrl(item);
 
-  link.append(highlightedText('search-suggestion-title', title));
+  link.append(highlightedText("search-suggestion-title", title));
 
   return link;
 }
@@ -384,17 +392,18 @@ function resultItem(item) {
   const { title, fields } = item._source.payload ?? {};
   const { author, date, description } = fields ?? {};
 
-  const article = el('article', 'search-result');
-  const link = el('a', 'search-result-title', title ?? '');
+  const article = el("article", "search-result");
+  const link = el("a", "search-result-title", title ?? "");
   link.href = getHitUrl(item);
   article.append(link);
 
-  if (description) article.append(el('p', 'search-result-description', description));
+  if (description)
+    article.append(el("p", "search-result-description", description));
 
-  const meta = el('div', 'search-result-meta');
+  const meta = el("div", "search-result-meta");
 
-  if (author) meta.append(el('span', null, author));
-  if (date) meta.append(el('span', null, date));
+  if (author) meta.append(el("span", null, author));
+  if (date) meta.append(el("span", null, date));
 
   if (meta.children.length) article.append(meta);
 
@@ -402,11 +411,11 @@ function resultItem(item) {
 }
 
 function error() {
-  const box = el('div', 'stx-results-panel__error');
+  const box = el("div", "stx-results-panel__error");
 
   box.append(
-    el('span', 'stx-results-panel__error-heading', 'Something went wrong.'),
-    el('span', 'stx-results-panel__error-text', 'Please try again later'),
+    el("span", "stx-results-panel__error-heading", "Something went wrong."),
+    el("span", "stx-results-panel__error-text", "Please try again later"),
   );
 
   return box;
@@ -414,21 +423,22 @@ function error() {
 
 const renderers = {
   // Key is `item-` + the result's `_source.type`.
-  'item-page/eds': resultItem,
+  "item-page/eds": resultItem,
   suggestionItem,
   error,
 };
 
 const callbacks = {
   // Submit the suggestion title, not the title plus snippet text.
-  suggestionItemSubmitValue: (item) => item.closest('.search-suggestion')
-    ?.querySelector('.search-suggestion-title')?.textContent ?? '',
+  suggestionItemSubmitValue: (item) =>
+    item
+      .closest(".search-suggestion")
+      ?.querySelector(".search-suggestion-title")?.textContent ?? "",
 };
 
 export default function decorate(block) {
   decorateResultsPanel(block, renderers, callbacks);
 }
-
 ```
 
 What it does:
@@ -491,15 +501,15 @@ git push
 2. Go to the **third section** (the tools section, after the second section break). If it does not already contain the search icon, type `:search:` on its own line. This marks where the input goes.
 3. Directly below it, in the same section, add this table. Copy the table into the document, then merge the two cells of the first row:
 
-| Search Config | |
-| --- | --- |
-| searchApiUrl | /search/pages |
-| searchPageUrl | /search-results |
-| suggestionsAsLinks | true |
+| Search Config      |                 |
+| ------------------ | --------------- |
+| searchApiUrl       | /search/pages   |
+| searchPageUrl      | /search-results |
+| suggestionsAsLinks | true            |
 
-   This is the minimal configuration. Required: `searchApiUrl`. Without `searchPageUrl`, pressing Enter in the nav input only adds `?query=…` to the current URL and stays on the page. Without `suggestionsAsLinks`, clicking a suggestion submits its text as a query.
+This is the minimal configuration. Required: `searchApiUrl`. Without `searchPageUrl`, pressing Enter in the nav input only adds `?query=…` to the current URL and stays on the page. Without `suggestionsAsLinks`, clicking a suggestion submits its text as a query.
 
-   Optional rows: `queryParam` (default `query`), `minSearchLength` (default 3), `namespace`, `inputPlaceholder`, `inputLabel`, `clearButtonAria`.
+Optional rows: `queryParam` (default `query`), `minSearchLength` (default 3), `namespace`, `inputPlaceholder`, `inputLabel`, `clearButtonAria`.
 
 4. **Preview**, then **Publish**.
 
@@ -511,19 +521,19 @@ git push
 2. Optionally add a heading, e.g. `Search`.
 3. Add this table. Copy the table into the document, then merge the two cells of the first row:
 
-| Search Results Panel | |
-| --- | --- |
-| searchApiUrl | /search/pages |
-| submitInPlace | true |
-| dataSources | /search/query/body |
-| requestId | eds-pages |
-| facetFields | architecture, audience, automation, benefit, business, capability, category, content, data, feature, operations, scalability, technology, topic, use-case |
+| Search Results Panel |                                                                                                                                                           |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| searchApiUrl         | /search/pages                                                                                                                                             |
+| submitInPlace        | true                                                                                                                                                      |
+| dataSources          | /search/query/body                                                                                                                                        |
+| requestId            | eds-pages                                                                                                                                                 |
+| facetFields          | architecture, audience, automation, benefit, business, capability, category, content, data, feature, operations, scalability, technology, topic, use-case |
 
-   This is the minimal configuration. Required: `searchApiUrl` (the block renders a red error without it) and `dataSources`. `requestId` is sent as the request body `id`; `facetFields` lists the facet trees shown next to the results.
+This is the minimal configuration. Required: `searchApiUrl` (the block renders a red error without it) and `dataSources`. `requestId` is sent as the request body `id`; `facetFields` lists the facet trees shown next to the results.
 
-   If you set `queryParam` or `minSearchLength`, use the same values as in the Search Config. A different `queryParam` opens the results page with an empty query.
+If you set `queryParam` or `minSearchLength`, use the same values as in the Search Config. A different `queryParam` opens the results page with an empty query.
 
-   Do **not** add a `searchPageUrl` row on this page. Leaving it unset makes the panel's own input refresh the results in place.
+Do **not** add a `searchPageUrl` row on this page. Leaving it unset makes the panel's own input refresh the results in place.
 
 4. **Preview**, then **Publish**.
 
@@ -554,16 +564,16 @@ After pushing to `main`, repeat the checks on `https://main--<repo>--<org>.aem.p
 
 ## Troubleshooting
 
-| Symptom | Cause |
-| --- | --- |
-| No input in the nav, no error | The `nav` document has no Search Config table, or no `:search:` icon in the third section |
-| Console: *Search Config in the nav is missing "searchApiUrl"* | `searchApiUrl` row missing or misspelled in the Search Config |
-| Search Config table visible in the nav | `decorateSearch(nav)` call missing in `header.js` |
-| Nav input renders unstyled | `scripts/search/streamx-search.css` not committed |
-| `Failed to fetch dynamically imported module …/scripts/search/…` | `npm run sync:search` not run, or `scripts/search/` not committed |
-| Enter in the nav input stays on the page and only changes the URL | `searchPageUrl` missing in the Search Config |
-| Results page opens but the query is empty | `queryParam` differs between the Search Config and the Search Results Panel |
-| Red box: *The Results panel block requires searchApiUrl* | `searchApiUrl` row missing or misspelled on the results page |
-| Results panel shows a count but no result items | No renderer for the results' `_source.type`; turn on `debugMode` to see which type is missing |
-| Block content shows as a plain table | Block name in da.live does not resolve to the block folder name, or the block folder/files are misnamed |
-| Suggestions request never fires | Fewer characters than `minSearchLength` (default 3) |
+| Symptom                                                           | Cause                                                                                                   |
+| ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| No input in the nav, no error                                     | The `nav` document has no Search Config table, or no `:search:` icon in the third section               |
+| Console: _Search Config in the nav is missing "searchApiUrl"_     | `searchApiUrl` row missing or misspelled in the Search Config                                           |
+| Search Config table visible in the nav                            | `decorateSearch(nav)` call missing in `header.js`                                                       |
+| Nav input renders unstyled                                        | `scripts/search/streamx-search.css` not committed                                                       |
+| `Failed to fetch dynamically imported module …/scripts/search/…`  | `npm run sync:search` not run, or `scripts/search/` not committed                                       |
+| Enter in the nav input stays on the page and only changes the URL | `searchPageUrl` missing in the Search Config                                                            |
+| Results page opens but the query is empty                         | `queryParam` differs between the Search Config and the Search Results Panel                             |
+| Red box: _The Results panel block requires searchApiUrl_          | `searchApiUrl` row missing or misspelled on the results page                                            |
+| Results panel shows a count but no result items                   | No renderer for the results' `_source.type`; turn on `debugMode` to see which type is missing           |
+| Block content shows as a plain table                              | Block name in da.live does not resolve to the block folder name, or the block folder/files are misnamed |
+| Suggestions request never fires                                   | Fewer characters than `minSearchLength` (default 3)                                                     |
