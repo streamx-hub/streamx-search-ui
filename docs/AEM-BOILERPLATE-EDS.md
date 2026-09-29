@@ -374,7 +374,8 @@ function highlightedText(className, content) {
 let suggestionCount = 0;
 
 function suggestionItem(item) {
-  const title = item.highlight?.["payload.title"] || item._source.payload || "";
+  const title =
+    item.highlight?.["payload.title"] || item._source.payload.title || "";
   const link = el("a", "stx-suggestion__item search-suggestion");
 
   suggestionCount += 1;
