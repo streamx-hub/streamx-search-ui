@@ -4,6 +4,7 @@ import { announceResults } from "../components/live-region";
 import createPagination from "../components/pagination";
 import { bindPagination } from "./build-page-results";
 import { renderResultsLoadingOverlay } from "../components/renderers";
+import { paginationInfoLabel } from "../components/results-header";
 import type { Results } from "../config/results-panel-config";
 
 export const showResultsLoading = (resultsContainer: HTMLElement) => {
@@ -31,7 +32,6 @@ const updateResultsMeta = (
   resultsPanel: HTMLElement,
 ) => {
   const totalNumber = data.hits?.total.value || 0;
-  const pagesNumber = Math.ceil(totalNumber / results.pageSize);
   const pageNumberEl = resultsContainer.querySelector(
     ".stx-results-panel__page-number",
   );
@@ -40,9 +40,10 @@ const updateResultsMeta = (
   );
 
   if (pageNumberEl) {
-    pageNumberEl.textContent = results.labels.paginationInfo(
+    pageNumberEl.textContent = paginationInfoLabel(
+      results,
       currentPage,
-      pagesNumber,
+      totalNumber,
     );
   }
 

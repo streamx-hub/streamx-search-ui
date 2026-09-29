@@ -5,7 +5,7 @@ import type {
 import type { TabConfig } from "../../../src/components/tabs/tabs";
 import { html } from "../../../src/helper";
 import type { OpenSearchItem } from "../../../src/types/open-search";
-import { createSearchTabs } from "../../../src/exports/search-tabs";
+import { createSearchTabs } from "../../../src/exports";
 import { addNavigation, renderCodeBlocks } from "../../js/helper";
 
 const initSearchPage = async (mountPoint: Element) => {
@@ -16,13 +16,13 @@ const initSearchPage = async (mountPoint: Element) => {
     "item-page/eds": (item: OpenSearchItem) => {
       return html`
         <article class="custom-result-item-render">
-          <img src="${item._source.image}" alt="" />
+          <img src="${item._source.payload.fields?.image}" alt="" />
           <div class="custom-result-item-render__text">
             <span>Custom render for <em>products</em></span>
             <span>${item._id}</span>
             <span>${item._source.type}</span>
-            <a href="${item._source.link}">
-              <span>${item._source.description}</span>
+            <a href="${item._source.payload.fields?.link}">
+              <span>${item._source.payload.fields?.description}</span>
             </a>
           </div>
         </article>

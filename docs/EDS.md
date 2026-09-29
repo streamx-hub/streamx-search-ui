@@ -144,7 +144,7 @@ export default function decorate(block) {
 ### Available callbacks
 
 | Callback                    | Type                                  | Description                                                                                                                          |
-|-----------------------------|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `suggestionItemSubmitValue` | `(suggestionItem: Element) => string` | Computes the submitted query from a clicked suggestion item, in place of its trimmed text content. See [API.md](API.md) for details. |
 
 ## Standalone Search Query

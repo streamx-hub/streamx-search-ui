@@ -1,7 +1,4 @@
-import {
-  mountSearchModal,
-  createSearchInput,
-} from "../../../src/exports/search-inline";
+import { mountSearchModal, createSearchInput } from "../../../src/exports";
 import { addNavigation, renderCodeBlocks } from "../../js/helper";
 
 const examples = {
