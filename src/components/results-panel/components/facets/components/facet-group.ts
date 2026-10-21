@@ -12,6 +12,11 @@ const humanizeFacetName = (field: string) =>
     .replace(/[_-]+/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase()) || field;
 
+export const toIdSafe = (value: string): string =>
+  Array.from(value, (char) =>
+    /[A-Za-z0-9-]/.test(char) ? char : `_${char.codePointAt(0)!.toString(16)}_`,
+  ).join("");
+
 export const createFacetGroup = (
   field: string,
   aggregation: OpenSearchAggregation,
@@ -38,7 +43,7 @@ export const createFacetGroup = (
         class="stx-results-panel__facet-toggle"
         aria-expanded="false"
         aria-controls="${valuesId}"
-        id="facet-toggle-${field}"
+        id="facet-toggle-${toIdSafe(field)}"
       >
         <span class="stx-results-panel__facet-name"
           >${humanizeFacetName(field)}</span
